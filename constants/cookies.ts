@@ -1,0 +1,1 @@
+export const LOCATION_COOKIE = "user_location";
