@@ -65,10 +65,8 @@ export function Navbar() {
 
       {/* 2. Compact Sticky Header (Slides down from top when scrolling down) */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100 transition-all duration-300 ${
-          isScrolled
-            ? 'translate-y-0 opacity-100 animate-slide-down'
-            : '-translate-y-full opacity-0 pointer-events-none'
+        className={`fixed top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100 transition-transform duration-700 ease-in-out ${
+          isScrolled ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
         {/* Keep the Envato banner at the top of the sticky header for consistency */}
