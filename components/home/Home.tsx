@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { LocationSelector } from '@/components/shared/LocationSelector';
 import { locationCookie } from '@/utils/location-cookie';
 import { Hero } from './Hero';
-
 import { Categories } from './Categories';
+import { HowItWorks } from './HowItWorks';
 
 interface HomeProps {
   initialLocation: string | null;
@@ -30,6 +30,9 @@ export default function Home({ initialLocation }: HomeProps) {
 
       {/* Popular Categories Section */}
       <Categories />
+
+      {/* How It Works Section */}
+      <HowItWorks />
     </main>
   );
 }
