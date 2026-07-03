@@ -32,7 +32,7 @@ export function LocationSelector({ onLocationSelect }: LocationSelectorProps) {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-white via-[#FFF8E7] to-white flex items-center justify-center p-4">
+    <div className="flex-1 bg-linear-to-br from-white via-[#FFF8E7] to-white flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-[#D4AF37] to-[#FFD700] rounded-full mb-6">

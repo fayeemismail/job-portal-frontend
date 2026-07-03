@@ -17,6 +17,7 @@ export function JobCard({ job }: JobCardProps) {
         <div className="flex gap-4">
           <div className="w-14 h-14 rounded-xl bg-linear-to-br from-[#FFF8E7] to-[#FFD700]/20 flex items-center justify-center border border-[#D4AF37]/20">
             {job.logo ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img src={job.logo} alt={job.company} className="w-10 h-10 rounded-lg" />
             ) : (
               <Briefcase className="w-7 h-7 text-[#D4AF37]" />
