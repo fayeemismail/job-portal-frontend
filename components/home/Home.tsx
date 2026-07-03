@@ -22,7 +22,7 @@ export default function Home({ initialLocation }: HomeProps) {
   }
 
   return (
-    <main className="flex-grow bg-linear-to-br from-white via-[#FAFAFA] to-white">
+    <main className="grow bg-linear-to-br from-white via-[#FAFAFA] to-white">
       {/* Landing Page Hero Section */}
       <Hero selectedLocation={selectedLocation} onChangeLocation={handleChangeLocation} />
     </main>
