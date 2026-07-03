@@ -33,7 +33,9 @@ export function StatsBar() {
       {stats.map(({ icon: Icon, value, label, gradient }) => (
         <div key={label} className="bg-white rounded-xl border border-border p-6">
           <div className="flex items-center gap-3 mb-2">
-            <div className={`w-10 h-10 bg-linear-to-br ${gradient} rounded-lg flex items-center justify-center`}>
+            <div
+              className={`w-10 h-10 bg-linear-to-br ${gradient} rounded-lg flex items-center justify-center`}
+            >
               <Icon className="w-5 h-5 text-white" />
             </div>
             <div>

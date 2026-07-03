@@ -58,7 +58,9 @@ export function JobCard({ job }: JobCardProps) {
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="px-3 py-1 bg-[#FFF8E7] text-[#7A5800] rounded-full text-sm">{job.type}</span>
+        <span className="px-3 py-1 bg-[#FFF8E7] text-[#7A5800] rounded-full text-sm">
+          {job.type}
+        </span>
         <button className="px-6 py-2 bg-linear-to-r from-[#D4AF37] to-[#FFD700] text-white rounded-lg hover:from-[#B8860B] hover:to-[#DAA520] transition-all">
           Apply Now
         </button>

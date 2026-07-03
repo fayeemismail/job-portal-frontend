@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+build/
+package-lock.json
+package.json
+tsconfig.json
+eslint.config.mjs
+.prettierrc
+next-env.d.ts
