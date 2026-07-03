@@ -41,3 +41,35 @@ body {
     transform: translateY(0);
   }
 }
+
+@utility clip-hexagon {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@utility animate-float-slow {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+@keyframes float-medium {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@utility animate-float-medium {
+  animation: float-medium 4s ease-in-out infinite;
+}

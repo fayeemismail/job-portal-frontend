@@ -30,11 +30,16 @@ export function Navbar() {
 
   return (
     <>
-      {/* 1. Normal Flow Header (Moves out of view on scroll) */}
-      <div className="w-full bg-white border-b border-gray-100">
-        {/* Sliding Banner (Envato market style) */}
+      {/* 1. Fixed Top Banner Container (Always sticks at z-50, doesn't animate on scroll) */}
+      <div className="fixed top-0 left-0 right-0 z-50 w-full">
         <TopBanner isOpen={bannerOpen} onClose={() => setBannerOpen(false)} />
+      </div>
 
+      {/* Placeholder in document flow to push content down below the fixed banner */}
+      <div className={`transition-all duration-500 ease-in-out ${bannerOpen ? 'h-14' : 'h-0'}`} />
+
+      {/* 2. Normal Flow Header (Moves out of view on scroll) */}
+      <div className="w-full bg-white border-b border-gray-100">
         {/* Main Navbar */}
         <nav className="bg-white">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
@@ -63,15 +68,13 @@ export function Navbar() {
         </nav>
       </div>
 
-      {/* 2. Compact Sticky Header (Slides down from top when scrolling down) */}
+      {/* 3. Compact Sticky Header (Slides down from behind the banner when scrolling down) */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 w-full bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100 transition-transform duration-700 ease-in-out ${
+        className={`fixed left-0 right-0 z-40 w-full bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100 transition-transform duration-700 ease-in-out ${
           isScrolled ? 'translate-y-0' : '-translate-y-full'
         }`}
+        style={{ top: bannerOpen ? '56px' : '0px' }}
       >
-        {/* Keep the Envato banner at the top of the sticky header for consistency */}
-        <TopBanner isOpen={bannerOpen} onClose={() => setBannerOpen(false)} />
-
         <nav className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
           <div className="flex justify-between items-center h-16">
             {/* Compact Logo */}
@@ -97,7 +100,7 @@ export function Navbar() {
         </nav>
       </div>
 
-      {/* 3. Mobile Navigation Menu drawer (rendered once globally) */}
+      {/* 4. Mobile Navigation Menu drawer (rendered once globally) */}
       <MobileNav isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </>
   );
