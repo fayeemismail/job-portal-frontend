@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { LocationSelector } from '@/components/shared/LocationSelector';
-import { Header } from '../layout/Header';
 import { FilterSidebar } from '@/components/shared/FilterSidebar';
 import { StatsBar } from '@/components/home/StatsBar';
 import { JobList } from '@/components/home/JobList';
@@ -18,7 +17,7 @@ interface HomeProps {
 export default function Home({ initialLocation }: HomeProps) {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(initialLocation);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery] = useState('');
 
   const jobs = mockJobs.map((job) => ({
     ...job,
@@ -35,18 +34,17 @@ export default function Home({ initialLocation }: HomeProps) {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-white via-[#FAFAFA] to-white">
-      <Header location={selectedLocation} onSearch={setSearchQuery} />
-
-      <div className="max-w-7xl mx-auto px-4 py-6">
+    <main className="flex-grow bg-linear-to-br from-white via-[#FAFAFA] to-white">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 py-2">
         <div className="flex items-center gap-2 mb-6">
-          <MapPin className="w-5 h-5 text-[#D4AF37]" />
+          <MapPin className="w-5 h-5 text-[#EE5E36]" />
           <span className="text-gray-600">
-            Showing jobs in <span className="text-gray-900 font-medium">{selectedLocation}</span>
+            Showing service providers in{' '}
+            <span className="text-gray-900 font-semibold">{selectedLocation}</span>
           </span>
           <button
             onClick={handleChangeLocation}
-            className="ml-2 text-sm text-[#D4AF37] hover:underline"
+            className="ml-2 text-sm text-[#EE5E36] font-semibold hover:underline"
           >
             Change
           </button>
@@ -61,6 +59,6 @@ export default function Home({ initialLocation }: HomeProps) {
           <JobList jobs={jobs} searchQuery={searchQuery} />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

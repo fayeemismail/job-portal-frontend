@@ -4,11 +4,10 @@ import { Search, Bell, User, Briefcase, Menu } from 'lucide-react';
 import { useState } from 'react';
 
 interface HeaderProps {
-  location: string;
   onSearch: (query: string) => void;
 }
 
-export function Header({ location, onSearch }: HeaderProps) {
+export function Header({ onSearch }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
