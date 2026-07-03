@@ -3,7 +3,11 @@
 import Link from 'next/link';
 import { LOGO_CONFIG } from './constants';
 
-export function Logo() {
+interface LogoProps {
+  isCompact?: boolean;
+}
+
+export function Logo({ isCompact = false }: LogoProps) {
   return (
     <div className="shrink-0 flex items-center">
       <Link href={LOGO_CONFIG.href} className="flex items-center gap-2 group">
@@ -11,7 +15,9 @@ export function Logo() {
         <img
           src={LOGO_CONFIG.src}
           alt={LOGO_CONFIG.alt}
-          className="h-[80px] w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+          className={`w-auto object-contain transition-all duration-300 group-hover:scale-[1.02] ${
+            isCompact ? 'h-[56px]' : 'h-[80px]'
+          }`}
         />
       </Link>
     </div>

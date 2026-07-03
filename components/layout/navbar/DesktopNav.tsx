@@ -7,7 +7,11 @@ import { NAV_ITEMS } from './constants';
 import { DropdownMenu } from './DropdownMenu';
 import { getActiveItemLabel } from './utils';
 
-export function DesktopNav() {
+interface DesktopNavProps {
+  isCompact?: boolean;
+}
+
+export function DesktopNav({ isCompact = false }: DesktopNavProps) {
   const pathname = usePathname();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -80,7 +84,9 @@ export function DesktopNav() {
 
       {/* Sliding Underline Indicator */}
       <span
-        className="absolute bottom-[22px] h-[3px] bg-[#EE5E36] rounded-full transition-all duration-300 ease-out pointer-events-none"
+        className={`absolute h-[3px] bg-[#EE5E36] rounded-full transition-all duration-300 ease-out pointer-events-none ${
+          isCompact ? 'bottom-[10px]' : 'bottom-[22px]'
+        }`}
         style={{
           left: `${underlineStyle.left}px`,
           width: `${underlineStyle.width}px`,
