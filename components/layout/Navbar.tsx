@@ -16,8 +16,8 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Trigger compact sticky navbar when scrolled past 180px
-      if (window.scrollY > 180) {
+      // Trigger compact sticky navbar when scrolled past 120px
+      if (window.scrollY > 120) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -39,9 +39,9 @@ export function Navbar() {
       <div className={`transition-all duration-500 ease-in-out ${bannerOpen ? 'h-14' : 'h-0'}`} />
 
       {/* 2. Normal Flow Header (Moves out of view on scroll) */}
-      <div className="w-full bg-[#FDF6F0] border-b border-gray-100/50">
+      <div className="w-full bg-[#FFF9F8] border-b border-[#FFEFEA]/50">
         {/* Main Navbar */}
-        <nav className="bg-[#FDF6F0]">
+        <nav className="bg-[#FFF9F8]">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
             <div className="flex justify-between items-center h-22">
               {/* Logo Section */}
