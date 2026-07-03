@@ -19,7 +19,7 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const BANNER_CONFIG = {
-  primaryText: 'envato',
+  primaryText: 'fasl',
   secondaryText: 'market',
   buyNowUrl: '#',
   buyNowLabel: 'Buy now',

@@ -39,9 +39,9 @@ export function Navbar() {
       <div className={`transition-all duration-500 ease-in-out ${bannerOpen ? 'h-14' : 'h-0'}`} />
 
       {/* 2. Normal Flow Header (Moves out of view on scroll) */}
-      <div className="w-full bg-white border-b border-gray-100">
+      <div className="w-full bg-[#FDF6F0] border-b border-gray-100/50">
         {/* Main Navbar */}
-        <nav className="bg-white">
+        <nav className="bg-[#FDF6F0]">
           <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
             <div className="flex justify-between items-center h-22">
               {/* Logo Section */}
