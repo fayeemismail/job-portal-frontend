@@ -5,6 +5,8 @@ import { LocationSelector } from '@/components/shared/LocationSelector';
 import { locationCookie } from '@/utils/location-cookie';
 import { Hero } from './Hero';
 
+import { Categories } from './Categories';
+
 interface HomeProps {
   initialLocation: string | null;
 }
@@ -25,6 +27,9 @@ export default function Home({ initialLocation }: HomeProps) {
     <main className="grow bg-linear-to-br from-white via-[#FAFAFA] to-white">
       {/* Landing Page Hero Section */}
       <Hero selectedLocation={selectedLocation} onChangeLocation={handleChangeLocation} />
+
+      {/* Popular Categories Section */}
+      <Categories />
     </main>
   );
 }

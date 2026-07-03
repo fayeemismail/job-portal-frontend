@@ -40,7 +40,7 @@ export default function BlogPage() {
               <h2 className="text-xl font-bold text-[#0B2545] mt-2 mb-3 hover:text-[#EE5E36] transition-colors cursor-pointer">
                 {post.title}
               </h2>
-              <p className="text-gray-600 mb-4 line-clamp-3 flex-grow">{post.excerpt}</p>
+              <p className="text-gray-600 mb-4 line-clamp-3 grow">{post.excerpt}</p>
               <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                 <span className="text-sm text-gray-500">By {post.author}</span>
                 <span className="text-sm text-[#EE5E36] font-semibold hover:underline cursor-pointer">
