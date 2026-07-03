@@ -8,7 +8,7 @@ export function CategoryGrid() {
       {CATEGORIES_LIST.map((cat) => (
         <div
           key={cat.id}
-          className="group relative rounded-3xl border border-[#FFE8DF] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-400 hover-slide shadow-xs bg-white hover:shadow-xl hover:border-[#EE5E36]"
+          className="group relative rounded-3xl border border-[#FFE8DF] p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-400 hover-slide shadow-xs bg-white hover:border-[#EE5E36]"
         >
           {/* Illustration circular container */}
           <div className="w-20 h-20 rounded-full flex items-center justify-center bg-[#FFF6F0] mb-6 group-hover:bg-white transition-all duration-400 z-10">

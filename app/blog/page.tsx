@@ -34,7 +34,7 @@ export default function BlogPage() {
           {dummyPosts.map((post) => (
             <article
               key={post.id}
-              className="bg-white border border-gray-100 rounded-xl p-6 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col"
+              className="bg-white border border-gray-100 rounded-xl p-6 shadow-xs transition-all duration-300 flex flex-col"
             >
               <span className="text-sm text-[#EE5E36] font-semibold">{post.date}</span>
               <h2 className="text-xl font-bold text-[#0B2545] mt-2 mb-3 hover:text-[#EE5E36] transition-colors cursor-pointer">
