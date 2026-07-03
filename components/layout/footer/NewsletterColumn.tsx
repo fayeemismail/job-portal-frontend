@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowUpRight, MapPin, Mail } from 'lucide-react';
-import { NEWSLETTER_CONTACT } from './constants';
+import { NEWSLETTER_CONTACT, NEWSLETTER_COPY } from './constants';
 
 export function NewsletterColumn() {
   const [email, setEmail] = useState('');
@@ -19,14 +19,14 @@ export function NewsletterColumn() {
 
   return (
     <div className="flex flex-col w-full max-w-[340px] md:max-w-[400px]">
-      <h3 className="text-[#0B2545] font-extrabold text-lg mb-4">Join Our Newsletter</h3>
+      <h3 className="text-[#0B2545] font-extrabold text-lg mb-4">{NEWSLETTER_COPY.title}</h3>
 
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2.5 w-full">
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter Your Email"
+          placeholder={NEWSLETTER_COPY.placeholder}
           className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-hidden focus:border-[#EE5E36] transition-colors"
           required
         />
@@ -34,7 +34,7 @@ export function NewsletterColumn() {
           type="submit"
           className="px-6 py-3 bg-[#EE5E36] hover:bg-[#0B2545] text-white font-bold text-sm rounded-lg transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 whitespace-nowrap shadow-sm"
         >
-          <span>Subscribe</span>
+          <span>{NEWSLETTER_COPY.buttonLabel}</span>
           <ArrowUpRight className="w-4 h-4" />
         </button>
       </form>
@@ -48,7 +48,7 @@ export function NewsletterColumn() {
           className="w-4 h-4 rounded-sm border-gray-300 text-[#EE5E36] focus:ring-[#EE5E36]/30 cursor-pointer"
         />
         <span className="text-xs text-gray-500 font-semibold group-hover:text-gray-700 transition-colors">
-          Agree Terms and conditions
+          {NEWSLETTER_COPY.checkboxLabel}
         </span>
       </label>
 

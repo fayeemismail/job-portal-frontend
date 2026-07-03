@@ -6,10 +6,10 @@ import { FOOTER_ABOUT } from './constants';
 export function AboutColumn() {
   return (
     <div className="flex flex-col max-w-[280px]">
-      <h3 className="text-[#0B2545] font-extrabold text-lg mb-4">About us</h3>
+      <h3 className="text-[#0B2545] font-extrabold text-lg mb-4">{FOOTER_ABOUT.title}</h3>
       <p className="text-gray-500 text-sm mb-8 leading-relaxed">{FOOTER_ABOUT.description}</p>
 
-      <h4 className="text-[#0B2545] font-extrabold text-sm mb-4">Language & Currency</h4>
+      <h4 className="text-[#0B2545] font-extrabold text-sm mb-4">{FOOTER_ABOUT.languageLabel}</h4>
       <div className="flex items-center gap-3">
         {/* Language Selector */}
         <div className="relative flex-1">

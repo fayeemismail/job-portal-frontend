@@ -1,6 +1,7 @@
 import { FooterColumn, SocialLink } from './types';
 
 export const FOOTER_ABOUT = {
+  title: 'About us',
   description:
     'It is a long established fact that a reader will be distracted by the readable counter of a page.',
   languageLabel: 'Language & Currency',
@@ -14,6 +15,25 @@ export const FOOTER_ABOUT = {
     { code: 'EUR', label: 'Euro' },
     { code: 'GBP', label: 'British Pound' },
   ],
+};
+
+export const FOOTER_LOGO = {
+  src: '/logo-black.png',
+  alt: 'Servat handyman service portal logo',
+  href: '/',
+};
+
+export const FOOTER_COLORS = {
+  bgLight: 'bg-[#FFF9F8]',
+  borderLight: 'border-[#FFEFEA]',
+  bgDark: 'bg-[#0B2545]',
+};
+
+export const NEWSLETTER_COPY = {
+  title: 'Join Our Newsletter',
+  placeholder: 'Enter Your Email',
+  buttonLabel: 'Subscribe',
+  checkboxLabel: 'Agree Terms and conditions',
 };
 
 export const FOOTER_COLUMNS: FooterColumn[] = [
