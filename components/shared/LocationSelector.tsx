@@ -9,9 +9,7 @@ interface LocationSelectorProps {
   onLocationSelect: (location: string) => void;
 }
 
-export function LocationSelector({
-  onLocationSelect,
-}: LocationSelectorProps) {
+export function LocationSelector({ onLocationSelect }: LocationSelectorProps) {
   const [selectedLocation, setSelectedLocation] = useState('');
 
   const selectLocation = (location: string) => {
@@ -41,35 +39,27 @@ export function LocationSelector({
             <MapPin className="w-10 h-10 text-white" />
           </div>
 
-          <h1 className="mb-3 text-[#6e6e6e]">
-            Select Your Location
-          </h1>
+          <h1 className="mb-3 text-[#6e6e6e]">Select Your Location</h1>
 
           <p className="text-[#6e6e6e]">
-            Choose your preferred location to find the best job
-            opportunities near you
+            Choose your preferred location to find the best job opportunities near you
           </p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg border border-border overflow-hidden">
           <div className="p-6">
-            <h3 className="mb-4 text-[#6e6e6e]">
-              Popular Locations
-            </h3>
+            <h3 className="mb-4 text-[#6e6e6e]">Popular Locations</h3>
 
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {suggestedLocations.map((location) => {
                 const locationString = `${location.city}, ${location.state}`;
 
-                const isSelected =
-                  selectedLocation === locationString;
+                const isSelected = selectedLocation === locationString;
 
                 return (
                   <button
                     key={locationString}
-                    onClick={() =>
-                      handleLocationClick(locationString)
-                    }
+                    onClick={() => handleLocationClick(locationString)}
                     className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
                       isSelected
                         ? 'bg-linear-to-r from-[#D4AF37] to-[#FFD700] border-[#D4AF37] text-white'
@@ -78,38 +68,22 @@ export function LocationSelector({
                   >
                     <div
                       className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        isSelected
-                          ? 'bg-white/20'
-                          : 'bg-[#FFF8E7]'
+                        isSelected ? 'bg-white/20' : 'bg-[#FFF8E7]'
                       }`}
                     >
                       <MapPin
-                        className={`w-5 h-5 ${
-                          isSelected
-                            ? 'text-white'
-                            : 'text-[#D4AF37]'
-                        }`}
+                        className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-[#D4AF37]'}`}
                       />
                     </div>
 
                     <div className="flex-1 text-left">
                       <div
-                        className={`font-medium ${
-                          isSelected
-                            ? 'text-white'
-                            : 'text-[#6e6e6e]'
-                        }`}
+                        className={`font-medium ${isSelected ? 'text-white' : 'text-[#6e6e6e]'}`}
                       >
                         {location.city}
                       </div>
 
-                      <div
-                        className={`text-sm ${
-                          isSelected
-                            ? 'text-white/80'
-                            : 'text-[#6e6e6e]'
-                        }`}
-                      >
+                      <div className={`text-sm ${isSelected ? 'text-white/80' : 'text-[#6e6e6e]'}`}>
                         {location.state}, {location.country}
                       </div>
                     </div>

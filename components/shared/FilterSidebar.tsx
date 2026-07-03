@@ -30,7 +30,9 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
                   className="w-4 h-4 rounded border-border text-[#D4AF37] focus:ring-[#D4AF37] cursor-pointer"
                   onChange={(e) => onFilterChange({ jobType: type, checked: e.target.checked })}
                 />
-                <span className="text-sm text-gray-700 group-hover:text-[#D4AF37] transition-colors">{type}</span>
+                <span className="text-sm text-gray-700 group-hover:text-[#D4AF37] transition-colors">
+                  {type}
+                </span>
               </label>
             ))}
           </div>
@@ -46,7 +48,9 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
                   className="w-4 h-4 rounded border-border text-[#D4AF37] focus:ring-[#D4AF37] cursor-pointer"
                   onChange={(e) => onFilterChange({ experience: level, checked: e.target.checked })}
                 />
-                <span className="text-sm text-gray-700 group-hover:text-[#D4AF37] transition-colors">{level}</span>
+                <span className="text-sm text-gray-700 group-hover:text-[#D4AF37] transition-colors">
+                  {level}
+                </span>
               </label>
             ))}
           </div>
@@ -62,7 +66,9 @@ export function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
                   className="w-4 h-4 rounded border-border text-[#D4AF37] focus:ring-[#D4AF37] cursor-pointer"
                   onChange={(e) => onFilterChange({ salary: range, checked: e.target.checked })}
                 />
-                <span className="text-sm text-gray-700 group-hover:text-[#D4AF37] transition-colors">{range}</span>
+                <span className="text-sm text-gray-700 group-hover:text-[#D4AF37] transition-colors">
+                  {range}
+                </span>
               </label>
             ))}
           </div>

@@ -12,7 +12,9 @@ export function JobList({ jobs, searchQuery }: JobListProps) {
   return (
     <div className="lg:col-span-3">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-gray-900">{searchQuery ? `Results for "${searchQuery}"` : 'Recommended Jobs'}</h2>
+        <h2 className="text-gray-900">
+          {searchQuery ? `Results for "${searchQuery}"` : 'Recommended Jobs'}
+        </h2>
         <select className="px-4 py-2 bg-white border border-border rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]">
           <option>Most Recent</option>
           <option>Highest Salary</option>
