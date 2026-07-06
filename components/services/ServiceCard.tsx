@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Star, MapPin, Heart } from 'lucide-react';
 import { ServiceItem } from './types';
+import { DEFAULT_LOCATION, STARTING_FROM_LABEL, BOOK_NOW_LABEL } from './constants';
 
 interface ServiceCardProps {
   service: ServiceItem;
@@ -55,7 +56,7 @@ export function ServiceCard({ service, categoryLabel }: ServiceCardProps) {
       <div className="flex items-center justify-between text-xs text-gray-500 font-semibold mb-2 px-1">
         <div className="flex items-center gap-1">
           <MapPin className="w-3.5 h-3.5 text-[#EE5E36]/80" />
-          <span>New York, USA</span>
+          <span>{DEFAULT_LOCATION}</span>
         </div>
         <div className="flex items-center gap-1">
           <Star className="w-3.5 h-3.5 fill-[#FFB800] text-[#FFB800]" />
@@ -74,7 +75,7 @@ export function ServiceCard({ service, categoryLabel }: ServiceCardProps) {
       <div className="border-t border-gray-100 pt-4 flex items-center justify-between mt-auto px-1 shrink-0">
         <div className="flex flex-col">
           <span className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-0.5">
-            Starting from
+            {STARTING_FROM_LABEL}
           </span>
           <div className="flex items-baseline gap-1.5">
             <span className="text-[#0B2545] font-extrabold text-lg leading-none">
@@ -91,7 +92,7 @@ export function ServiceCard({ service, categoryLabel }: ServiceCardProps) {
             type="button"
             className="bg-[#FFF4F0] hover:bg-[#EE5E36] text-[#EE5E36] hover:text-white px-5 py-2.5 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer active:scale-95 shadow-2xs"
           >
-            Book Now
+            {BOOK_NOW_LABEL}
           </button>
         </Link>
       </div>
