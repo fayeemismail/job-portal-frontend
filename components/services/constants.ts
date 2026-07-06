@@ -278,6 +278,8 @@ export const BOOKING_PAGE_COPY = {
   proceedStep2Button: 'Proceed to Payment',
   confirmBookingButton: 'Confirm & Place Booking',
   bookingConfirmedTitle: 'Booking Confirmed!',
+  viewOrderButton: 'View Order Details',
+  continueBrowsingButton: 'Continue Browsing',
 };
 
 export const DEFAULT_ADDRESSES = [

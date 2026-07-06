@@ -19,6 +19,7 @@ interface CheckoutModalProps {
   activeAddress: AddressItem | undefined;
   requirementText: string;
   onFinishBooking: () => void;
+  onViewOrder: () => void;
 }
 
 export function CheckoutModal({
@@ -30,6 +31,7 @@ export function CheckoutModal({
   activeAddress,
   requirementText,
   onFinishBooking,
+  onViewOrder,
 }: CheckoutModalProps) {
   if (!showConfirmation || !activeDate || !activeTime || !activeAddress) return null;
 
@@ -101,12 +103,20 @@ export function CheckoutModal({
           )}
         </div>
 
-        <button
-          onClick={onFinishBooking}
-          className="w-full bg-[#0B2545] hover:bg-[#153459] text-white text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl transition-all cursor-pointer animate-pulse"
-        >
-          Done
-        </button>
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={onViewOrder}
+            className="w-full bg-[#EE5E36] hover:bg-[#d64e29] text-white text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl transition-all cursor-pointer shadow-3xs"
+          >
+            {BOOKING_PAGE_COPY.viewOrderButton}
+          </button>
+          <button
+            onClick={onFinishBooking}
+            className="w-full bg-white border border-[#0B2545]/15 hover:bg-gray-50 text-[#0B2545] text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl transition-all cursor-pointer"
+          >
+            {BOOKING_PAGE_COPY.continueBrowsingButton}
+          </button>
+        </div>
       </div>
     </div>
   );
