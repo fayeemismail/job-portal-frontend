@@ -24,38 +24,39 @@ export function ODPActions({
 
       <button
         onClick={onDownloadInvoice}
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider text-[#0B2545]/80 hover:text-[#EE5E36] hover:bg-[#FFF4F0]/30 transition-all cursor-pointer border border-[#0B2545]/5 hover:border-[#EE5E36]/20"
+        className="btn-animate btn-animate-neutral w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider cursor-pointer"
       >
-        <Download className="w-4.5 h-4.5 text-[#EE5E36]" />
-        <span>{ORDERS_PAGE_COPY.invoicePdfBtn}</span>
+        <Download className="w-4.5 h-4.5 text-[#EE5E36] relative z-10" />
+        <span className="relative z-10">{ORDERS_PAGE_COPY.invoicePdfBtn}</span>
       </button>
 
       {status === 'pending' && (
         <button
           onClick={onReschedule}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider text-[#0B2545]/80 hover:text-[#EE5E36] hover:bg-[#FFF4F0]/30 transition-all cursor-pointer border border-[#0B2545]/5 hover:border-[#EE5E36]/20"
+          className="btn-animate btn-animate-neutral w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider cursor-pointer"
         >
-          <RefreshCw className="w-4.5 h-4.5 text-[#EE5E36]" />
-          <span>{ORDERS_PAGE_COPY.rescheduleBtn}</span>
+          <RefreshCw className="w-4.5 h-4.5 text-[#EE5E36] relative z-10" />
+          <span className="relative z-10">{ORDERS_PAGE_COPY.rescheduleBtn}</span>
         </button>
       )}
 
       {status === 'pending' && (
         <button
           onClick={onCancelBooking}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider text-red-500 hover:text-white hover:bg-red-500 hover:border-red-500 transition-all cursor-pointer border border-red-500/10"
+          className="btn-animate border border-red-500/20 text-red-500 hover:text-white w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider cursor-pointer"
+          style={{ '--btn-hover-bg': '#ef4444' } as React.CSSProperties}
         >
-          <Trash2 className="w-4.5 h-4.5 shrink-0" />
-          <span>{ORDERS_PAGE_COPY.cancelBookingBtn}</span>
+          <Trash2 className="w-4.5 h-4.5 shrink-0 relative z-10" />
+          <span className="relative z-10">{ORDERS_PAGE_COPY.cancelBookingBtn}</span>
         </button>
       )}
 
       <a
         href={BILLING_CONFIG.dispatchTelHref}
-        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider text-[#0B2545]/80 hover:text-[#EE5E36] hover:bg-[#FFF4F0]/30 transition-all cursor-pointer border border-[#0B2545]/5 hover:border-[#EE5E36]/20"
+        className="btn-animate btn-animate-neutral w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider cursor-pointer"
       >
-        <PhoneCall className="w-4.5 h-4.5 text-[#EE5E36]" />
-        <span>{ORDERS_PAGE_COPY.contactDispatchBtn}</span>
+        <PhoneCall className="w-4.5 h-4.5 text-[#EE5E36] relative z-10" />
+        <span className="relative z-10">{ORDERS_PAGE_COPY.contactDispatchBtn}</span>
       </a>
     </div>
   );

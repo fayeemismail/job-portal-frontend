@@ -35,7 +35,7 @@ export function HeroSearch({ selectedLocation, onChangeLocation }: HeroSearchPro
       {/* Square search button */}
       <button
         type="button"
-        className="w-full sm:w-auto p-4 bg-[#EE5E36] hover:bg-[#0B2545] text-white rounded-xl active:scale-95 transition-all duration-300 flex items-center justify-center cursor-pointer shadow-md shadow-[#EE5E36]/15"
+        className="btn-animate btn-animate-primary w-full sm:w-auto p-4 rounded-xl flex items-center justify-center cursor-pointer shadow-md shadow-[#EE5E36]/15"
       >
         <Search className="w-5 h-5" />
       </button>

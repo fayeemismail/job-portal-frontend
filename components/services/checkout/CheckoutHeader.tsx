@@ -28,7 +28,7 @@ export function CheckoutHeader({ step, serviceTitle, serviceId, onPrevStep }: Ch
       {step === 1 ? (
         <Link
           href={`/services/${serviceId}`}
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#0B2545]/60 hover:text-[#EE5E36] transition-colors uppercase tracking-wider group self-start sm:self-center"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#0B2545]/60 hover:text-[#EE5E36] uppercase tracking-wider group self-start sm:self-center active:scale-95 transition-all"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
           {BOOKING_PAGE_COPY.backToDetails}
@@ -36,7 +36,7 @@ export function CheckoutHeader({ step, serviceTitle, serviceId, onPrevStep }: Ch
       ) : (
         <button
           onClick={onPrevStep}
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#0B2545]/60 hover:text-[#EE5E36] transition-colors uppercase tracking-wider group self-start sm:self-center cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#0B2545]/60 hover:text-[#EE5E36] uppercase tracking-wider group self-start sm:self-center cursor-pointer active:scale-95 transition-all"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
           {step === 2 ? BOOKING_PAGE_COPY.backToSchedule : BOOKING_PAGE_COPY.backToRequirements}

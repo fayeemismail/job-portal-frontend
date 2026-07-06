@@ -104,3 +104,71 @@ body {
     border-color: #ee5e36;
   }
 }
+
+/* Conventional, Enterprise-Grade Reusable Action Animations */
+.btn-animate {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.btn-animate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--btn-hover-bg, #0b2545);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.btn-animate:hover::after {
+  transform: scaleY(1);
+}
+
+.btn-animate:active {
+  transform: scale(0.95) !important;
+}
+
+/* Preset variations */
+.btn-animate-primary {
+  background-color: #ee5e36 !important;
+  color: #ffffff !important;
+  --btn-hover-bg: #0b2545;
+}
+
+.btn-animate-secondary {
+  background-color: #0b2545 !important;
+  color: #ffffff !important;
+  --btn-hover-bg: #ee5e36;
+}
+
+.btn-animate-outline {
+  border: 1px solid rgba(238, 94, 54, 0.3);
+  background-color: rgba(255, 244, 240, 0.3);
+  color: #ee5e36 !important;
+  --btn-hover-bg: #ee5e36;
+}
+
+.btn-animate-outline:hover {
+  color: #ffffff !important;
+  border-color: #ee5e36 !important;
+}
+
+.btn-animate-neutral {
+  border: 1px solid rgba(11, 37, 69, 0.15);
+  background-color: #f9fafb;
+  color: #0b2545 !important;
+  --btn-hover-bg: #0b2545;
+}
+
+.btn-animate-neutral:hover {
+  color: #ffffff !important;
+  border-color: #0b2545 !important;
+}

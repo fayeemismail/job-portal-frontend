@@ -110,13 +110,13 @@ export function LocationSelector({
           {/* Current Location Quick Option */}
           <button
             onClick={handleCurrentLocation}
-            className={`w-full flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl border font-bold text-xs tracking-wider uppercase transition-all cursor-pointer select-none active:scale-[0.98] ${
+            className={`w-full flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl border font-bold text-xs tracking-wider uppercase select-none transition-all duration-300 group cursor-pointer ${
               selectedLocation === 'Current Location'
-                ? 'bg-[#FFF4F0] border-[#EE5E36] text-[#EE5E36] shadow-xs'
-                : 'bg-[#FFFBF9] hover:bg-[#FFF4F0] text-[#EE5E36] border-[#EE5E36]/10'
+                ? 'bg-[#FFF4F0] border-[#EE5E36] text-[#EE5E36] shadow-xs active:scale-[0.98]'
+                : 'bg-[#FFFBF9] hover:bg-[#FFF4F0] text-[#EE5E36] border-[#EE5E36]/10 hover:scale-[1.01] hover:shadow-3xs active:scale-[0.98]'
             }`}
           >
-            <Navigation className="w-4 h-4 shrink-0" />
+            <Navigation className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             <span>Use Current Location</span>
           </button>
         </div>
@@ -137,10 +137,10 @@ export function LocationSelector({
                   <button
                     key={locationString}
                     onClick={() => onLocationSelect(locationString)}
-                    className={`w-full flex items-center gap-3.5 p-3 rounded-xl border text-left transition-all duration-200 select-none group cursor-pointer active:scale-[0.99] ${
+                    className={`w-full flex items-center gap-3.5 p-3 rounded-xl border text-left transition-all duration-300 select-none group cursor-pointer active:scale-[0.99] hover:scale-[1.01] hover:shadow-3xs ${
                       isSelected
                         ? 'bg-[#FFF4F0] border-[#EE5E36] text-[#0B2545] shadow-xs'
-                        : 'bg-white border-gray-100 hover:border-[#EE5E36]/20'
+                        : 'bg-white border-gray-100 hover:border-[#EE5E36]/25'
                     }`}
                   >
                     <div
@@ -149,8 +149,10 @@ export function LocationSelector({
                       }`}
                     >
                       <MapPin
-                        className={`w-4.5 h-4.5 transition-colors ${
-                          isSelected ? 'text-white' : 'text-[#EE5E36]'
+                        className={`w-4.5 h-4.5 transition-all duration-300 ${
+                          isSelected
+                            ? 'text-white'
+                            : 'text-[#EE5E36] group-hover:-translate-y-0.5 group-hover:scale-110'
                         }`}
                       />
                     </div>

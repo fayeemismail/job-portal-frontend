@@ -153,7 +153,7 @@ export function ServiceDetails({ service, categoryLabel }: ServiceDetailsProps) 
                 <button
                   type="button"
                   onClick={handleBookNow}
-                  className="w-full bg-[#FF5A36] hover:bg-[#EE4A26] text-white text-xs font-extrabold tracking-wider uppercase py-4 rounded-xl transition-colors duration-200 cursor-pointer shadow-xs active:scale-[0.98]"
+                  className="btn-animate btn-animate-primary w-full text-white text-xs font-extrabold tracking-wider uppercase py-4 rounded-xl cursor-pointer shadow-xs"
                 >
                   {SDP_COPY.bookServiceButton}
                 </button>

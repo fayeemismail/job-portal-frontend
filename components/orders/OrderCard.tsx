@@ -82,10 +82,10 @@ export function OrderCard({ order }: OrderCardProps) {
         <div className="border-t border-gray-100/50 pt-4 mt-auto">
           <Link
             href={`/orders/${order.id}`}
-            className="w-full inline-flex items-center justify-center gap-2 bg-[#0B2545] hover:bg-[#EE5E36] text-white px-5 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-all duration-300 shadow-3xs cursor-pointer group"
+            className="btn-animate btn-animate-secondary w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider shadow-3xs cursor-pointer group"
           >
             <span>{ORDERS_PAGE_COPY.viewDetailsBtn}</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform relative z-10" />
           </Link>
         </div>
       </div>

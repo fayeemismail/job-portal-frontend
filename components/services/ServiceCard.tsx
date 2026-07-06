@@ -90,7 +90,7 @@ export function ServiceCard({ service, categoryLabel }: ServiceCardProps) {
         <Link href={`/services/${service.id}`}>
           <button
             type="button"
-            className="bg-[#FFF4F0] hover:bg-[#EE5E36] text-[#EE5E36] hover:text-white px-5 py-2.5 text-xs font-extrabold rounded-xl transition-all duration-300 cursor-pointer active:scale-95 shadow-2xs"
+            className="btn-animate btn-animate-outline px-5 py-2.5 text-xs font-extrabold rounded-xl cursor-pointer shadow-2xs"
           >
             {BOOK_NOW_LABEL}
           </button>

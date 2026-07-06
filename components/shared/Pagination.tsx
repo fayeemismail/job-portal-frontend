@@ -18,7 +18,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="w-10 h-10 rounded-xl border border-gray-200 hover:border-[#EE5E36]/30 hover:bg-[#FFF4F0]/30 text-[#0B2545] disabled:text-gray-300 disabled:border-gray-100 disabled:hover:bg-transparent transition-all flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
+        className="w-10 h-10 rounded-xl border border-gray-200 hover:border-[#EE5E36]/30 hover:bg-[#FFF4F0]/30 text-[#0B2545] disabled:text-gray-300 disabled:border-gray-100 disabled:hover:bg-transparent active:scale-95 transition-all flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
@@ -27,7 +27,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`w-10 h-10 rounded-xl text-xs font-extrabold tracking-wide transition-all cursor-pointer flex items-center justify-center ${
+          className={`w-10 h-10 rounded-xl text-xs font-extrabold tracking-wide active:scale-95 transition-all cursor-pointer flex items-center justify-center ${
             currentPage === page
               ? 'bg-[#EE5E36] text-white shadow-3xs'
               : 'border border-gray-200 hover:border-[#EE5E36]/30 hover:bg-[#FFF4F0]/30 text-[#0B2545]'
@@ -40,7 +40,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="w-10 h-10 rounded-xl border border-gray-200 hover:border-[#EE5E36]/30 hover:bg-[#FFF4F0]/30 text-[#0B2545] disabled:text-gray-300 disabled:border-gray-100 disabled:hover:bg-transparent transition-all flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
+        className="w-10 h-10 rounded-xl border border-gray-200 hover:border-[#EE5E36]/30 hover:bg-[#FFF4F0]/30 text-[#0B2545] disabled:text-gray-300 disabled:border-gray-100 disabled:hover:bg-transparent active:scale-95 transition-all flex items-center justify-center cursor-pointer disabled:cursor-not-allowed"
       >
         <ChevronRight className="w-5 h-5" />
       </button>

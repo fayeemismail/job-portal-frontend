@@ -109,9 +109,9 @@ export function CheckoutSummary({
                 type="button"
                 onClick={onProceedStep2}
                 disabled={selectedTimeIdx === null}
-                className={`w-full text-white text-xs font-extrabold tracking-widest uppercase py-4 rounded-xl transition-all duration-300 shadow-2xs text-center select-none ${
+                className={`w-full text-white text-xs font-extrabold tracking-widest uppercase py-4 rounded-xl shadow-2xs text-center select-none ${
                   selectedTimeIdx !== null
-                    ? 'bg-[#EE5E36] hover:bg-[#d64e29] hover:shadow-xs cursor-pointer active:scale-[0.98]'
+                    ? 'btn-animate btn-animate-primary cursor-pointer'
                     : 'bg-gray-300/80 cursor-not-allowed opacity-75'
                 }`}
               >
@@ -124,9 +124,9 @@ export function CheckoutSummary({
                 type="button"
                 onClick={onProceedStep3}
                 disabled={!selectedAddressId}
-                className={`w-full text-white text-xs font-extrabold tracking-widest uppercase py-4 rounded-xl transition-all duration-300 shadow-2xs text-center select-none ${
+                className={`w-full text-white text-xs font-extrabold tracking-widest uppercase py-4 rounded-xl shadow-2xs text-center select-none ${
                   selectedAddressId
-                    ? 'bg-[#EE5E36] hover:bg-[#d64e29] hover:shadow-xs cursor-pointer active:scale-[0.98]'
+                    ? 'btn-animate btn-animate-primary cursor-pointer'
                     : 'bg-gray-300/80 cursor-not-allowed opacity-75'
                 }`}
               >
@@ -138,7 +138,7 @@ export function CheckoutSummary({
               <button
                 type="button"
                 onClick={onFinalConfirm}
-                className="w-full bg-[#EE5E36] hover:bg-[#d64e29] text-white text-xs font-extrabold tracking-widest uppercase py-4 rounded-xl transition-all duration-300 shadow-2xs text-center select-none cursor-pointer active:scale-[0.98]"
+                className="btn-animate btn-animate-primary w-full text-white text-xs font-extrabold tracking-widest uppercase py-4 rounded-xl shadow-2xs text-center select-none cursor-pointer"
               >
                 {BOOKING_PAGE_COPY.confirmBookingButton}
               </button>

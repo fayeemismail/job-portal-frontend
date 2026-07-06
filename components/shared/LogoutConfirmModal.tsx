@@ -44,15 +44,17 @@ export function LogoutConfirmModal({ isOpen, onClose, onConfirm }: LogoutConfirm
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 bg-gray-50 hover:bg-gray-100 text-[#0B2545] text-xs font-bold tracking-wider uppercase py-3 rounded-xl transition-all cursor-pointer border border-gray-200/50"
+            className="group relative overflow-hidden flex-1 bg-gray-50 text-[#0B2545] text-xs font-bold tracking-wider uppercase py-3 rounded-xl active:scale-95 transition-all duration-300 cursor-pointer border border-gray-200/50 hover:text-white"
           >
-            Cancel
+            <span className="relative z-10">Cancel</span>
+            <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 bg-red-500 hover:bg-red-600 text-white text-xs font-bold tracking-wider uppercase py-3 rounded-xl transition-all cursor-pointer shadow-3xs"
+            className="group relative overflow-hidden flex-1 bg-red-500 text-white text-xs font-bold tracking-wider uppercase py-3 rounded-xl active:scale-95 transition-all duration-300 cursor-pointer shadow-3xs"
           >
-            Logout
+            <span className="relative z-10">Logout</span>
+            <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
           </button>
         </div>
       </div>
