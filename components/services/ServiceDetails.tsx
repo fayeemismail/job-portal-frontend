@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, ThumbsUp, Share2, ArrowLeft, CheckCircle, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { MapPin, ThumbsUp, Share2, ArrowLeft } from 'lucide-react';
 import { ServiceItem } from './types';
 import { DEFAULT_LOCATION, CATEGORY_PHOTOS, SDP_COPY } from './constants';
 
@@ -13,7 +14,7 @@ interface ServiceDetailsProps {
 
 export function ServiceDetails({ service, categoryLabel }: ServiceDetailsProps) {
   const [liked, setLiked] = useState(false);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const router = useRouter();
 
   // Fallback photos
   const photos = CATEGORY_PHOTOS[service.category] || CATEGORY_PHOTOS.cleaning;
@@ -25,7 +26,7 @@ export function ServiceDetails({ service, categoryLabel }: ServiceDetailsProps) 
   };
 
   const handleBookNow = () => {
-    setBookingSuccess(true);
+    router.push(`/services/${service.id}/book`);
   };
 
   return (
@@ -160,40 +161,7 @@ export function ServiceDetails({ service, categoryLabel }: ServiceDetailsProps) 
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Booking confirmation Overlay/Modal */}
-      {bookingSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="fixed inset-0 bg-[#0B2545]/45 backdrop-blur-xs transition-opacity duration-300"
-            onClick={() => setBookingSuccess(false)}
-          />
-          <div className="relative bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-md w-full text-center z-10 animate-in fade-in zoom-in-95 duration-200 border border-gray-100">
-            <button
-              onClick={() => setBookingSuccess(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors p-1 cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="w-16 h-16 bg-[#FFF4F0] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#EE5E36]/10">
-              <CheckCircle className="w-8 h-8 text-[#EE5E36]" />
-            </div>
-            <h3 className="text-xl font-extrabold text-[#0B2545] tracking-tight mb-2">
-              {SDP_COPY.bookingSuccessTitle}
-            </h3>
-            <p className="text-sm font-semibold text-gray-500 leading-relaxed mb-6">
-              {SDP_COPY.bookingSuccessDesc(service.title)}
-            </p>
-            <button
-              onClick={() => setBookingSuccess(false)}
-              className="w-full bg-[#0B2545] hover:bg-[#153459] text-white text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl transition-all cursor-pointer"
-            >
-              {SDP_COPY.backToServiceButton}
-            </button>
-          </div>
-        </div>
-      )}
+      </div>{' '}
     </div>
   );
 }

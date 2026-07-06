@@ -230,3 +230,42 @@ export const SDP_COPY = {
 
 export const STARTING_FROM_LABEL = 'Starting from';
 export const BOOK_NOW_LABEL = 'Book Now';
+
+export const BOOKING_PAGE_COPY = {
+  title: 'CHOOSE DATE/TIME',
+  urgencyLabel: 'Is This Order Very Urgent?',
+  urgentlyRequired: 'Urgently Required',
+  scheduleForLater: 'Schedule For Later',
+  proceedButton: 'PROCEED',
+  bookingConfirmedTitle: 'Booking Confirmed!',
+  bookingConfirmedDesc: (title: string, date: string, time: string) =>
+    `Your request for ${title} has been booked for ${date} at ${time}. Our service provider will arrive on schedule.`,
+};
+
+export const BOOKING_DATES = [
+  { day: 'Mon', date: '06' },
+  { day: 'Tue', date: '07' },
+  { day: 'Wed', date: '08' },
+  { day: 'Thu', date: '09' },
+  { day: 'Fri', date: '10' },
+  { day: 'Sat', date: '11' },
+];
+
+export const BOOKING_TIME_SLOTS = [
+  '08:00 AM - 10:00 AM',
+  '10:00 AM - 12:00 PM',
+  '12:00 PM - 02:00 PM',
+  '02:00 PM - 04:00 PM',
+  '04:00 PM - 06:00 PM',
+  '06:00 PM - 08:00 PM',
+];
+
+export const PRICING_BREAKDOWN_CONFIGS = [
+  { label: 'First 1 Hr', multiplier: 1.0 },
+  { label: 'Upto 1.5 Hrs', multiplier: 1.25 },
+  { label: 'Upto 2 Hrs', multiplier: 1.5 },
+  { label: 'Upto 2.5 Hrs', multiplier: 1.8 },
+  { label: 'Upto 3 Hrs', multiplier: 2.0 },
+  { label: 'Upto 3.5 Hrs', multiplier: 2.25 },
+  { label: 'Upto 4 Hrs', multiplier: 2.5 },
+];
