@@ -17,10 +17,19 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [profileExpanded, setProfileExpanded] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(() => authCookie.get());
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const activeItem = getActiveItemLabel(pathname, NAV_ITEMS);
 
+  // Sync initially on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoggedIn(authCookie.get());
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Sync when drawer opens
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {

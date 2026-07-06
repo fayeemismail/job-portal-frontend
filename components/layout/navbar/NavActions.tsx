@@ -1,14 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Phone, User, LogOut, ClipboardList } from 'lucide-react';
 import { CONTACT_CONFIG, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
 import { authCookie } from '@/utils/auth-cookie';
 
 export function NavActions() {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => authCookie.get());
+  // Initialize to false to match server-side HTML rendering (prevents hydration mismatch)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Sync with client-side cookie value after hydration
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoggedIn(authCookie.get());
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleLogout = () => {
     authCookie.set(false);
