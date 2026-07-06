@@ -113,6 +113,11 @@ export default function BookingFlowPage() {
     router.push(`/services/${id}`);
   };
 
+  const handleViewOrder = () => {
+    setShowConfirmation(false);
+    router.push(`/orders/ORD-8947A`);
+  };
+
   return (
     <div className="bg-white min-h-screen pb-20 pt-10 font-sans text-[#0B2545]">
       <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -197,6 +202,7 @@ export default function BookingFlowPage() {
         activeAddress={activeAddress}
         requirementText={requirementText}
         onFinishBooking={handleFinishBooking}
+        onViewOrder={handleViewOrder}
       />
     </div>
   );

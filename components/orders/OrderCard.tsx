@@ -1,15 +1,15 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Calendar, Clock, DollarSign, ArrowRight } from 'lucide-react';
 import { OrderItem, ORDERS_PAGE_COPY, ORDER_STATUS_STYLES } from './constants';
 
 interface OrderCardProps {
   order: OrderItem;
-  onViewDetails: (order: OrderItem) => void;
 }
 
-export function OrderCard({ order, onViewDetails }: OrderCardProps) {
+export function OrderCard({ order }: OrderCardProps) {
   return (
     <div className="bg-[#FFFBF9] border border-[#EE5E36]/10 rounded-3xl overflow-hidden hover:border-[#EE5E36]/25 transition-all duration-300 flex flex-col">
       {/* Service Image Header */}
@@ -80,13 +80,13 @@ export function OrderCard({ order, onViewDetails }: OrderCardProps) {
 
         {/* Action View */}
         <div className="border-t border-gray-100/50 pt-4 mt-auto">
-          <button
-            onClick={() => onViewDetails(order)}
+          <Link
+            href={`/orders/${order.id}`}
             className="w-full inline-flex items-center justify-center gap-2 bg-[#0B2545] hover:bg-[#EE5E36] text-white px-5 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider transition-all duration-300 shadow-3xs cursor-pointer group"
           >
             <span>{ORDERS_PAGE_COPY.viewDetailsBtn}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
       </div>
     </div>
