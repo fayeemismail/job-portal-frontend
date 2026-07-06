@@ -1,110 +1,184 @@
 'use client';
 
-import { useState } from 'react';
-import { MapPin, Navigation } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { MapPin, Navigation, X, Search, Check } from 'lucide-react';
 import { suggestedLocations } from '@/lib/data';
-import { locationCookie } from '@/utils/location-cookie';
 
 interface LocationSelectorProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedLocation: string;
   onLocationSelect: (location: string) => void;
 }
 
-export function LocationSelector({ onLocationSelect }: LocationSelectorProps) {
-  const [selectedLocation, setSelectedLocation] = useState('');
+export function LocationSelector({
+  isOpen,
+  onClose,
+  selectedLocation,
+  onLocationSelect,
+}: LocationSelectorProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const modalRef = useRef<HTMLDivElement>(null);
 
-  const selectLocation = (location: string) => {
-    setSelectedLocation(location);
+  // Close modal on ESC keypress
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
-    // Save location in cookie
-    locationCookie.set(location);
+  if (!isOpen) return null;
 
-    setTimeout(() => {
-      onLocationSelect(location);
-    }, 300);
-  };
-
-  const handleLocationClick = (location: string) => {
-    selectLocation(location);
-  };
+  // Filter locations based on search query
+  const filteredLocations = suggestedLocations.filter(
+    (loc) =>
+      loc.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      loc.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      loc.country.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleCurrentLocation = () => {
-    selectLocation('Current Location');
+    onLocationSelect('Current Location');
   };
 
   return (
-    <div className="flex-1 bg-linear-to-br from-white via-[#FFF8E7] to-white flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-[#D4AF37] to-[#FFD700] rounded-full mb-6">
-            <MapPin className="w-10 h-10 text-white" />
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+      {/* Backdrop with transition */}
+      <div
+        className="fixed inset-0 bg-[#0B2545]/45 backdrop-blur-xs transition-opacity duration-300 animate-in fade-in"
+        onClick={onClose}
+      />
+
+      {/* Modal Content container */}
+      <div
+        ref={modalRef}
+        className="relative bg-white rounded-3xl shadow-2xl border border-gray-100 max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh] z-10 animate-in fade-in zoom-in-95 duration-200"
+      >
+        {/* Header */}
+        <div className="p-6 pb-4 border-b border-gray-100 flex items-start justify-between">
+          <div>
+            <h2 className="text-xl font-extrabold text-[#0B2545] tracking-tight">
+              Select Location
+            </h2>
+            <p className="text-[#0B2545]/60 text-xs mt-1 font-medium">
+              Find top-rated professionals and services in your area
+            </p>
           </div>
-
-          <h1 className="mb-3 text-[#6e6e6e]">Select Your Location</h1>
-
-          <p className="text-[#6e6e6e]">
-            Choose your preferred location to find the best job opportunities near you
-          </p>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-full hover:bg-[#FFF4F0] text-gray-400 hover:text-[#EE5E36] transition-all cursor-pointer"
+            aria-label="Close modal"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg border border-border overflow-hidden">
-          <div className="p-6">
-            <h3 className="mb-4 text-[#6e6e6e]">Popular Locations</h3>
+        {/* Search & Action Box */}
+        <div className="p-6 pb-4 flex flex-col gap-3">
+          {/* Search Input */}
+          <div className="relative flex items-center">
+            <Search className="absolute left-4 w-4 h-4 text-gray-400 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search city, state or country..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:border-[#EE5E36] focus:bg-white transition-all text-sm font-medium text-gray-800 placeholder-gray-400 shadow-inner"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-4 text-xs font-semibold text-gray-400 hover:text-[#EE5E36] cursor-pointer"
+              >
+                Clear
+              </button>
+            )}
+          </div>
 
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {suggestedLocations.map((location) => {
+          {/* Current Location Quick Option */}
+          <button
+            onClick={handleCurrentLocation}
+            className={`w-full flex items-center justify-center gap-2.5 py-3 px-4 rounded-xl border font-bold text-xs tracking-wider uppercase transition-all cursor-pointer select-none active:scale-[0.98] ${
+              selectedLocation === 'Current Location'
+                ? 'bg-[#FFF4F0] border-[#EE5E36] text-[#EE5E36] shadow-xs'
+                : 'bg-[#FFFBF9] hover:bg-[#FFF4F0] text-[#EE5E36] border-[#EE5E36]/10'
+            }`}
+          >
+            <Navigation className="w-4 h-4 shrink-0" />
+            <span>Use Current Location</span>
+          </button>
+        </div>
+
+        {/* Suggested / Filtered Locations List */}
+        <div className="flex-1 overflow-y-auto px-6 pb-6 pr-4 max-h-[320px] scrollbar-thin">
+          <h3 className="text-xs font-bold text-[#0B2545]/40 tracking-wider uppercase mb-3">
+            {searchQuery ? 'Search Results' : 'Popular Locations'}
+          </h3>
+
+          <div className="space-y-2">
+            {filteredLocations.length > 0 ? (
+              filteredLocations.map((location) => {
                 const locationString = `${location.city}, ${location.state}`;
-
                 const isSelected = selectedLocation === locationString;
 
                 return (
                   <button
                     key={locationString}
-                    onClick={() => handleLocationClick(locationString)}
-                    className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${
+                    onClick={() => onLocationSelect(locationString)}
+                    className={`w-full flex items-center gap-3.5 p-3 rounded-xl border text-left transition-all duration-200 select-none group cursor-pointer active:scale-[0.99] ${
                       isSelected
-                        ? 'bg-linear-to-r from-[#D4AF37] to-[#FFD700] border-[#D4AF37] text-white'
-                        : 'bg-white border-border hover:border-[#D4AF37] hover:bg-[#FFF8E7]'
+                        ? 'bg-[#FFF4F0] border-[#EE5E36] text-[#0B2545] shadow-xs'
+                        : 'bg-white border-gray-100 hover:border-[#EE5E36]/20'
                     }`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        isSelected ? 'bg-white/20' : 'bg-[#FFF8E7]'
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+                        isSelected ? 'bg-[#EE5E36]' : 'bg-[#FFF4F0] group-hover:bg-[#EE5E36]/10'
                       }`}
                     >
                       <MapPin
-                        className={`w-5 h-5 ${isSelected ? 'text-white' : 'text-[#D4AF37]'}`}
+                        className={`w-4.5 h-4.5 transition-colors ${
+                          isSelected ? 'text-white' : 'text-[#EE5E36]'
+                        }`}
                       />
                     </div>
 
-                    <div className="flex-1 text-left">
-                      <div
-                        className={`font-medium ${isSelected ? 'text-white' : 'text-[#6e6e6e]'}`}
-                      >
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold truncate text-[#0B2545]">
                         {location.city}
                       </div>
-
-                      <div className={`text-sm ${isSelected ? 'text-white/80' : 'text-[#6e6e6e]'}`}>
+                      <div className="text-xs truncate text-gray-400 font-medium">
                         {location.state}, {location.country}
                       </div>
                     </div>
+
+                    {isSelected && (
+                      <div className="w-5 h-5 rounded-full bg-[#EE5E36] flex items-center justify-center text-white shrink-0 animate-in zoom-in-75 duration-150">
+                        <Check className="w-3 h-3 stroke-3" />
+                      </div>
+                    )}
                   </button>
                 );
-              })}
-            </div>
-          </div>
-
-          <div className="border-t border-border p-6">
-            <button
-              onClick={handleCurrentLocation}
-              className={`w-full flex items-center justify-center gap-3 p-4 rounded-xl border transition-all ${
-                selectedLocation === 'Current Location'
-                  ? 'bg-linear-to-r from-[#D4AF37] to-[#FFD700] border-[#D4AF37] text-white'
-                  : 'bg-linear-to-r from-[#D4AF37] to-[#FFD700] hover:from-[#B8860B] hover:to-[#DAA520] text-white border-[#D4AF37]'
-              }`}
-            >
-              <Navigation className="w-5 h-5" />
-              <span>Use Current Location</span>
-            </button>
+              })
+            ) : (
+              <div className="text-center py-8">
+                <MapPin className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-gray-400">No locations found</p>
+                <p className="text-xs text-gray-300 mt-1">Try another search term</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
