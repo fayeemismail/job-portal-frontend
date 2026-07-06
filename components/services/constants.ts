@@ -179,3 +179,54 @@ export const MOCK_SERVICES: ServiceItem[] = [
     },
   },
 ];
+
+export const DEFAULT_LOCATION = 'New York, USA';
+
+export const DEFAULT_SKILLS_TAGS = ['Gardening', 'Handyman', 'Plumber', '+12'];
+
+export const CATEGORY_PHOTOS: Record<string, string[]> = {
+  cleaning: [
+    'https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=400&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=400&auto=format&fit=crop&q=80',
+  ],
+  plumbing: [
+    'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop&q=80',
+  ],
+  electrical: [
+    'https://images.unsplash.com/photo-1621905252507-b354bc25edac?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1558224494-ef663bb5953e?w=400&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1460518451285-97b6ba326861?w=400&auto=format&fit=crop&q=80',
+  ],
+  carpentry: [
+    'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&auto=format&fit=crop&q=80',
+  ],
+  painting: [
+    'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&auto=format&fit=crop&q=80',
+  ],
+};
+
+export const SDP_COPY = {
+  backToServices: 'Back to services',
+  appreciation: 'Appreciation',
+  operatorRole: 'Service Operator',
+  serviceDetailsHeading: 'Service Details',
+  packageNameLabel: 'Package Name',
+  startingAtLabel: 'Starting At',
+  bookServiceButton: 'Book Service',
+  bookingSuccessTitle: 'Booking Request Received!',
+  bookingSuccessDesc: (title: string) =>
+    `Thank you for booking the ${title}. A certified coordinator will contact you shortly to confirm the scheduled date and time.`,
+  backToServiceButton: 'Back to Service',
+  fallbackDescription:
+    ' Consectetur adipisicing elit sed do eiusmod tempor incididunt utna labore etnalorale magna aliqua enim ad minim veniam quis nostrud exercite.',
+};
+
+export const STARTING_FROM_LABEL = 'Starting from';
+export const BOOK_NOW_LABEL = 'Book Now';
