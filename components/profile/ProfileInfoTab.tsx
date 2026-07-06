@@ -48,7 +48,7 @@ export function ProfileInfoTab({
         {!isEditingProfile && (
           <button
             onClick={onStartEditProfile}
-            className="inline-flex items-center gap-1.5 px-4 py-2 border border-[#0B2545]/15 hover:border-[#EE5E36] hover:text-[#EE5E36] rounded-xl text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 border border-[#EE5E36]/30 bg-[#FFF4F0]/30 text-[#EE5E36] hover:bg-[#EE5E36] hover:text-white hover:border-[#EE5E36] rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
           >
             <Edit2 className="w-3.5 h-3.5" />
             {PROFILE_DASHBOARD_COPY.editInfoBtn}

@@ -134,7 +134,7 @@ export function AddressesTab({
                     <div className="flex items-center gap-3 border-t border-gray-50 pt-3">
                       <button
                         onClick={() => onStartEditAddress(addr)}
-                        className="inline-flex items-center gap-1 text-[10px] font-extrabold text-[#0B2545]/60 hover:text-[#EE5E36] uppercase tracking-wider cursor-pointer"
+                        className="inline-flex items-center gap-1 text-[10px] font-extrabold text-[#EE5E36] hover:text-[#d64e29] uppercase tracking-wider cursor-pointer"
                       >
                         <Edit2 className="w-3 h-3" />
                         Edit
