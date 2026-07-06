@@ -5,6 +5,7 @@ import { LocationSelector } from '@/components/shared/LocationSelector';
 import { locationCookie } from '@/utils/location-cookie';
 import { Hero } from './Hero';
 import { Categories } from './Categories';
+import { FeaturedServices } from './FeaturedServices';
 import { HowItWorks } from './HowItWorks';
 
 interface HomeProps {
@@ -34,6 +35,9 @@ export default function Home({ initialLocation }: HomeProps) {
 
       {/* Popular Categories Section */}
       <Categories />
+
+      {/* Featured Services Section */}
+      <FeaturedServices />
 
       {/* How It Works Section */}
       <HowItWorks />

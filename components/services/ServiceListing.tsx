@@ -1,26 +1,64 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, ArrowUpDown, X } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { Search, SlidersHorizontal, ArrowUpDown, X, ChevronDown } from 'lucide-react';
 import { MOCK_SERVICES, SERVICE_CATEGORIES, SORT_OPTIONS } from './constants';
 import { ServiceCard } from './ServiceCard';
 import { ServiceFilters } from './ServiceFilters';
 import { SortKey } from './types';
+import { Pagination } from '@/components/shared/Pagination';
 
 export function ServiceListing() {
-  // 1. States
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
+  // 1. States (Init category list directly from searchParams)
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    categoryParam ? [categoryParam] : []
+  );
   const [maxPrice, setMaxPrice] = useState(250);
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState<SortKey>('popular');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortOpen, setSortOpen] = useState(false);
 
-  // 2. Event Handlers
+  const PAGE_SIZE = 9;
+
+  // 2. Event Handlers (Resetting currentPage dynamically when query/filter/sort parameters update)
   const handleCategoryToggle = (category: string) => {
     setSelectedCategories((prev) =>
       prev.includes(category) ? prev.filter((id) => id !== category) : [...prev, category]
     );
+    setCurrentPage(1);
+  };
+
+  const handleRemoveCategory = (catId: string) => {
+    setSelectedCategories((prev) => prev.filter((id) => id !== catId));
+    setCurrentPage(1);
+  };
+
+  const handlePriceChange = (val: number) => {
+    setMaxPrice(val);
+    setCurrentPage(1);
+  };
+
+  const handleRatingChange = (val: number) => {
+    setMinRating(val);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (key: SortKey) => {
+    setSortBy(key);
+    setSortOpen(false);
+    setCurrentPage(1);
   };
 
   const handleResetFilters = () => {
@@ -29,10 +67,7 @@ export function ServiceListing() {
     setMaxPrice(250);
     setMinRating(0);
     setSortBy('popular');
-  };
-
-  const handleRemoveCategory = (catId: string) => {
-    setSelectedCategories((prev) => prev.filter((id) => id !== catId));
+    setCurrentPage(1);
   };
 
   // 3. Memoized Filtered & Sorted Listings
@@ -52,63 +87,43 @@ export function ServiceListing() {
       result = result.filter((s) => selectedCategories.includes(s.category));
     }
 
-    // Filter by Price limit
+    // Filter by Max Price
     result = result.filter((s) => s.price <= maxPrice);
 
-    // Filter by Rating stars
-    if (minRating > 0) {
-      result = result.filter((s) => s.rating >= minRating);
-    }
+    // Filter by Min Rating
+    result = result.filter((s) => s.rating >= minRating);
 
-    // Sort result
+    // Sorting operations
     if (sortBy === 'price-asc') {
       result.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price-desc') {
       result.sort((a, b) => b.price - a.price);
     } else if (sortBy === 'rating-desc') {
       result.sort((a, b) => b.rating - a.rating);
-    } else {
-      // Default: 'popular' (by reviewCount)
-      result.sort((a, b) => b.reviewCount - a.reviewCount);
     }
 
     return result;
   }, [searchQuery, selectedCategories, maxPrice, minRating, sortBy]);
 
-  // Total active filter count
-  const activeFiltersCount =
-    selectedCategories.length + (maxPrice < 250 ? 1 : 0) + (minRating > 0 ? 1 : 0);
+  const activeFiltersCount = selectedCategories.length + (searchQuery.trim() ? 1 : 0);
 
   return (
-    <main className="grow bg-[#FAFAFA] py-12 select-none">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
-        {/* Title Header */}
-        <div className="mb-10 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#0B2545] leading-tight mb-2">
-            Explore Professional Services
-          </h1>
-          <p className="text-gray-500 text-sm sm:text-base max-w-xl">
-            Find and book top-rated local handymen, plumbers, cleaners, and electricians instantly.
-          </p>
-        </div>
-
-        {/* 1. Top Search and Actions Bar */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          {/* Search Field */}
-          <div className="relative flex-1 group">
+    <div className="bg-white min-h-screen py-16 font-sans text-[#0B2545]">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 space-y-8">
+        {/* 1. Header with search bar and filter controls */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-gray-100 pb-6">
+          <div className="relative w-full sm:max-w-md shrink-0">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-400" />
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search services (e.g. cleaning, plumbing)..."
-              className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-sm text-[#0B2545] placeholder-gray-400 focus:outline-hidden focus:border-[#EE5E36]/50 shadow-xs transition-colors"
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="Search services (e.g. cleaning, pipe leak)..."
+              className="w-full bg-[#FFFBF9] border border-[#EE5E36]/10 rounded-2xl pl-11 pr-10 py-3.5 text-xs font-semibold text-[#0B2545] focus:outline-hidden focus:border-[#EE5E36] placeholder-gray-400"
             />
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-              <Search className="w-5 h-5" />
-            </div>
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => handleSearchChange('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
                 <X className="w-4.5 h-4.5" />
@@ -131,20 +146,46 @@ export function ServiceListing() {
               )}
             </button>
 
-            {/* Sorting Dropdown */}
-            <div className="relative flex items-center bg-white border border-gray-100 rounded-2xl px-4 py-3.5 shadow-xs w-full sm:w-auto">
-              <ArrowUpDown className="w-4.5 h-4.5 text-[#EE5E36] mr-2 shrink-0" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortKey)}
-                className="bg-transparent text-sm font-bold text-[#0B2545] focus:outline-hidden cursor-pointer appearance-none pr-6 w-full"
+            {/* Custom Sorting Dropdown */}
+            <div className="relative w-full sm:w-auto z-30">
+              <button
+                type="button"
+                onClick={() => setSortOpen(!sortOpen)}
+                className="flex items-center justify-between bg-white border border-gray-100 rounded-2xl px-4 py-3.5 shadow-xs w-full sm:w-56 cursor-pointer text-left focus:outline-hidden select-none hover:border-gray-200"
               >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.key} value={opt.key}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                <div className="flex items-center">
+                  <ArrowUpDown className="w-4 h-4 text-[#EE5E36] mr-2.5 shrink-0" />
+                  <span className="text-xs sm:text-sm font-bold text-[#0B2545]">
+                    {SORT_OPTIONS.find((o) => o.key === sortBy)?.label}
+                  </span>
+                </div>
+                <ChevronDown
+                  className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+                    sortOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              {sortOpen && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setSortOpen(false)} />
+                  <div className="absolute right-0 top-full mt-2 w-full bg-white border border-gray-100 rounded-2xl shadow-xl z-25 overflow-hidden py-1.5 animate-in fade-in duration-200">
+                    {SORT_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.key}
+                        onClick={() => handleSortChange(opt.key)}
+                        className={`w-full text-left px-4 py-2.5 text-xs sm:text-sm font-semibold transition-colors ${
+                          sortBy === opt.key
+                            ? 'bg-[#FFF4F0] text-[#EE5E36] font-bold'
+                            : 'text-[#0B2545] hover:bg-gray-50'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -160,54 +201,38 @@ export function ServiceListing() {
               return (
                 <div
                   key={catId}
-                  className="bg-white border border-gray-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-[#0B2545] shadow-xs"
+                  className="inline-flex items-center gap-1.5 bg-[#FFF4F0]/60 border border-[#EE5E36]/10 px-3 py-1.5 rounded-xl text-xs font-bold text-[#EE5E36]"
                 >
                   <span>{label}</span>
                   <button
                     onClick={() => handleRemoveCategory(catId)}
-                    className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                    className="p-0.5 hover:bg-white rounded-full transition-colors cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               );
             })}
-            {maxPrice < 250 && (
-              <div className="bg-white border border-gray-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-[#0B2545] shadow-xs">
-                <span>Under ${maxPrice}</span>
-                <button
-                  onClick={() => setMaxPrice(250)}
-                  className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
-            {minRating > 0 && (
-              <div className="bg-white border border-gray-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold text-[#0B2545] shadow-xs">
-                <span>{minRating}+ Stars</span>
-                <button
-                  onClick={() => setMinRating(0)}
-                  className="text-gray-400 hover:text-gray-600 cursor-pointer"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
+            <button
+              onClick={handleResetFilters}
+              className="text-xs text-gray-400 hover:text-[#EE5E36] font-extrabold uppercase tracking-wider underline cursor-pointer px-1 py-1"
+            >
+              Clear All
+            </button>
           </div>
         )}
 
-        {/* 3. Columns Content Section */}
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Desktop Filters Panel */}
-          <aside className="hidden md:block w-[280px] shrink-0">
+        {/* 3. Main content body layout split */}
+        <div className="flex flex-col md:flex-row gap-8 items-start">
+          {/* Desktop Filters panel sticky sidebar */}
+          <aside className="hidden md:block w-72 shrink-0 sticky top-28 bg-[#FFFBF9] border border-[#EE5E36]/10 p-6 rounded-3xl space-y-6">
             <ServiceFilters
               selectedCategories={selectedCategories}
               maxPrice={maxPrice}
               minRating={minRating}
               onCategoryChange={handleCategoryToggle}
-              onPriceChange={setMaxPrice}
-              onRatingChange={setMinRating}
+              onPriceChange={handlePriceChange}
+              onRatingChange={handleRatingChange}
               onReset={handleResetFilters}
             />
           </aside>
@@ -215,12 +240,10 @@ export function ServiceListing() {
           {/* Mobile Filters panel drawer overlay */}
           {mobileFiltersOpen && (
             <div className="fixed inset-0 z-50 md:hidden flex justify-end">
-              {/* Backdrop */}
               <div
                 className="absolute inset-0 bg-black/40 backdrop-blur-xs"
                 onClick={() => setMobileFiltersOpen(false)}
               />
-              {/* Content Drawer */}
               <div className="relative w-full max-w-xs bg-white h-full p-6 overflow-y-auto flex flex-col gap-6 animate-slide-left shadow-2xl">
                 <div className="flex justify-between items-center pb-4 border-b border-gray-100">
                   <h3 className="text-lg font-bold text-[#0B2545]">Filter Options</h3>
@@ -236,8 +259,8 @@ export function ServiceListing() {
                   maxPrice={maxPrice}
                   minRating={minRating}
                   onCategoryChange={handleCategoryToggle}
-                  onPriceChange={setMaxPrice}
-                  onRatingChange={setMinRating}
+                  onPriceChange={handlePriceChange}
+                  onRatingChange={handleRatingChange}
                   onReset={handleResetFilters}
                 />
               </div>
@@ -247,14 +270,23 @@ export function ServiceListing() {
           {/* Listing Grid */}
           <div className="flex-1">
             {filteredServices.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredServices.map((service) => {
-                  const catLabel =
-                    SERVICE_CATEGORIES.find((c) => c.id === service.category)?.label || '';
-                  return (
-                    <ServiceCard key={service.id} service={service} categoryLabel={catLabel} />
-                  );
-                })}
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredServices
+                    .slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+                    .map((service) => {
+                      const catLabel =
+                        SERVICE_CATEGORIES.find((c) => c.id === service.category)?.label || '';
+                      return (
+                        <ServiceCard key={service.id} service={service} categoryLabel={catLabel} />
+                      );
+                    })}
+                </div>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={Math.ceil(filteredServices.length / PAGE_SIZE)}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             ) : (
               // Empty State
@@ -276,6 +308,6 @@ export function ServiceListing() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

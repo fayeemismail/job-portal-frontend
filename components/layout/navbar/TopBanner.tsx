@@ -26,13 +26,6 @@ export function TopBanner({ isOpen, onClose }: TopBannerProps) {
         </span>
       </div>
       <div className="flex items-center gap-4">
-        <a
-          href={BANNER_CONFIG.buyNowUrl}
-          className="group relative overflow-hidden bg-[#82b440] text-white text-xs font-semibold px-4 py-2 rounded-[4px] shadow-sm active:scale-95 transition-all duration-300"
-        >
-          <span className="relative z-10">{BANNER_CONFIG.buyNowLabel}</span>
-          <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
-        </a>
         <button
           onClick={onClose}
           className="text-gray-400 hover:text-white p-1 transition-colors duration-200 cursor-pointer"

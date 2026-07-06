@@ -40,7 +40,7 @@ export function ProfileSidebar({
             setActiveTab('profile');
             onTabChange();
           }}
-          className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-xs font-extrabold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+          className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-xs font-extrabold tracking-wider uppercase active:scale-95 transition-all cursor-pointer ${
             activeTab === 'profile'
               ? 'bg-[#FFF4F0] text-[#EE5E36] shadow-3xs'
               : 'text-[#0B2545]/60 hover:text-[#EE5E36] hover:bg-[#FFF4F0]/10'
@@ -54,7 +54,7 @@ export function ProfileSidebar({
             setActiveTab('addresses');
             onTabChange();
           }}
-          className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-xs font-extrabold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+          className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-xs font-extrabold tracking-wider uppercase active:scale-95 transition-all cursor-pointer ${
             activeTab === 'addresses'
               ? 'bg-[#FFF4F0] text-[#EE5E36] shadow-3xs'
               : 'text-[#0B2545]/60 hover:text-[#EE5E36] hover:bg-[#FFF4F0]/10'

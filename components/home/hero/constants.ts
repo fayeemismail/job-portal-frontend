@@ -25,7 +25,7 @@ export const CUSTOMER_AVATARS = [
 
 export const SOCIAL_PROOF_CONFIG = {
   customerCount: '2k+ Customers',
-  satisfactionLabel: 'Satisfied with Servat services',
+  satisfactionLabel: 'Satisfied with Ainorax - Service Provider services',
 };
 
 export const SEARCH_CONFIG = {

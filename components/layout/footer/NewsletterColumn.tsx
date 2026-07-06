@@ -32,7 +32,7 @@ export function NewsletterColumn() {
         />
         <button
           type="submit"
-          className="px-6 py-3 bg-[#EE5E36] hover:bg-[#0B2545] text-white font-bold text-sm rounded-lg transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 whitespace-nowrap shadow-sm"
+          className="btn-animate btn-animate-primary px-6 py-3 text-white font-bold text-sm rounded-lg flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap shadow-sm"
         >
           <span>{NEWSLETTER_COPY.buttonLabel}</span>
           <ArrowUpRight className="w-4 h-4" />

@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { Phone, User, LogOut, ClipboardList } from 'lucide-react';
 import { CONTACT_CONFIG, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
 import { authCookie } from '@/utils/auth-cookie';
+import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
 
 export function NavActions() {
   // Initialize to false to match server-side HTML rendering (prevents hydration mismatch)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // Sync with client-side cookie value after hydration
   useEffect(() => {
@@ -20,8 +22,14 @@ export function NavActions() {
   }, []);
 
   const handleLogout = () => {
+    setShowDropdown(false);
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
     authCookie.set(false);
     setIsLoggedIn(false);
+    setShowLogoutModal(false);
   };
 
   const handleLogin = () => {
@@ -93,21 +101,24 @@ export function NavActions() {
           <Link
             href={AUTH_CONFIG.signInHref}
             onClick={handleLogin}
-            className="group relative overflow-hidden px-6 py-2.5 text-[15px] font-semibold text-[#0B2545] hover:text-white border border-[#0B2545]/20 hover:border-[#0B2545] rounded-lg transition-colors duration-300"
+            className="btn-animate btn-animate-neutral px-6 py-2.5 text-[15px] font-semibold rounded-lg cursor-pointer"
           >
             <span className="relative z-10">{AUTH_CONFIG.signInLabel}</span>
-            <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
           </Link>
           <Link
             href={AUTH_CONFIG.signUpHref}
             onClick={handleLogin}
-            className="group relative overflow-hidden px-6 py-2.5 text-[15px] font-semibold text-white bg-[#EE5E36] rounded-lg active:scale-95 shadow-md shadow-[#EE5E36]/10 hover:shadow-[#0B2545]/20 transition-all duration-300"
+            className="btn-animate btn-animate-primary px-6 py-2.5 text-[15px] font-semibold rounded-lg cursor-pointer shadow-md shadow-[#EE5E36]/10"
           >
             <span className="relative z-10">{AUTH_CONFIG.signUpLabel}</span>
-            <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
           </Link>
         </div>
       )}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </div>
   );
 }

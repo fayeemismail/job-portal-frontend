@@ -103,16 +103,16 @@ export function CheckoutModal({
           )}
         </div>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 mt-6">
           <button
             onClick={onViewOrder}
-            className="w-full bg-[#EE5E36] hover:bg-[#d64e29] text-white text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl transition-all cursor-pointer shadow-3xs"
+            className="btn-animate btn-animate-primary w-full text-white text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl cursor-pointer shadow-3xs"
           >
             {BOOKING_PAGE_COPY.viewOrderButton}
           </button>
           <button
             onClick={onFinishBooking}
-            className="w-full bg-white border border-[#0B2545]/15 hover:bg-gray-50 text-[#0B2545] text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl transition-all cursor-pointer"
+            className="btn-animate btn-animate-neutral w-full text-xs font-bold tracking-wider uppercase py-3.5 rounded-xl cursor-pointer"
           >
             {BOOKING_PAGE_COPY.continueBrowsingButton}
           </button>

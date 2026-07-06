@@ -178,6 +178,59 @@ export const MOCK_SERVICES: ServiceItem[] = [
       completedJobs: 95,
     },
   },
+  {
+    id: 's10',
+    title: 'Door Installation & Repair',
+    description:
+      'Hanging new interior/exterior doors, lock/deadbolt installation, hinge adjustments.',
+    category: 'carpentry',
+    price: 55,
+    priceType: 'hourly',
+    rating: 4.8,
+    reviewCount: 37,
+    imageUrl: '/service-carpentry.png',
+    provider: {
+      name: 'Marcus Vance',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+      rating: 4.92,
+      completedJobs: 95,
+    },
+  },
+  {
+    id: 's11',
+    title: 'Exterior House Painting',
+    description:
+      'Full surface prep, pressure washing, priming, and double coat painting on exterior walls.',
+    category: 'painting',
+    price: 180,
+    priceType: 'fixed',
+    rating: 4.9,
+    reviewCount: 54,
+    imageUrl: '/service-painting.png',
+    provider: {
+      name: 'Sarah Jenkins',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+      rating: 4.95,
+      completedJobs: 340,
+    },
+  },
+  {
+    id: 's12',
+    title: 'Full House Water Inspection',
+    description: 'Check water mains, check pressure ratings, find leaks, and test drain quality.',
+    category: 'plumbing',
+    price: 65,
+    priceType: 'fixed',
+    rating: 4.7,
+    reviewCount: 22,
+    imageUrl: '/service-plumbing.png',
+    provider: {
+      name: 'Thomas Miller',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+      rating: 4.82,
+      completedJobs: 210,
+    },
+  },
 ];
 
 export const DEFAULT_LOCATION = 'New York, USA';

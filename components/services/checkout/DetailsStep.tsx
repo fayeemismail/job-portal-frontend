@@ -85,7 +85,7 @@ export function DetailsStep({
           <button
             type="button"
             onClick={() => setShowAddressForm(!showAddressForm)}
-            className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#EE5E36] uppercase tracking-wider hover:underline"
+            className="inline-flex items-center gap-1 text-[11px] font-extrabold text-[#EE5E36] uppercase tracking-wider hover:underline active:scale-95 transition-all cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             {BOOKING_PAGE_COPY.addNewAddressLabel}
@@ -218,7 +218,7 @@ export function DetailsStep({
 
           <button
             type="submit"
-            className="w-full bg-[#0B2545] hover:bg-[#1c406c] text-white text-xs font-extrabold tracking-wider uppercase py-3 rounded-xl transition-all cursor-pointer mt-2"
+            className="btn-animate btn-animate-secondary w-full text-white text-xs font-extrabold tracking-wider uppercase py-3 rounded-xl cursor-pointer mt-2"
           >
             {BOOKING_PAGE_COPY.saveAddressButton}
           </button>

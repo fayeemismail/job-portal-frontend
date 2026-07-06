@@ -19,7 +19,7 @@ export const FOOTER_ABOUT = {
 
 export const FOOTER_LOGO = {
   src: '/logo-black.png',
-  alt: 'Servat handyman service portal logo',
+  alt: 'Ainorax - Service Provider handyman service portal logo',
   href: '/',
 };
 
@@ -41,7 +41,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: 'Company',
     links: [
       { label: 'Contact Us', href: '/contact' },
-      { label: 'Servat Blog', href: '/blog' },
+      { label: 'Ainorax - Service Provider Blog', href: '/blog' },
       { label: 'Engineering Blog', href: '/engineering-blog' },
       { label: 'Marketplace', href: '/marketplace' },
       { label: 'Social Good', href: '/social-good' },
@@ -52,7 +52,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     links: [
       { label: 'Help Topics', href: '/help' },
       { label: 'Post A Job', href: '/post-a-job' },
-      { label: 'Servat Pro', href: '/pro' },
+      { label: 'Ainorax - Service Provider Pro', href: '/pro' },
       { label: 'FAQs', href: '/faqs' },
       { label: 'Verify', href: '/verify' },
     ],

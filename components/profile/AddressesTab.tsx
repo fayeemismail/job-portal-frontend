@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Plus, Map, Building, Home, Edit2, Trash2, X, Save } from 'lucide-react';
 import { PROFILE_DASHBOARD_COPY } from './constants';
 
@@ -73,6 +74,8 @@ export function AddressesTab({
   onSaveEditAddress,
   onDeleteAddress,
 }: AddressesTabProps) {
+  const [deletingAddressId, setDeletingAddressId] = useState<string | null>(null);
+
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       {/* Addresses List grid cards */}
@@ -89,10 +92,13 @@ export function AddressesTab({
             </div>
             <button
               onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center gap-1.5 bg-[#EE5E36] hover:bg-[#d64e29] text-white px-4 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer shadow-3xs"
+              className="group relative overflow-hidden inline-flex items-center gap-1.5 px-4 py-2 border border-[#EE5E36]/30 bg-[#FFF4F0]/30 text-[#EE5E36] hover:text-white hover:border-[#EE5E36] rounded-xl text-xs font-extrabold uppercase tracking-wider active:scale-95 transition-all duration-300 cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
-              {PROFILE_DASHBOARD_COPY.addAddressBtn}
+              <span className="relative z-10 flex items-center gap-1.5">
+                <Plus className="w-4 h-4" />
+                {PROFILE_DASHBOARD_COPY.addAddressBtn}
+              </span>
+              <span className="absolute inset-0 bg-[#EE5E36] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
             </button>
           </div>
 
@@ -134,14 +140,14 @@ export function AddressesTab({
                     <div className="flex items-center gap-3 border-t border-gray-50 pt-3">
                       <button
                         onClick={() => onStartEditAddress(addr)}
-                        className="inline-flex items-center gap-1 text-[10px] font-extrabold text-[#EE5E36] hover:text-[#d64e29] uppercase tracking-wider cursor-pointer"
+                        className="inline-flex items-center gap-1 text-[10px] font-extrabold text-[#EE5E36] hover:text-[#d64e29] uppercase tracking-wider active:scale-95 transition-all cursor-pointer"
                       >
                         <Edit2 className="w-3 h-3" />
                         Edit
                       </button>
                       <button
-                        onClick={() => onDeleteAddress(addr.id)}
-                        className="inline-flex items-center gap-1 text-[10px] font-extrabold text-red-500/80 hover:text-red-600 uppercase tracking-wider ml-auto cursor-pointer"
+                        onClick={() => setDeletingAddressId(addr.id)}
+                        className="inline-flex items-center gap-1 text-[10px] font-extrabold text-red-500/80 hover:text-red-600 uppercase tracking-wider ml-auto active:scale-95 transition-all cursor-pointer"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         Delete
@@ -252,15 +258,15 @@ export function AddressesTab({
           <div className="flex items-center gap-3 pt-2">
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 bg-[#EE5E36] hover:bg-[#d64e29] text-white px-5 py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer shadow-3xs"
+              className="btn-animate btn-animate-primary inline-flex items-center gap-1.5 px-5 py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider cursor-pointer shadow-3xs"
             >
-              <Save className="w-3.5 h-3.5" />
-              {PROFILE_DASHBOARD_COPY.saveAddressBtn}
+              <Save className="w-3.5 h-3.5 relative z-10" />
+              <span className="relative z-10">{PROFILE_DASHBOARD_COPY.saveAddressBtn}</span>
             </button>
             <button
               type="button"
               onClick={() => setShowAddForm(false)}
-              className="px-5 py-3 border border-[#0B2545]/15 hover:bg-gray-50 text-[#0B2545]/60 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer"
+              className="btn-animate btn-animate-neutral px-5 py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider cursor-pointer"
             >
               {PROFILE_DASHBOARD_COPY.cancelBtn}
             </button>
@@ -360,20 +366,68 @@ export function AddressesTab({
           <div className="flex items-center gap-3 pt-2">
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 bg-[#EE5E36] hover:bg-[#d64e29] text-white px-5 py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer shadow-3xs"
+              className="btn-animate btn-animate-primary inline-flex items-center gap-1.5 px-5 py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider cursor-pointer shadow-3xs"
             >
-              <Save className="w-3.5 h-3.5" />
-              {PROFILE_DASHBOARD_COPY.saveChangesBtn}
+              <Save className="w-3.5 h-3.5 relative z-10" />
+              <span className="relative z-10">{PROFILE_DASHBOARD_COPY.saveChangesBtn}</span>
             </button>
             <button
               type="button"
               onClick={() => setEditingAddressId(null)}
-              className="px-5 py-3 border border-[#0B2545]/15 hover:bg-gray-50 text-[#0B2545]/60 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer"
+              className="btn-animate btn-animate-neutral px-5 py-3 rounded-xl text-xs font-extrabold uppercase tracking-wider cursor-pointer"
             >
               {PROFILE_DASHBOARD_COPY.cancelBtn}
             </button>
           </div>
         </form>
+      )}
+
+      {/* Delete Address Confirmation Modal */}
+      {deletingAddressId && (
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 bg-[#0B2545]/45 backdrop-blur-xs transition-opacity duration-300"
+            onClick={() => setDeletingAddressId(null)}
+          />
+          <div className="relative bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center z-10 animate-in fade-in zoom-in-95 duration-200 border border-gray-100">
+            <button
+              onClick={() => setDeletingAddressId(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors p-1 cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-100">
+              <Trash2 className="w-8 h-8 text-red-500" />
+            </div>
+
+            <h3 className="text-lg font-extrabold text-[#0B2545] tracking-tight mb-2">
+              Delete Address
+            </h3>
+            <p className="text-xs font-semibold text-gray-500 mb-6 leading-relaxed">
+              Are you sure you want to delete this address? This action cannot be undone.
+            </p>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeletingAddressId(null)}
+                className="btn-animate btn-animate-neutral flex-1 text-xs font-bold tracking-wider uppercase py-3 rounded-xl cursor-pointer"
+              >
+                <span className="relative z-10">Cancel</span>
+              </button>
+              <button
+                onClick={() => {
+                  onDeleteAddress(deletingAddressId);
+                  setDeletingAddressId(null);
+                }}
+                className="btn-animate border border-red-500/20 text-red-500 hover:text-white flex-1 text-xs font-bold tracking-wider uppercase py-3 rounded-xl cursor-pointer"
+                style={{ '--btn-hover-bg': '#ef4444' } as React.CSSProperties}
+              >
+                <span className="relative z-10">Delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
