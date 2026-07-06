@@ -7,6 +7,7 @@ import { ChevronDown, Phone, User, LogOut, ClipboardList } from 'lucide-react';
 import { NAV_ITEMS, CONTACT_CONFIG, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
 import { getActiveItemLabel } from './utils';
 import { authCookie } from '@/utils/auth-cookie';
+import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [profileExpanded, setProfileExpanded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const activeItem = getActiveItemLabel(pathname, NAV_ITEMS);
 
@@ -40,9 +42,14 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   }, [isOpen]);
 
   const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
     authCookie.set(false);
     setIsLoggedIn(false);
     setProfileExpanded(false);
+    setShowLogoutModal(false);
     onClose();
   };
 
@@ -194,6 +201,11 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
           )}
         </div>
       </div>
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </div>
   );
 }

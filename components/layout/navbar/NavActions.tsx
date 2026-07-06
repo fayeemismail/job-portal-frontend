@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { Phone, User, LogOut, ClipboardList } from 'lucide-react';
 import { CONTACT_CONFIG, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
 import { authCookie } from '@/utils/auth-cookie';
+import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
 
 export function NavActions() {
   // Initialize to false to match server-side HTML rendering (prevents hydration mismatch)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // Sync with client-side cookie value after hydration
   useEffect(() => {
@@ -20,8 +22,14 @@ export function NavActions() {
   }, []);
 
   const handleLogout = () => {
+    setShowDropdown(false);
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
     authCookie.set(false);
     setIsLoggedIn(false);
+    setShowLogoutModal(false);
   };
 
   const handleLogin = () => {
@@ -108,6 +116,11 @@ export function NavActions() {
           </Link>
         </div>
       )}
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </div>
   );
 }

@@ -89,7 +89,7 @@ export function AddressesTab({
             </div>
             <button
               onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center gap-1.5 bg-[#EE5E36] hover:bg-[#d64e29] text-white px-4 py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-colors cursor-pointer shadow-3xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2 border border-[#EE5E36]/30 bg-[#FFF4F0]/30 text-[#EE5E36] hover:bg-[#EE5E36] hover:text-white hover:border-[#EE5E36] rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               {PROFILE_DASHBOARD_COPY.addAddressBtn}

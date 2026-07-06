@@ -5,12 +5,28 @@ import { Search, X, ClipboardList } from 'lucide-react';
 import { MOCK_ORDERS, ORDERS_PAGE_COPY } from '@/components/orders/constants';
 import { OrdersFilters } from '@/components/orders/OrdersFilters';
 import { OrderCard } from '@/components/orders/OrderCard';
+import { Pagination } from '@/components/shared/Pagination';
 
 type FilterType = 'all' | 'active' | 'completed' | 'cancelled';
+
+const PAGE_SIZE = 6;
 
 export default function UserOrdersPage() {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Wrapper for active filter changes
+  const handleFilterChange = (filter: FilterType) => {
+    setActiveFilter(filter);
+    setCurrentPage(1);
+  };
+
+  // Wrapper for search query changes
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    setCurrentPage(1);
+  };
 
   // Filter logic
   const filteredOrders = MOCK_ORDERS.filter((order) => {
@@ -37,6 +53,12 @@ export default function UserOrdersPage() {
     return true;
   });
 
+  const totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE);
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
   return (
     <div className="bg-white min-h-screen py-16 font-sans text-[#0B2545]">
       <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -50,7 +72,7 @@ export default function UserOrdersPage() {
 
         {/* Filters and Search Bar row */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <OrdersFilters activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+          <OrdersFilters activeFilter={activeFilter} setActiveFilter={handleFilterChange} />
 
           {/* Search bar */}
           <div className="relative w-full md:max-w-xs shrink-0">
@@ -58,13 +80,13 @@ export default function UserOrdersPage() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder={ORDERS_PAGE_COPY.searchPlaceholder}
               className="w-full bg-[#FFFBF9] border border-[#EE5E36]/10 rounded-2xl pl-10 pr-10 py-3 text-xs font-semibold text-[#0B2545] focus:outline-none focus:border-[#EE5E36] placeholder-gray-400"
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => handleSearchChange('')}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#0B2545] cursor-pointer"
               >
                 <X className="w-4 h-4" />
@@ -80,10 +102,19 @@ export default function UserOrdersPage() {
             <p>{ORDERS_PAGE_COPY.noOrdersMsg}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredOrders.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))}
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedOrders.map((order) => (
+                <OrderCard key={order.id} order={order} />
+              ))}
+            </div>
+
+            {/* Pagination controls */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         )}
       </div>

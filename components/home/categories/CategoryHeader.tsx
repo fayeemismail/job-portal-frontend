@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { CATEGORIES_HEADER } from './constants';
 
@@ -31,13 +32,15 @@ export function CategoryHeader() {
         </h2>
       </div>
 
-      <button
-        type="button"
-        className="w-fit px-6 py-4 bg-[#EE5E36] hover:bg-[#0B2545] text-white font-bold text-sm tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer shadow-md shadow-[#EE5E36]/15 hover:shadow-lg"
-      >
-        <span>{CATEGORIES_HEADER.buttonLabel}</span>
-        <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-      </button>
+      <Link href="/services" className="w-fit">
+        <button
+          type="button"
+          className="w-full px-6 py-4 bg-[#EE5E36] hover:bg-[#0B2545] text-white font-bold text-sm tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer shadow-md shadow-[#EE5E36]/15 hover:shadow-lg"
+        >
+          <span>{CATEGORIES_HEADER.buttonLabel}</span>
+          <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </button>
+      </Link>
     </div>
   );
 }
