@@ -52,7 +52,7 @@ export const USER_PROFILE_CONFIG = {
   initials: 'JD',
   myAccountLabel: 'My Account',
   profileLabel: 'My Profile',
-  profileHref: '/workers/profile',
+  profileHref: '/profile',
   ordersLabel: 'My Orders',
   ordersHref: '#',
   logoutLabel: 'Logout',
