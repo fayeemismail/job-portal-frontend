@@ -230,3 +230,95 @@ export const SDP_COPY = {
 
 export const STARTING_FROM_LABEL = 'Starting from';
 export const BOOK_NOW_LABEL = 'Book Now';
+
+export const BOOKING_PAGE_COPY = {
+  titleStep1: 'Choose Date & Time',
+  titleStep2: 'Booking Details',
+  titleStep3: 'Payment & Confirmation',
+  backToDetails: 'Back to details',
+  backToSchedule: 'Back to schedule',
+  backToRequirements: 'Back to requirements',
+  selectDateLabel: 'Select Date',
+  selectTimeLabel: 'Select Time Slot',
+  requirementsLabel: 'Requirement Details',
+  describeRequirementsSub: 'Describe what you need done',
+  requirementsPlaceholder:
+    'Please provide details (e.g. Bring extra long ladder, leaky pipeline is under the cabinet, or check toilet handle...)',
+  chooseAddressLabel: 'Choose Address',
+  addNewAddressLabel: 'Add New',
+  createAddressTitle: 'Create New Address',
+  addressFormLabels: {
+    type: 'Label (e.g. Home, Work, Cabin)',
+    street: 'Street Address',
+    city: 'City',
+    state: 'State',
+    zip: 'ZIP Code',
+  },
+  saveAddressButton: 'Save Address',
+  orderReviewTitle: 'Review Booking Details',
+  orderReviewLabels: {
+    schedule: 'Schedule Selected',
+    notes: 'Your Instructions',
+    address: 'Delivery Address',
+    payment: 'Payment Method',
+    service: 'Service',
+    date: 'Date:',
+    time: 'Time:',
+    addr: 'Address:',
+    note: 'Notes:',
+    pay: 'Payment:',
+  },
+  paymentMethodTitle: 'Choose Payment Method',
+  codTitle: 'Cash on Delivery (COD) / Pay After Service',
+  codDescription:
+    'Pay directly to our certified professional in cash, card, or mobile transfer once the service is fully completed to your satisfaction.',
+  summaryTitle: 'Booking Summary',
+  pricingBreakdownTitle: 'Pricing Breakdown',
+  proceedButton: 'PROCEED',
+  proceedStep2Button: 'Proceed to Payment',
+  confirmBookingButton: 'Confirm & Place Booking',
+  bookingConfirmedTitle: 'Booking Confirmed!',
+};
+
+export const DEFAULT_ADDRESSES = [
+  {
+    id: 'addr-1',
+    label: 'Home',
+    street: '123 Broadway St, Apt 4B',
+    cityStateZip: 'New York, NY 10001',
+  },
+  {
+    id: 'addr-2',
+    label: 'Office',
+    street: '450 Lexington Ave, Floor 12',
+    cityStateZip: 'New York, NY 10017',
+  },
+];
+
+export const BOOKING_DATES = [
+  { day: 'Mon', date: '06' },
+  { day: 'Tue', date: '07' },
+  { day: 'Wed', date: '08' },
+  { day: 'Thu', date: '09' },
+  { day: 'Fri', date: '10' },
+  { day: 'Sat', date: '11' },
+];
+
+export const BOOKING_TIME_SLOTS = [
+  '08:00 AM - 10:00 AM',
+  '10:00 AM - 12:00 PM',
+  '12:00 PM - 02:00 PM',
+  '02:00 PM - 04:00 PM',
+  '04:00 PM - 06:00 PM',
+  '06:00 PM - 08:00 PM',
+];
+
+export const PRICING_BREAKDOWN_CONFIGS = [
+  { label: 'First 1 Hr', multiplier: 1.0 },
+  { label: 'Upto 1.5 Hrs', multiplier: 1.25 },
+  { label: 'Upto 2 Hrs', multiplier: 1.5 },
+  { label: 'Upto 2.5 Hrs', multiplier: 1.8 },
+  { label: 'Upto 3 Hrs', multiplier: 2.0 },
+  { label: 'Upto 3.5 Hrs', multiplier: 2.25 },
+  { label: 'Upto 4 Hrs', multiplier: 2.5 },
+];
