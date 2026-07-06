@@ -54,6 +54,6 @@ export const USER_PROFILE_CONFIG = {
   profileLabel: 'My Profile',
   profileHref: '/profile',
   ordersLabel: 'My Orders',
-  ordersHref: '#',
+  ordersHref: '/orders',
   logoutLabel: 'Logout',
 };
