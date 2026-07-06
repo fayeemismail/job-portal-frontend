@@ -44,17 +44,16 @@ export function LogoutConfirmModal({ isOpen, onClose, onConfirm }: LogoutConfirm
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="group relative overflow-hidden flex-1 bg-gray-50 text-[#0B2545] text-xs font-bold tracking-wider uppercase py-3 rounded-xl active:scale-95 transition-all duration-300 cursor-pointer border border-gray-200/50 hover:text-white"
+            className="btn-animate btn-animate-neutral flex-1 text-xs font-bold tracking-wider uppercase py-3 rounded-xl cursor-pointer"
           >
             <span className="relative z-10">Cancel</span>
-            <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
           </button>
           <button
             onClick={onConfirm}
-            className="group relative overflow-hidden flex-1 bg-red-500 text-white text-xs font-bold tracking-wider uppercase py-3 rounded-xl active:scale-95 transition-all duration-300 cursor-pointer shadow-3xs"
+            className="btn-animate border border-red-500/20 text-red-500 hover:text-white flex-1 text-xs font-bold tracking-wider uppercase py-3 rounded-xl cursor-pointer"
+            style={{ '--btn-hover-bg': '#ef4444' } as React.CSSProperties}
           >
             <span className="relative z-10">Logout</span>
-            <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
           </button>
         </div>
       </div>

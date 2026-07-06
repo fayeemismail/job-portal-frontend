@@ -123,13 +123,14 @@ body {
   inset: 0;
   background-color: var(--btn-hover-bg, #0b2545);
   transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: -1;
 }
 
 .btn-animate:hover::after {
   transform: scaleY(1);
+  transform-origin: bottom;
 }
 
 .btn-animate:active {

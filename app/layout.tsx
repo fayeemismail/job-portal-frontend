@@ -4,7 +4,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  title: 'Servat - Handyman Service Provider',
+  title: 'Ainorax - Service Provider',
   description: 'Find top-rated local service providers.',
 };
 

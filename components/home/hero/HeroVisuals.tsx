@@ -11,7 +11,7 @@ export function HeroVisuals() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={HERO_ASSETS.girlHexagonVisual}
-          alt="Servat service provider cleaner"
+          alt="Ainorax - Service Provider cleaner"
           className="w-full h-auto object-contain select-none pointer-events-none"
         />
       </div>

@@ -184,18 +184,16 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               <Link
                 href={AUTH_CONFIG.signInHref}
                 onClick={handleLogin}
-                className="group relative overflow-hidden w-full text-center py-2.5 text-sm font-semibold text-[#0B2545] hover:text-white border border-[#0B2545]/20 hover:border-[#0B2545] rounded-lg transition-colors duration-300"
+                className="btn-animate btn-animate-neutral w-full text-center py-2.5 text-sm font-semibold rounded-lg cursor-pointer"
               >
                 <span className="relative z-10">{AUTH_CONFIG.signInLabel}</span>
-                <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
               </Link>
               <Link
                 href={AUTH_CONFIG.signUpHref}
                 onClick={handleLogin}
-                className="group relative overflow-hidden w-full text-center py-2.5 text-sm font-semibold text-white bg-[#EE5E36] rounded-lg transition-colors duration-300"
+                className="btn-animate btn-animate-primary w-full text-center py-2.5 text-sm font-semibold rounded-lg cursor-pointer shadow-md shadow-[#EE5E36]/10"
               >
                 <span className="relative z-10">{AUTH_CONFIG.signUpLabel}</span>
-                <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
               </Link>
             </div>
           )}

@@ -27,7 +27,7 @@ export const BANNER_CONFIG = {
 
 export const LOGO_CONFIG = {
   src: '/logo-black.png',
-  alt: 'Servat Logo',
+  alt: 'Ainorax - Service Provider Logo',
   href: '/',
 };
 

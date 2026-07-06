@@ -35,13 +35,12 @@ export function CategoryHeader() {
       <Link href="/services" className="w-fit block">
         <button
           type="button"
-          className="group relative overflow-hidden w-full px-6 py-4 bg-[#EE5E36] text-white font-bold text-sm tracking-wider rounded-xl active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#EE5E36]/15 hover:shadow-lg"
+          className="btn-animate btn-animate-primary w-full px-6 py-4 font-bold text-sm tracking-wider rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-[#EE5E36]/15 hover:shadow-lg"
         >
           <span className="relative z-10 flex items-center gap-2">
             <span>{CATEGORIES_HEADER.buttonLabel}</span>
-            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 relative z-10" />
           </span>
-          <span className="absolute inset-0 bg-[#0B2545] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
         </button>
       </Link>
     </div>
