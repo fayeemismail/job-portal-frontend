@@ -15,7 +15,6 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
 ];
 
 export const BANNER_CONFIG = {
@@ -47,4 +46,14 @@ export const AUTH_CONFIG = {
 export const NAV_UTILITY_CONFIG = {
   defaultActiveLabel: 'Home',
   toggleMenuAriaLabel: 'Toggle menu',
+};
+
+export const USER_PROFILE_CONFIG = {
+  initials: 'JD',
+  myAccountLabel: 'My Account',
+  profileLabel: 'My Profile',
+  profileHref: '/workers/profile',
+  ordersLabel: 'My Orders',
+  ordersHref: '#',
+  logoutLabel: 'Logout',
 };
