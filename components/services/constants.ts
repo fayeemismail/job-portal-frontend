@@ -232,15 +232,68 @@ export const STARTING_FROM_LABEL = 'Starting from';
 export const BOOK_NOW_LABEL = 'Book Now';
 
 export const BOOKING_PAGE_COPY = {
-  title: 'CHOOSE DATE/TIME',
-  urgencyLabel: 'Is This Order Very Urgent?',
-  urgentlyRequired: 'Urgently Required',
-  scheduleForLater: 'Schedule For Later',
+  titleStep1: 'Choose Date & Time',
+  titleStep2: 'Booking Details',
+  titleStep3: 'Payment & Confirmation',
+  backToDetails: 'Back to details',
+  backToSchedule: 'Back to schedule',
+  backToRequirements: 'Back to requirements',
+  selectDateLabel: 'Select Date',
+  selectTimeLabel: 'Select Time Slot',
+  requirementsLabel: 'Requirement Details',
+  describeRequirementsSub: 'Describe what you need done',
+  requirementsPlaceholder:
+    'Please provide details (e.g. Bring extra long ladder, leaky pipeline is under the cabinet, or check toilet handle...)',
+  chooseAddressLabel: 'Choose Address',
+  addNewAddressLabel: 'Add New',
+  createAddressTitle: 'Create New Address',
+  addressFormLabels: {
+    type: 'Label (e.g. Home, Work, Cabin)',
+    street: 'Street Address',
+    city: 'City',
+    state: 'State',
+    zip: 'ZIP Code',
+  },
+  saveAddressButton: 'Save Address',
+  orderReviewTitle: 'Review Booking Details',
+  orderReviewLabels: {
+    schedule: 'Schedule Selected',
+    notes: 'Your Instructions',
+    address: 'Delivery Address',
+    payment: 'Payment Method',
+    service: 'Service',
+    date: 'Date:',
+    time: 'Time:',
+    addr: 'Address:',
+    note: 'Notes:',
+    pay: 'Payment:',
+  },
+  paymentMethodTitle: 'Choose Payment Method',
+  codTitle: 'Cash on Delivery (COD) / Pay After Service',
+  codDescription:
+    'Pay directly to our certified professional in cash, card, or mobile transfer once the service is fully completed to your satisfaction.',
+  summaryTitle: 'Booking Summary',
+  pricingBreakdownTitle: 'Pricing Breakdown',
   proceedButton: 'PROCEED',
+  proceedStep2Button: 'Proceed to Payment',
+  confirmBookingButton: 'Confirm & Place Booking',
   bookingConfirmedTitle: 'Booking Confirmed!',
-  bookingConfirmedDesc: (title: string, date: string, time: string) =>
-    `Your request for ${title} has been booked for ${date} at ${time}. Our service provider will arrive on schedule.`,
 };
+
+export const DEFAULT_ADDRESSES = [
+  {
+    id: 'addr-1',
+    label: 'Home',
+    street: '123 Broadway St, Apt 4B',
+    cityStateZip: 'New York, NY 10001',
+  },
+  {
+    id: 'addr-2',
+    label: 'Office',
+    street: '450 Lexington Ave, Floor 12',
+    cityStateZip: 'New York, NY 10017',
+  },
+];
 
 export const BOOKING_DATES = [
   { day: 'Mon', date: '06' },
