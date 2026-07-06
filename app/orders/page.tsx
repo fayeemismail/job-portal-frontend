@@ -2,17 +2,15 @@
 
 import { useState } from 'react';
 import { Search, X, ClipboardList } from 'lucide-react';
-import { MOCK_ORDERS, ORDERS_PAGE_COPY, OrderItem } from '@/components/orders/constants';
+import { MOCK_ORDERS, ORDERS_PAGE_COPY } from '@/components/orders/constants';
 import { OrdersFilters } from '@/components/orders/OrdersFilters';
 import { OrderCard } from '@/components/orders/OrderCard';
-import { OrderDetailModal } from '@/components/orders/OrderDetailModal';
 
 type FilterType = 'all' | 'active' | 'completed' | 'cancelled';
 
 export default function UserOrdersPage() {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState<OrderItem | null>(null);
 
   // Filter logic
   const filteredOrders = MOCK_ORDERS.filter((order) => {
@@ -84,13 +82,10 @@ export default function UserOrdersPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredOrders.map((order) => (
-              <OrderCard key={order.id} order={order} onViewDetails={setSelectedOrder} />
+              <OrderCard key={order.id} order={order} />
             ))}
           </div>
         )}
-
-        {/* Details Inspector Modal Overlay */}
-        <OrderDetailModal order={selectedOrder} onClose={() => setSelectedOrder(null)} />
       </div>
     </div>
   );

@@ -201,6 +201,35 @@ export const ORDERS_PAGE_COPY = {
   dateCardLabel: 'Date',
   timeCardLabel: 'Time Slot',
   priceCardLabel: 'Price',
+  // ODP specific copies
+  bookingDetailsTitle: 'Booking Details',
+  backToBookingsBtn: 'Back to Bookings',
+  bookingNotFoundTitle: 'Booking Not Found',
+  bookingNotFoundSubtitle: 'The order reference you are looking for does not exist or has expired.',
+  scheduledDateLabel: 'Scheduled Date',
+  timeWindowLabel: 'Time Window',
+  serviceDestinationLabel: 'Service Destination',
+  paymentModeLabel: 'Payment Mode',
+  receiptBreakdownTitle: 'Receipt Breakdown',
+  baseBookingRateLabel: 'Base Booking Rate',
+  fixedServiceFeeLabel: 'Fixed service fee',
+  taxesLabel: 'Taxes (8%)',
+  finalTotalLabel: 'Final Total',
+  bookingActionsTitle: 'Booking Actions',
+  invoicePdfBtn: 'Invoice PDF',
+  rescheduleBtn: 'Reschedule',
+  cancelBookingBtn: 'Cancel Booking',
+  contactDispatchBtn: 'Contact Dispatch',
+  confirmCancelPrompt: 'Are you sure you want to cancel this booking?',
+  toastCancelSuccess: 'Booking cancelled successfully.',
+  toastDownloadInvoice: 'Receipt download started.',
+  toastRescheduleSent: 'Reschedule request sent to support.',
+};
+
+export const BILLING_CONFIG = {
+  flatServiceFee: 7.5,
+  taxRate: 0.08,
+  dispatchTelHref: 'tel:+15550192834',
 };
 
 export const ORDER_STATUS_STYLES: Record<OrderItem['status'], string> = {
