@@ -37,7 +37,7 @@ export function SignInForm() {
   return (
     <div className="w-full h-full bg-white grid grid-cols-1 md:grid-cols-12 relative animate-in fade-in duration-500 overflow-hidden">
       {/* Left Column: Value Proposition Panel */}
-      <div className="hidden md:flex md:col-span-5 bg-gradient-to-br from-[#0B2545] via-[#0E2F59] to-[#154680] p-10 text-white flex-col justify-between relative overflow-hidden h-full">
+      <div className="hidden md:flex md:col-span-5 bg-linear-to-br from-[#0B2545] via-[#0E2F59] to-[#154680] p-10 text-white flex-col justify-between relative overflow-hidden h-full">
         {/* Subtle decorative orb */}
         <div className="absolute top-[-20%] right-[-20%] w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
 
