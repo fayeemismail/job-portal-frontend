@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Phone, User, LogOut, ClipboardList } from 'lucide-react';
-import { NAV_ITEMS, CONTACT_CONFIG, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
+import { ChevronDown, User, LogOut, ClipboardList } from 'lucide-react';
+import { NAV_ITEMS, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
 import { getActiveItemLabel } from './utils';
 import { authCookie } from '@/utils/auth-cookie';
 import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
@@ -164,15 +164,6 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
         {/* Mobile Right Section */}
         <div className="pt-4 border-t border-gray-100 space-y-4">
-          <a
-            href={CONTACT_CONFIG.href}
-            onClick={onClose}
-            className="flex items-center gap-2 px-3 text-[#0B2545]"
-          >
-            <Phone className="w-4 h-4 text-[#EE5E36]" />
-            <span className="text-sm font-semibold tracking-wider">{CONTACT_CONFIG.phone}</span>
-          </a>
-
           {!isLoggedIn && (
             <div className="grid grid-cols-2 gap-3 px-3">
               <Link

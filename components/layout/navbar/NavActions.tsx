@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Phone, User, LogOut, ClipboardList } from 'lucide-react';
-import { CONTACT_CONFIG, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
+import { User, LogOut, ClipboardList } from 'lucide-react';
+import { AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
 import { authCookie } from '@/utils/auth-cookie';
 import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
 
@@ -34,15 +34,6 @@ export function NavActions() {
 
   return (
     <div className="hidden lg:flex items-center space-x-8 h-full">
-      {/* Phone Contact */}
-      <a
-        href={CONTACT_CONFIG.href}
-        className="flex items-center gap-2 text-[#0B2545] hover:text-[#EE5E36] transition-colors duration-300 cursor-pointer group"
-      >
-        <Phone className="w-4 h-4 text-[#EE5E36] group-hover:animate-pulse" />
-        <span className="text-[15px] font-semibold select-none">{CONTACT_CONFIG.phone}</span>
-      </a>
-
       {isLoggedIn ? (
         /* Logged In - My Account Dropdown */
         <div

@@ -31,11 +31,6 @@ export const LOGO_CONFIG = {
   href: '/',
 };
 
-export const CONTACT_CONFIG = {
-  phone: '+48 615 579 822',
-  href: 'tel:+48615579822',
-};
-
 export const AUTH_CONFIG = {
   signInHref: '/signin',
   signUpHref: '/signup',
