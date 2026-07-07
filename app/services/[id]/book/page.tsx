@@ -52,8 +52,6 @@ export default function BookingFlowPage() {
   const [newState, setNewState] = useState('');
   const [newZip, setNewZip] = useState('');
 
-
-
   // Computed variables
   const activeDate = selectedDateIdx !== null ? BOOKING_DATES[selectedDateIdx] : null;
   const activeTime = selectedTimeIdx !== null ? BOOKING_TIME_SLOTS[selectedTimeIdx] : null;

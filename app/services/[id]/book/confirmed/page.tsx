@@ -1,11 +1,7 @@
 'use client';
 
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
-import {
-  MOCK_SERVICES,
-  BOOKING_DATES,
-  BOOKING_TIME_SLOTS,
-} from '@/components/services/constants';
+import { MOCK_SERVICES, BOOKING_DATES, BOOKING_TIME_SLOTS } from '@/components/services/constants';
 import { BookingConfirmed } from '@/components/services/checkout/BookingConfirmed';
 
 export default function BookingConfirmedPage() {
