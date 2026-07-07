@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { TopBanner } from './navbar/TopBanner';
 import { Logo } from './navbar/Logo';
@@ -10,6 +11,7 @@ import { MobileNav } from './navbar/MobileNav';
 import { NAV_UTILITY_CONFIG } from './navbar/constants';
 
 export function Navbar() {
+  const pathname = usePathname();
   const [bannerOpen, setBannerOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -27,6 +29,10 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <>

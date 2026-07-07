@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { AboutColumn } from './footer/AboutColumn';
 import { LinksColumn } from './footer/LinksColumn';
 import { NewsletterColumn } from './footer/NewsletterColumn';
@@ -15,6 +16,12 @@ import {
 } from './footer/constants';
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <footer
       className={`w-full ${FOOTER_COLORS.bgLight} border-t ${FOOTER_COLORS.borderLight} flex flex-col pt-16 select-none`}
