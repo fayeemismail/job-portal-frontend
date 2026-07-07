@@ -32,11 +32,6 @@ export function NavActions() {
     setShowLogoutModal(false);
   };
 
-  const handleLogin = () => {
-    authCookie.set(true);
-    setIsLoggedIn(true);
-  };
-
   return (
     <div className="hidden lg:flex items-center space-x-8 h-full">
       {/* Phone Contact */}
@@ -100,14 +95,12 @@ export function NavActions() {
         <div className="flex items-center space-x-3">
           <Link
             href={AUTH_CONFIG.signInHref}
-            onClick={handleLogin}
             className="btn-animate btn-animate-neutral px-6 py-2.5 text-[15px] font-semibold rounded-lg cursor-pointer"
           >
             <span className="relative z-10">{AUTH_CONFIG.signInLabel}</span>
           </Link>
           <Link
             href={AUTH_CONFIG.signUpHref}
-            onClick={handleLogin}
             className="btn-animate btn-animate-primary px-6 py-2.5 text-[15px] font-semibold rounded-lg cursor-pointer shadow-md shadow-[#EE5E36]/10"
           >
             <span className="relative z-10">{AUTH_CONFIG.signUpLabel}</span>

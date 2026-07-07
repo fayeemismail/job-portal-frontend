@@ -53,12 +53,6 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
     onClose();
   };
 
-  const handleLogin = () => {
-    authCookie.set(true);
-    setIsLoggedIn(true);
-    onClose();
-  };
-
   return (
     <div
       className={`lg:hidden transition-all duration-300 ease-in-out border-t border-gray-100 ${
@@ -183,14 +177,12 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             <div className="grid grid-cols-2 gap-3 px-3">
               <Link
                 href={AUTH_CONFIG.signInHref}
-                onClick={handleLogin}
                 className="btn-animate btn-animate-neutral w-full text-center py-2.5 text-sm font-semibold rounded-lg cursor-pointer"
               >
                 <span className="relative z-10">{AUTH_CONFIG.signInLabel}</span>
               </Link>
               <Link
                 href={AUTH_CONFIG.signUpHref}
-                onClick={handleLogin}
                 className="btn-animate btn-animate-primary w-full text-center py-2.5 text-sm font-semibold rounded-lg cursor-pointer shadow-md shadow-[#EE5E36]/10"
               >
                 <span className="relative z-10">{AUTH_CONFIG.signUpLabel}</span>
