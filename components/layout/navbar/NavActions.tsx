@@ -30,6 +30,7 @@ export function NavActions() {
     authCookie.set(false);
     setIsLoggedIn(false);
     setShowLogoutModal(false);
+    window.location.href = '/';
   };
 
   return (

@@ -51,6 +51,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
     setProfileExpanded(false);
     setShowLogoutModal(false);
     onClose();
+    window.location.href = '/';
   };
 
   return (
