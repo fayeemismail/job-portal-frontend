@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { authCookie } from '@/utils/auth-cookie';
-import { Logo } from '@/components/layout/navbar/Logo';
+import { AuthSidebar } from './AuthSidebar';
 
 export function SignUpForm() {
   // Set default values for quick testing
@@ -47,63 +47,8 @@ export function SignUpForm() {
 
   return (
     <div className="w-full h-full bg-white grid grid-cols-1 md:grid-cols-12 relative animate-in fade-in duration-500 overflow-hidden">
-      {/* Left Column: Value Proposition Panel */}
-      <div className="hidden md:flex md:col-span-5 bg-linear-to-br from-[#0B2545] via-[#0E2F59] to-[#154680] p-10 text-white flex-col justify-between relative overflow-hidden h-full">
-        {/* Subtle decorative orb */}
-        <div className="absolute top-[-20%] right-[-20%] w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-
-        <div className="relative z-10 w-full my-auto text-left">
-          {/* Logo */}
-          <div className="brightness-0 invert mb-6 -ml-3 text-left">
-            <Logo />
-          </div>
-
-          <h2 className="text-3xl font-serif font-semibold tracking-wide leading-tight mb-4 text-slate-100">
-            Join the Leading Service Platform
-          </h2>
-
-          <p className="text-gray-300/80 text-xs font-semibold leading-relaxed max-w-xs mb-10">
-            Create an account to track all your local home services, unlock loyalty reward points,
-            and chat with certified professionals.
-          </p>
-
-          {/* Testimonial Quote (Enterprise & Conventional) */}
-          <div className="border-l-2 border-[#EE5E36] pl-5 text-left my-8">
-            <p className="text-xs font-medium italic leading-relaxed text-gray-200/90 mb-4">
-              &ldquo;The peace of mind of having fully insured, background-checked local experts is
-              worth everything. Getting home cleaning and plumbing sorted out takes less than a
-              minute. Highly recommend Ainorax!&rdquo;
-            </p>
-            <div>
-              <h4 className="text-xs font-bold text-white">Sarah Jenkins</h4>
-              <p className="text-[10px] text-gray-400 font-semibold mt-0.5">
-                Verified Homeowner &bull; New York
-              </p>
-            </div>
-
-            {/* Stars */}
-            <div className="flex gap-0.5 mt-3 text-[#EE5E36]">
-              <span className="text-[10px]">★</span>
-              <span className="text-[10px]">★</span>
-              <span className="text-[10px]">★</span>
-              <span className="text-[10px]">★</span>
-              <span className="text-[10px]">★</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Metrics */}
-        <div className="relative z-10 mt-auto pt-4 border-t border-white/10 flex justify-between text-left text-[10px] font-bold text-gray-400">
-          <div>
-            <p className="text-white text-sm font-extrabold">10k+</p>
-            <p>Done Bookings</p>
-          </div>
-          <div>
-            <p className="text-white text-sm font-extrabold">4.95★</p>
-            <p>Average Rating</p>
-          </div>
-        </div>
-      </div>
+      {/* Left Column: Reusable Value Proposition Sidebar */}
+      <AuthSidebar mode="signup" />
 
       {/* Right Column: Sign Up Form */}
       <div className="col-span-12 md:col-span-7 px-6 py-4 md:px-12 flex flex-col justify-center bg-white h-full overflow-hidden">
