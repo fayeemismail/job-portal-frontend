@@ -92,13 +92,12 @@ export function AddressesTab({
             </div>
             <button
               onClick={() => setShowAddForm(true)}
-              className="group relative overflow-hidden inline-flex items-center gap-1.5 px-4 py-2 border border-[#EE5E36]/30 bg-[#FFF4F0]/30 text-[#EE5E36] hover:text-white hover:border-[#EE5E36] rounded-xl text-xs font-extrabold uppercase tracking-wider active:scale-95 transition-all duration-300 cursor-pointer"
+              className="btn-animate btn-animate-outline inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-extrabold uppercase tracking-wider cursor-pointer"
             >
               <span className="relative z-10 flex items-center gap-1.5">
                 <Plus className="w-4 h-4" />
                 {PROFILE_DASHBOARD_COPY.addAddressBtn}
               </span>
-              <span className="absolute inset-0 bg-[#EE5E36] origin-bottom scale-y-0 transition-transform duration-300 ease-out group-hover:scale-y-100 z-0" />
             </button>
           </div>
 

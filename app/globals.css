@@ -80,29 +80,29 @@ body {
   overflow: hidden;
   z-index: 1;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fff8f5;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: -1;
-  }
+.hover-slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff8f5;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
 
-  &:hover::before {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
+.hover-slide:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
 
-  &:hover {
-    border-color: #ee5e36;
-  }
+.hover-slide:hover {
+  border-color: #ee5e36;
 }
 
 /* Conventional, Enterprise-Grade Reusable Action Animations */
@@ -123,14 +123,13 @@ body {
   inset: 0;
   background-color: var(--btn-hover-bg, #0b2545);
   transform: scaleY(0);
-  transform-origin: top;
+  transform-origin: bottom;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: -1;
 }
 
 .btn-animate:hover::after {
   transform: scaleY(1);
-  transform-origin: bottom;
 }
 
 .btn-animate:active {
