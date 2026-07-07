@@ -1,9 +1,7 @@
 'use client';
 
+import { DashboardCard } from '@/components/admin/dashboard/DashboardCard';
+
 export default function AdminDashboardPage() {
-  return (
-    <div className="font-sans text-[#0B2545]">
-      <h1>this is admin Dashboard</h1>
-    </div>
-  );
+  return <DashboardCard />;
 }

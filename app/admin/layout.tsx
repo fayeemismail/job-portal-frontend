@@ -20,16 +20,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, []);
 
   if (!mounted) {
-    return <div className="min-h-screen bg-gray-50/50" />;
+    return <div className="min-h-screen bg-white" />;
   }
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-gray-50/50">
+      <div className="flex min-h-screen bg-white transition-colors duration-300">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <AdminNavbar />
-          <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-gray-50/30">{children}</main>
+          <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-white transition-colors duration-300 font-sans">
+            {children}
+          </main>
         </div>
       </div>
     </SidebarProvider>
