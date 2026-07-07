@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/admin/AppSidebar';
-import { AdminNavbar } from '@/components/admin/AdminNavbar';
+import { AppSidebar } from '@/components/admin/sidebar/AppSidebar';
+import { AdminNavbar } from '@/components/admin/navbar/AdminNavbar';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
