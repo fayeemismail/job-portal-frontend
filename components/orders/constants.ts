@@ -17,7 +17,8 @@ export interface OrderItem {
   serviceName: string;
   category: string;
   imageUrl: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  status:
+    'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled';
   price: number;
   paymentMethod: string;
   date: string;
@@ -399,4 +400,7 @@ export const ORDER_STATUS_STYLES: Record<OrderItem['status'], string> = {
   'in-progress': 'bg-[#FFF4F0]/30 text-[#EE5E36] border border-[#EE5E36]/20',
   pending: 'bg-gray-50/50 text-[#0B2545]/70 border border-[#0B2545]/10',
   cancelled: 'bg-red-50/30 text-red-500 border border-red-200/60',
+  accepted: 'bg-indigo-50/30 text-indigo-600 border border-indigo-200/60',
+  dispatched: 'bg-purple-50/30 text-purple-600 border border-purple-200/60',
+  'on-hold': 'bg-gray-55/50 text-gray-600 border border-gray-200',
 };

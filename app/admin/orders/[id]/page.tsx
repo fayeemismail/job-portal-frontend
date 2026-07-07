@@ -23,7 +23,9 @@ export default function AdminOrderDetailsPage({ params }: OrderDetailsPageProps)
   // Find dynamic order item
   const order = MOCK_ORDERS.find((o) => o.id === id);
 
-  const [status, setStatus] = useState(order?.status || 'pending');
+  const [status, setStatus] = useState<
+    'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled'
+  >(order?.status || 'pending');
   const [workerName, setWorkerName] = useState(order?.worker?.name || 'Unassigned');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
@@ -32,7 +34,10 @@ export default function AdminOrderDetailsPage({ params }: OrderDetailsPageProps)
     setTimeout(() => setToastMsg(null), 3000);
   };
 
-  const handleStatusChange = (newStatus: 'pending' | 'in-progress' | 'completed' | 'cancelled') => {
+  const handleStatusChange = (
+    newStatus:
+      'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled'
+  ) => {
     setStatus(newStatus);
     triggerToast(`Booking status updated to ${newStatus.toUpperCase()}`);
   };

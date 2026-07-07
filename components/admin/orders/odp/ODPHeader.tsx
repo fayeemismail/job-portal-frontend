@@ -3,11 +3,16 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
+import { CustomDropdown } from './CustomDropdown';
 
 interface ODPHeaderProps {
   orderId: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
-  onStatusChange: (status: 'pending' | 'in-progress' | 'completed' | 'cancelled') => void;
+  status:
+    'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled';
+  onStatusChange: (
+    status:
+      'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled'
+  ) => void;
 }
 
 export function ODPHeader({ orderId, status, onStatusChange }: ODPHeaderProps) {
@@ -17,7 +22,13 @@ export function ODPHeader({ orderId, status, onStatusChange }: ODPHeaderProps) {
   // Dynamic Theme Styling
   const hoverTextClass = isNavy ? 'hover:text-[#0B2545]' : 'hover:text-[#EE5E36]';
   const orderIdTextClass = isNavy ? 'text-[#0B2545]' : 'text-[#EE5E36]';
-  const focusBorderClass = isNavy ? 'focus:border-[#0B2545]' : 'focus:border-[#EE5E36]';
+
+  const STATUS_OPTIONS = [
+    { value: 'pending', label: 'Pending', desc: 'Booking request waiting for dispatch' },
+    { value: 'in-progress', label: 'In Progress', desc: 'Worker currently resolving the task' },
+    { value: 'completed', label: 'Completed', desc: 'Job successfully finished and closed' },
+    { value: 'cancelled', label: 'Cancelled', desc: 'Booking request revoked/cancelled' },
+  ] as const;
 
   return (
     <div className="space-y-4 font-sans text-[#0B2545] text-left">
@@ -46,20 +57,12 @@ export function ODPHeader({ orderId, status, onStatusChange }: ODPHeaderProps) {
           <span className="text-xs font-black uppercase tracking-wider text-gray-400">
             Booking Status:
           </span>
-          <select
+          <CustomDropdown
+            options={STATUS_OPTIONS}
             value={status}
-            onChange={(e) =>
-              onStatusChange(
-                e.target.value as 'pending' | 'in-progress' | 'completed' | 'cancelled'
-              )
-            }
-            className={`border border-[#0B2545]/10 rounded-xl px-4 py-2 text-xs font-bold text-[#0B2545] ${focusBorderClass} bg-white cursor-pointer transition-all`}
-          >
-            <option value="pending">Pending</option>
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+            onChange={(val) => onStatusChange(val as ODPHeaderProps['status'])}
+            widthClass="w-36"
+          />
         </div>
       </div>
     </div>

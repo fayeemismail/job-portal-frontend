@@ -3,6 +3,7 @@
 import { MapPin, Calendar, Clock, UserCheck } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import { CATEGORY_PHOTOS } from '@/components/services/constants';
+import { CustomDropdown } from './CustomDropdown';
 
 interface ODPServiceDetailsProps {
   serviceName: string;
@@ -39,7 +40,6 @@ export function ODPServiceDetails({
     ? 'bg-[#0B2545]/5 text-[#0B2545] border-[#0B2545]/10'
     : 'bg-[#FFF4F0] text-[#EE5E36] border-[#EE5E36]/10';
   const iconColorClass = isNavy ? 'text-[#0B2545]' : 'text-[#EE5E36]';
-  const focusBorderClass = isNavy ? 'focus:border-[#0B2545]' : 'focus:border-[#EE5E36]';
 
   // Dynamic Cover Photo lookup
   const photos = CATEGORY_PHOTOS[category.toLowerCase()] || CATEGORY_PHOTOS.cleaning;
@@ -119,17 +119,16 @@ export function ODPServiceDetails({
           </div>
 
           <div>
-            <select
+            <CustomDropdown
+              options={AVAILABLE_WORKERS.map((worker) => ({
+                value: worker.name,
+                label: worker.name,
+                desc: worker.role,
+              }))}
               value={workerName}
-              onChange={(e) => onWorkerChange(e.target.value)}
-              className={`border border-[#0B2545]/10 rounded-xl px-4 py-2 text-xs font-bold text-[#0B2545] ${focusBorderClass} bg-white cursor-pointer transition-all`}
-            >
-              {AVAILABLE_WORKERS.map((worker) => (
-                <option key={worker.name} value={worker.name}>
-                  {worker.name} ({worker.role})
-                </option>
-              ))}
-            </select>
+              onChange={onWorkerChange}
+              widthClass="w-56"
+            />
           </div>
         </div>
       </div>

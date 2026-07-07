@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <AdminNavbar />
-          <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-white transition-colors duration-300 font-sans">
+          <main className="flex-1 p-6 md:p-8 bg-white transition-colors duration-300 font-sans">
             {children}
           </main>
         </div>
