@@ -13,7 +13,6 @@ import { ScheduleStep } from '@/components/services/checkout/ScheduleStep';
 import { DetailsStep } from '@/components/services/checkout/DetailsStep';
 import { PaymentStep } from '@/components/services/checkout/PaymentStep';
 import { CheckoutSummary } from '@/components/services/checkout/CheckoutSummary';
-import { CheckoutModal } from '@/components/services/checkout/CheckoutModal';
 
 interface AddressItem {
   id: string;
@@ -53,8 +52,7 @@ export default function BookingFlowPage() {
   const [newState, setNewState] = useState('');
   const [newZip, setNewZip] = useState('');
 
-  // Confirmation modal trigger
-  const [showConfirmation, setShowConfirmation] = useState(false);
+
 
   // Computed variables
   const activeDate = selectedDateIdx !== null ? BOOKING_DATES[selectedDateIdx] : null;
@@ -104,18 +102,16 @@ export default function BookingFlowPage() {
 
   const handleFinalConfirm = () => {
     if (selectedDateIdx !== null && selectedTimeIdx !== null && selectedAddressId) {
-      setShowConfirmation(true);
+      const params = new URLSearchParams({
+        dateIdx: selectedDateIdx.toString(),
+        timeIdx: selectedTimeIdx.toString(),
+        addressLabel: activeAddress?.label || '',
+        addressStreet: activeAddress?.street || '',
+        addressCityStateZip: activeAddress?.cityStateZip || '',
+        note: requirementText,
+      });
+      router.push(`/services/${id}/book/confirmed?${params.toString()}`);
     }
-  };
-
-  const handleFinishBooking = () => {
-    setShowConfirmation(false);
-    router.push(`/services/${id}`);
-  };
-
-  const handleViewOrder = () => {
-    setShowConfirmation(false);
-    router.push(`/orders/ORD-8947A`);
   };
 
   return (
@@ -191,19 +187,6 @@ export default function BookingFlowPage() {
           />
         </div>
       </div>
-
-      {/* Confirmation Success popup */}
-      <CheckoutModal
-        showConfirmation={showConfirmation}
-        onClose={() => setShowConfirmation(false)}
-        serviceTitle={service.title}
-        activeDate={activeDate}
-        activeTime={activeTime}
-        activeAddress={activeAddress}
-        requirementText={requirementText}
-        onFinishBooking={handleFinishBooking}
-        onViewOrder={handleViewOrder}
-      />
     </div>
   );
 }
