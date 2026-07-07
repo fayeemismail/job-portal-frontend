@@ -155,7 +155,7 @@ export function Sidebar({ children }: SidebarProps) {
 
   return (
     <aside
-      className={`flex flex-col justify-between shrink-0 relative z-10 transition-all duration-300 ease-in-out ${
+      className={`sticky top-0 h-screen flex flex-col justify-between shrink-0 z-20 transition-all duration-300 ease-in-out ${
         themeClasses.sidebarBg
       } ${open ? 'w-64' : 'w-16'}`}
     >
