@@ -69,12 +69,31 @@ export const THEME_CLASSES = {
   },
 };
 
+export type AccentTheme = 'navy' | 'orange';
+
 interface SidebarContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
   toggleSidebar: () => void;
   theme: AdminTheme;
   setTheme: (theme: AdminTheme) => void;
+  accentTheme: AccentTheme;
+  setAccentTheme: (theme: AccentTheme) => void;
+  themeClasses: {
+    sidebarBg: string;
+    activeBtn: string;
+    hoverBtn: string;
+    label: string;
+    footerBg: string;
+    footerIcon: string;
+    logoFilter: string;
+    navbarBg: string;
+    navbarTrigger: string;
+    navbarIcon: string;
+    navbarText: string;
+    navbarSubtitle: string;
+    navbarDivider: string;
+  };
 }
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -94,11 +113,34 @@ interface SidebarProviderProps {
 export function SidebarProvider({ children }: SidebarProviderProps) {
   const [open, setOpen] = useState(true);
   const [theme, setTheme] = useState<AdminTheme>('light');
+  const [accentTheme, setAccentTheme] = useState<AccentTheme>('navy');
 
   const toggleSidebar = () => setOpen(!open);
 
+  const baseTheme = THEME_CLASSES[theme];
+  const isNavyAccent = accentTheme === 'navy';
+  const activeBtn = isNavyAccent
+    ? 'bg-[#0B2545] text-white shadow-md shadow-[#0B2545]/15'
+    : 'bg-[#EE5E36] text-white shadow-md shadow-[#EE5E36]/15';
+
+  const themeClasses = {
+    ...baseTheme,
+    activeBtn,
+  };
+
   return (
-    <SidebarContext.Provider value={{ open, setOpen, toggleSidebar, theme, setTheme }}>
+    <SidebarContext.Provider
+      value={{
+        open,
+        setOpen,
+        toggleSidebar,
+        theme,
+        setTheme,
+        accentTheme,
+        setAccentTheme,
+        themeClasses,
+      }}
+    >
       {children}
     </SidebarContext.Provider>
   );
@@ -109,8 +151,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ children }: SidebarProps) {
-  const { open, theme } = useSidebar();
-  const themeClasses = THEME_CLASSES[theme];
+  const { open, themeClasses } = useSidebar();
 
   return (
     <aside
@@ -141,8 +182,7 @@ export function SidebarGroup({ children }: { children: ReactNode }) {
 }
 
 export function SidebarGroupLabel({ children }: { children: ReactNode }) {
-  const { open, theme } = useSidebar();
-  const themeClasses = THEME_CLASSES[theme];
+  const { open, themeClasses } = useSidebar();
   if (!open) return null;
 
   return (
@@ -170,8 +210,7 @@ interface SidebarMenuButtonProps {
 }
 
 export function SidebarMenuButton({ children, active, onClick, href }: SidebarMenuButtonProps) {
-  const { open, theme } = useSidebar();
-  const themeClasses = THEME_CLASSES[theme];
+  const { open, themeClasses } = useSidebar();
   const className = `w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-colors duration-205 cursor-pointer select-none text-left relative overflow-hidden ${
     active ? themeClasses.activeBtn : themeClasses.hoverBtn
   } ${!open ? 'justify-center' : ''}`;
@@ -202,15 +241,13 @@ export function SidebarMenuButton({ children, active, onClick, href }: SidebarMe
 }
 
 export function SidebarFooter({ children }: { children: ReactNode }) {
-  const { theme } = useSidebar();
-  const themeClasses = THEME_CLASSES[theme];
+  const { themeClasses } = useSidebar();
 
   return <div className={`p-4 ${themeClasses.footerBg}`}>{children}</div>;
 }
 
 export function SidebarTrigger() {
-  const { toggleSidebar, theme } = useSidebar();
-  const themeClasses = THEME_CLASSES[theme];
+  const { toggleSidebar, themeClasses } = useSidebar();
 
   return (
     <button

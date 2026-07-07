@@ -7,7 +7,7 @@ export const NAV_ITEMS = [
     icon: LayoutDashboard,
   },
   {
-    label: 'Orders Listing',
+    label: 'Orders',
     href: '/admin/orders',
     icon: ClipboardList,
   },

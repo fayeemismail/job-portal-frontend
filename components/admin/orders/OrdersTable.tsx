@@ -1,18 +1,35 @@
 'use client';
 
 import { OrderItem } from '@/components/orders/constants';
+import { useRouter } from 'next/navigation';
+import { useSidebar } from '@/components/ui/sidebar';
 
 interface OrdersTableProps {
   orders: OrderItem[];
 }
 
 export function OrdersTable({ orders }: OrdersTableProps) {
+  const router = useRouter();
+  const { accentTheme } = useSidebar();
+  const isNavy = accentTheme === 'navy';
+
+  const handleRowClick = (id: string) => {
+    router.push(`/admin/orders/${id}`);
+  };
+
+  // Dynamic Theme Styling
+  const headerBgClass = isNavy ? 'bg-[#0B2545]/5' : 'bg-[#FFFBF9]/80';
+  const orderIdTextClass = isNavy ? 'text-[#0B2545]' : 'text-[#EE5E36]';
+  const rowHoverBgClass = isNavy ? 'hover:bg-[#0B2545]/5' : 'hover:bg-[#FFFBF9]/30';
+
   return (
     <div className="bg-white border border-[#0B2545]/10 rounded-3xl overflow-hidden shadow-2xs">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-[#FFFBF9]/80 border-b border-[#0B2545]/10 text-[#0B2545]/70 text-[11px] font-extrabold uppercase tracking-wider text-left">
+            <tr
+              className={`${headerBgClass} border-b border-[#0B2545]/10 text-[#0B2545]/70 text-[11px] font-extrabold uppercase tracking-wider text-left`}
+            >
               <th className="px-6 py-4 font-black">Order ID</th>
               <th className="px-6 py-4 font-black">Service Name</th>
               <th className="px-6 py-4 font-black">Category</th>
@@ -27,10 +44,13 @@ export function OrdersTable({ orders }: OrdersTableProps) {
               orders.map((order) => (
                 <tr
                   key={order.id}
-                  className="border-b border-gray-50 hover:bg-[#FFFBF9]/30 text-xs text-[#0B2545] transition-colors"
+                  onClick={() => handleRowClick(order.id)}
+                  className={`border-b border-gray-50 ${rowHoverBgClass} text-xs text-[#0B2545] transition-colors cursor-pointer`}
                 >
                   <td className="px-6 py-4 font-semibold">
-                    <span className="font-mono font-black text-gray-400">{order.id}</span>
+                    <span className={`font-mono font-black ${orderIdTextClass} hover:underline`}>
+                      {order.id}
+                    </span>
                   </td>
                   <td className="px-6 py-4 font-semibold">{order.serviceName}</td>
                   <td className="px-6 py-4 font-semibold">{order.category}</td>
