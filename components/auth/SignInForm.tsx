@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { authCookie, adminCookie } from '@/utils/auth-cookie';
+import { authCookie, adminCookie, workerCookie } from '@/utils/auth-cookie';
 import { AuthSidebar } from './AuthSidebar';
 
 export function SignInForm() {
-  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [authRole, setAuthRole] = useState<'customer' | 'admin' | 'worker'>('customer');
   // Set default values for quick testing
   const [email, setEmail] = useState('john.doe@example.com');
   const [password, setPassword] = useState('password123');
@@ -30,9 +30,15 @@ export function SignInForm() {
 
     if (email === 'admin@example.com') {
       adminCookie.set(true);
+      workerCookie.remove();
       window.location.href = '/admin';
+    } else if (email === 'worker@example.com') {
+      adminCookie.remove();
+      workerCookie.set(true);
+      window.location.href = '/worker';
     } else {
       adminCookie.remove();
+      workerCookie.remove();
       window.location.href = '/';
     }
   };
@@ -61,19 +67,27 @@ export function SignInForm() {
             <button
               type="button"
               onClick={() => {
-                const nextAdminMode = !isAdminMode;
-                setIsAdminMode(nextAdminMode);
-                if (nextAdminMode) {
+                if (authRole === 'customer') {
+                  setAuthRole('admin');
                   setEmail('admin@example.com');
                   setPassword('admin123');
+                } else if (authRole === 'admin') {
+                  setAuthRole('worker');
+                  setEmail('worker@example.com');
+                  setPassword('worker123');
                 } else {
+                  setAuthRole('customer');
                   setEmail('john.doe@example.com');
                   setPassword('password123');
                 }
               }}
-              className="text-[10px] font-extrabold text-[#EE5E36] hover:text-[#0B2545] border border-[#EE5E36]/25 hover:border-[#0B2545]/25 px-2 py-1.5 rounded-lg transition-all cursor-pointer select-none mt-0.5 shrink-0"
+              className="text-[10px] font-extrabold text-[#EE5E36] hover:text-[#0B2545] border border-[#EE5E36]/25 hover:border-[#0B2545]/25 px-2 py-1.5 rounded-lg transition-all cursor-pointer select-none mt-0.5 shrink-0 animate-in fade-in duration-200"
             >
-              {isAdminMode ? 'Customer Demo' : 'Admin Demo'}
+              {authRole === 'customer'
+                ? 'Admin Demo'
+                : authRole === 'admin'
+                  ? 'Worker Demo'
+                  : 'Customer Demo'}
             </button>
           </div>
 
