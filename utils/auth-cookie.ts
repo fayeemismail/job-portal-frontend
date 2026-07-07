@@ -41,3 +41,22 @@ export const adminCookie = {
     deleteCookie('isAdmin');
   },
 };
+
+export const workerCookie = {
+  get(): boolean {
+    const worker = getCookie('isWorker');
+    return worker === 'true';
+  },
+
+  set(isWorker: boolean) {
+    setCookie('isWorker', String(isWorker), {
+      maxAge: COOKIE_MAX_AGE,
+      path: '/',
+      sameSite: 'lax',
+    });
+  },
+
+  remove() {
+    deleteCookie('isWorker');
+  },
+};

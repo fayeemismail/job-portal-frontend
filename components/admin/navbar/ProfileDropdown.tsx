@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { User, LogOut, Palette } from 'lucide-react';
 import { THEME_CLASSES, AdminTheme, useSidebar } from '@/components/ui/sidebar';
-import { authCookie, adminCookie } from '@/utils/auth-cookie';
+import { authCookie, adminCookie, workerCookie } from '@/utils/auth-cookie';
 import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
 import { ADMIN_INITIALS, ADMIN_NAME } from './constants';
 
@@ -26,6 +26,7 @@ export function ProfileDropdown({ theme }: ProfileDropdownProps) {
   const handleConfirmLogout = () => {
     authCookie.set(false);
     adminCookie.remove();
+    workerCookie.remove();
     setShowLogoutModal(false);
     window.location.href = '/signin';
   };

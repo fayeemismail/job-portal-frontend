@@ -18,7 +18,7 @@ import {
 export function Footer() {
   const pathname = usePathname();
 
-  if (pathname.startsWith('/admin')) {
+  if (pathname.startsWith('/admin') || pathname.startsWith('/worker')) {
     return null;
   }
 
