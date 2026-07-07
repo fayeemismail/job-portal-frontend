@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { authCookie } from '@/utils/auth-cookie';
+import { authCookie, adminCookie } from '@/utils/auth-cookie';
 import { AuthSidebar } from './AuthSidebar';
 
 export function SignInForm() {
+  const [isAdminMode, setIsAdminMode] = useState(false);
   // Set default values for quick testing
   const [email, setEmail] = useState('john.doe@example.com');
   const [password, setPassword] = useState('password123');
@@ -26,7 +27,14 @@ export function SignInForm() {
 
     // Instant authentication redirect
     authCookie.set(true);
-    window.location.href = '/';
+
+    if (email === 'admin@example.com') {
+      adminCookie.set(true);
+      window.location.href = '/admin';
+    } else {
+      adminCookie.remove();
+      window.location.href = '/';
+    }
   };
 
   const handleSocialLogin = () => {
@@ -43,11 +51,30 @@ export function SignInForm() {
       <div className="col-span-12 md:col-span-7 px-6 py-4 md:px-12 flex flex-col justify-center bg-white h-full overflow-hidden">
         <div className="max-w-sm w-full mx-auto my-auto">
           {/* Header */}
-          <div className="text-left mb-5">
-            <h1 className="text-xl font-extrabold text-[#0B2545] tracking-tight">Sign In</h1>
-            <p className="text-xs font-semibold text-gray-400 mt-1">
-              Enter your credentials to manage your home services.
-            </p>
+          <div className="text-left mb-5 flex justify-between items-start gap-4">
+            <div>
+              <h1 className="text-xl font-extrabold text-[#0B2545] tracking-tight">Sign In</h1>
+              <p className="text-xs font-semibold text-gray-400 mt-1">
+                Enter your credentials to manage your home services.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const nextAdminMode = !isAdminMode;
+                setIsAdminMode(nextAdminMode);
+                if (nextAdminMode) {
+                  setEmail('admin@example.com');
+                  setPassword('admin123');
+                } else {
+                  setEmail('john.doe@example.com');
+                  setPassword('password123');
+                }
+              }}
+              className="text-[10px] font-extrabold text-[#EE5E36] hover:text-[#0B2545] border border-[#EE5E36]/25 hover:border-[#0B2545]/25 px-2 py-1.5 rounded-lg transition-all cursor-pointer select-none mt-0.5 shrink-0"
+            >
+              {isAdminMode ? 'Customer Demo' : 'Admin Demo'}
+            </button>
           </div>
 
           {/* Alert Error Box */}

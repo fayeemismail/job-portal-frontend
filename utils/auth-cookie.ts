@@ -22,3 +22,22 @@ export const authCookie = {
     deleteCookie(AUTH_COOKIE);
   },
 };
+
+export const adminCookie = {
+  get(): boolean {
+    const admin = getCookie('isAdmin');
+    return admin === 'true';
+  },
+
+  set(isAdmin: boolean) {
+    setCookie('isAdmin', String(isAdmin), {
+      maxAge: COOKIE_MAX_AGE,
+      path: '/',
+      sameSite: 'lax',
+    });
+  },
+
+  remove() {
+    deleteCookie('isAdmin');
+  },
+};
