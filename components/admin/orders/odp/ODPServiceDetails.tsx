@@ -1,9 +1,11 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { MapPin, Calendar, Clock, UserCheck } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import { CATEGORY_PHOTOS } from '@/components/services/constants';
 import { CustomDropdown } from './CustomDropdown';
+import { getLocalWorkers, WorkerProfile } from '@/utils/worker-profile-store';
 
 interface ODPServiceDetailsProps {
   serviceName: string;
@@ -14,14 +16,6 @@ interface ODPServiceDetailsProps {
   workerName: string;
   onWorkerChange: (workerName: string) => void;
 }
-
-const AVAILABLE_WORKERS = [
-  { name: 'Unassigned', role: 'None' },
-  { name: 'Marcus Vance', role: 'Cleaning Expert' },
-  { name: 'Jordan Vance', role: 'Painting Expert' },
-  { name: 'Sarah Miller', role: 'Plumbing Expert' },
-  { name: 'Alex Cooper', role: 'Electrical Expert' },
-] as const;
 
 export function ODPServiceDetails({
   serviceName,
@@ -35,6 +29,20 @@ export function ODPServiceDetails({
   const { accentTheme } = useSidebar();
   const isNavy = accentTheme === 'navy';
 
+  // Dynamic workers state
+  const [workersList, setWorkersList] = useState<WorkerProfile[]>([]);
+  const [assignedWorker, setAssignedWorker] = useState<WorkerProfile | null>(null);
+
+  useEffect(() => {
+    Promise.resolve().then(() => {
+      const list = getLocalWorkers();
+      setWorkersList(list);
+
+      const assigned = list.find((w) => w.name.toLowerCase() === workerName.toLowerCase());
+      setAssignedWorker(assigned || null);
+    });
+  }, [workerName]);
+
   // Dynamic Theme Styling
   const tagBgClass = isNavy
     ? 'bg-[#0B2545]/5 text-[#0B2545] border-[#0B2545]/10'
@@ -44,6 +52,15 @@ export function ODPServiceDetails({
   // Dynamic Cover Photo lookup
   const photos = CATEGORY_PHOTOS[category.toLowerCase()] || CATEGORY_PHOTOS.cleaning;
   const coverPhoto = photos[0];
+
+  const dropdownOptions = [
+    { value: 'Unassigned', label: 'Unassigned', desc: 'No dispatcher assigned' },
+    ...workersList.map((w) => ({
+      value: w.name,
+      label: w.name,
+      desc: w.role,
+    })),
+  ];
 
   return (
     <div className="bg-white border border-[#0B2545]/10 rounded-3xl p-6 space-y-6 text-left font-sans text-[#0B2545] shadow-xs">
@@ -111,20 +128,37 @@ export function ODPServiceDetails({
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50/30 border border-gray-100 rounded-2xl p-4">
-          <div>
-            <p className="text-[10px] font-bold text-gray-455 uppercase tracking-widest">
-              Currently Assigned
-            </p>
-            <p className="text-xs font-black text-[#0B2545] mt-0.5">{workerName}</p>
+          <div className="flex items-center gap-3">
+            {assignedWorker ? (
+              <div className="w-10 h-10 rounded-xl overflow-hidden border border-gray-100 shrink-0 bg-gray-50 shadow-3xs">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={assignedWorker.avatar}
+                  alt={workerName}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-150/60 shrink-0 flex items-center justify-center text-[10px] font-black text-gray-400">
+                UA
+              </div>
+            )}
+            <div>
+              <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">
+                Currently Assigned
+              </p>
+              <p className="text-xs font-black text-[#0B2545] mt-1">{workerName}</p>
+              {assignedWorker && (
+                <p className="text-[9px] font-bold text-gray-450 mt-0.5 uppercase tracking-wider">
+                  {assignedWorker.role}
+                </p>
+              )}
+            </div>
           </div>
 
           <div>
             <CustomDropdown
-              options={AVAILABLE_WORKERS.map((worker) => ({
-                value: worker.name,
-                label: worker.name,
-                desc: worker.role,
-              }))}
+              options={dropdownOptions}
               value={workerName}
               onChange={onWorkerChange}
               widthClass="w-56"

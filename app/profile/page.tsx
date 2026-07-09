@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DEFAULT_ADDRESSES } from '@/components/services/constants';
 import { DEFAULT_PROFILE, PROFILE_DASHBOARD_COPY } from '@/components/profile/constants';
 import { ProfileSidebar } from '@/components/profile/ProfileSidebar';
 import { ProfileInfoTab } from '@/components/profile/ProfileInfoTab';
 import { AddressesTab } from '@/components/profile/AddressesTab';
 import { FeedbackToast } from '@/components/profile/FeedbackToast';
+import { adminCookie } from '@/utils/auth-cookie';
 
 interface AddressItem {
   id: string;
@@ -24,15 +25,52 @@ export default function ProfileDashboardPage() {
   const [profileEmail, setProfileEmail] = useState(DEFAULT_PROFILE.email);
   const [profilePhone, setProfilePhone] = useState(DEFAULT_PROFILE.phone);
   const [profileInitials, setProfileInitials] = useState(DEFAULT_PROFILE.initials);
+  const [profileAvatar, setProfileAvatar] = useState(DEFAULT_PROFILE.avatar || '');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // Profile Edit Temporary states
   const [editName, setEditName] = useState('');
   const [editEmail, setEditEmail] = useState('');
   const [editPhone, setEditPhone] = useState('');
+  const [editAvatar, setEditAvatar] = useState('');
 
   // Address States
   const [addresses, setAddresses] = useState<AddressItem[]>(DEFAULT_ADDRESSES);
+
+  useEffect(() => {
+    Promise.resolve().then(() => {
+      const isAdmin = adminCookie.get();
+      const storageKey = isAdmin ? 'vance_admin_profile' : 'vance_customer_profile';
+      const stored = localStorage.getItem(storageKey);
+
+      if (stored) {
+        try {
+          const data = JSON.parse(stored);
+          setProfileName(data.name || (isAdmin ? 'Admin Operator' : DEFAULT_PROFILE.name));
+          setProfileEmail(data.email || (isAdmin ? 'admin@example.com' : DEFAULT_PROFILE.email));
+          setProfilePhone(data.phone || (isAdmin ? '+1 (555) 019-9988' : DEFAULT_PROFILE.phone));
+          setProfileInitials(data.initials || (isAdmin ? 'A' : DEFAULT_PROFILE.initials));
+          setProfileAvatar(
+            data.avatar ||
+              (isAdmin
+                ? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
+                : DEFAULT_PROFILE.avatar || '')
+          );
+        } catch {
+          // fallback
+        }
+      } else if (isAdmin) {
+        // Seed default admin values if not set yet
+        setProfileName('Admin Operator');
+        setProfileEmail('admin@example.com');
+        setProfilePhone('+1 (555) 019-9988');
+        setProfileInitials('A');
+        setProfileAvatar('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150');
+      }
+      setMounted(true);
+    });
+  }, []);
 
   // Add Address states
   const [showAddForm, setShowAddForm] = useState(false);
@@ -65,6 +103,7 @@ export default function ProfileDashboardPage() {
     setEditName(profileName);
     setEditEmail(profileEmail);
     setEditPhone(profilePhone);
+    setEditAvatar(profileAvatar);
     setIsEditingProfile(true);
   };
 
@@ -75,6 +114,7 @@ export default function ProfileDashboardPage() {
     setProfileName(editName);
     setProfileEmail(editEmail);
     setProfilePhone(editPhone);
+    setProfileAvatar(editAvatar);
 
     // Compute initials from name
     const names = editName.trim().split(' ');
@@ -83,7 +123,27 @@ export default function ProfileDashboardPage() {
       .join('')
       .toUpperCase()
       .slice(0, 2);
-    setProfileInitials(initials || 'JD');
+    const computedInitials = initials || 'JD';
+    setProfileInitials(computedInitials);
+
+    const isAdmin = adminCookie.get();
+    const storageKey = isAdmin ? 'vance_admin_profile' : 'vance_customer_profile';
+    const eventName = isAdmin ? 'adminProfileUpdated' : 'customerProfileUpdated';
+
+    // Save to localStorage
+    const profileData = {
+      name: editName,
+      email: editEmail,
+      phone: editPhone,
+      avatar: editAvatar,
+      initials: computedInitials,
+    };
+    localStorage.setItem(storageKey, JSON.stringify(profileData));
+
+    // Dispatch update event
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event(eventName));
+    }
 
     setIsEditingProfile(false);
     triggerFeedback(PROFILE_DASHBOARD_COPY.feedbackProfileUpdated);
@@ -166,6 +226,10 @@ export default function ProfileDashboardPage() {
     setIsEditingProfile(false);
   };
 
+  if (!mounted) {
+    return <div className="min-h-screen bg-white" />;
+  }
+
   return (
     <div className="bg-white min-h-screen py-16 font-sans text-[#0B2545]">
       <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -190,6 +254,7 @@ export default function ProfileDashboardPage() {
             profileName={profileName}
             profileEmail={profileEmail}
             profileInitials={profileInitials}
+            profileAvatar={profileAvatar}
             onTabChange={handleTabChange}
           />
 
@@ -209,6 +274,8 @@ export default function ProfileDashboardPage() {
                 setEditEmail={setEditEmail}
                 editPhone={editPhone}
                 setEditPhone={setEditPhone}
+                editAvatar={editAvatar}
+                setEditAvatar={setEditAvatar}
                 onStartEditProfile={handleStartEditProfile}
                 onSaveProfile={handleSaveProfile}
               />

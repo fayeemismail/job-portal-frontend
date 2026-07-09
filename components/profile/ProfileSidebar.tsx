@@ -9,6 +9,7 @@ interface ProfileSidebarProps {
   profileName: string;
   profileEmail: string;
   profileInitials: string;
+  profileAvatar: string;
   onTabChange: () => void;
 }
 
@@ -18,14 +19,20 @@ export function ProfileSidebar({
   profileName,
   profileEmail,
   profileInitials,
+  profileAvatar,
   onTabChange,
 }: ProfileSidebarProps) {
   return (
     <div className="lg:col-span-4 space-y-6">
       {/* User Profile Summary Card */}
       <div className="bg-[#FFFBF9] border border-[#EE5E36]/10 rounded-3xl p-6 text-center space-y-4">
-        <div className="relative w-20 h-20 mx-auto rounded-full bg-[#FFF4F0] border border-[#EE5E36]/15 flex items-center justify-center text-[#EE5E36] text-2xl font-black shadow-xs">
-          {profileInitials}
+        <div className="relative w-24 h-24 mx-auto rounded-full bg-[#FFF4F0] border border-[#EE5E36]/15 overflow-hidden flex items-center justify-center text-[#EE5E36] text-2xl font-black shadow-xs">
+          {profileAvatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profileAvatar} alt={profileName} className="w-full h-full object-cover" />
+          ) : (
+            profileInitials
+          )}
         </div>
         <div>
           <h3 className="text-lg font-black tracking-tight">{profileName}</h3>

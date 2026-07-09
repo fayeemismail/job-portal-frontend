@@ -1,4 +1,4 @@
-import { LayoutDashboard, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Users } from 'lucide-react';
 
 export const NAV_ITEMS = [
   {
@@ -10,5 +10,10 @@ export const NAV_ITEMS = [
     label: 'Orders',
     href: '/admin/orders',
     icon: ClipboardList,
+  },
+  {
+    label: 'Workers',
+    href: '/admin/workers',
+    icon: Users,
   },
 ];
