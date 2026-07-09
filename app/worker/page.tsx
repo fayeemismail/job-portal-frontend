@@ -106,42 +106,44 @@ export default function WorkerDashboardPage() {
   // ----------------------------------------------------
   if (profile.approvalStatus === 'pending' && profile.questionnaire) {
     return (
-      <div className="flex items-center justify-center min-h-[70vh] p-4 font-sans text-[#0B2545] text-left animate-in fade-in duration-300">
-        <div className="bg-white border border-[#0B2545]/10 rounded-3xl p-8 max-w-2xl w-full text-center shadow-lg relative overflow-hidden">
+      <div className="flex items-center justify-center min-h-[55vh] p-4 font-sans text-[#0B2545] text-left animate-in fade-in duration-300">
+        <div className="bg-white border border-[#0B2545]/10 rounded-3xl p-6 max-w-xl w-full text-center shadow-lg relative overflow-hidden">
           <div
             className={`absolute top-0 left-0 w-full h-1.5 ${isNavy ? 'bg-[#0B2545]' : 'bg-[#EE5E36]'}`}
           />
 
-          <Clock className={`w-16 h-16 mx-auto ${accentTextClass} animate-bounce mt-4`} />
+          <Clock className={`w-12 h-12 mx-auto ${accentTextClass} animate-bounce mt-2`} />
 
-          <h1 className="text-2xl font-black mt-6 tracking-tight">Application Under Review</h1>
-          <p className="text-xs text-gray-400 mt-2 max-w-md mx-auto leading-relaxed">
+          <h1 className="text-xl font-black mt-4 tracking-tight">Application Under Review</h1>
+          <p className="text-xs text-gray-400 mt-1.5 max-w-md mx-auto leading-relaxed">
             Thank you, <span className="font-extrabold text-[#0B2545]">{profile.name}</span>! Your
             onboarding questionnaire is submitted and currently under review by the operations team.
           </p>
 
           {/* Submission Details */}
-          <div className="bg-gray-50/60 border border-gray-100 rounded-2xl p-5 mt-6 text-left space-y-4 max-w-lg mx-auto">
-            <h3 className="text-xs font-black uppercase tracking-wider border-b border-gray-200/60 pb-1.5 text-gray-400">
+          <div className="bg-gray-50/60 border border-gray-100 rounded-2xl p-4 mt-4 text-left space-y-3 max-w-lg mx-auto">
+            <h3 className="text-[10px] font-black uppercase tracking-wider border-b border-gray-200/60 pb-1 text-gray-400">
               Your Application Summary
             </h3>
 
-            <div className="grid grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <span className="font-semibold text-gray-400 block">Experience:</span>
+                <span className="font-semibold text-gray-400 block text-[10px]">Experience:</span>
                 <span className="font-extrabold">{profile.questionnaire.experience}</span>
               </div>
               <div>
-                <span className="font-semibold text-gray-400 block">Availability:</span>
+                <span className="font-semibold text-gray-400 block text-[10px]">Availability:</span>
                 <span className="font-extrabold">{profile.questionnaire.availability}</span>
               </div>
               <div className="col-span-2">
-                <span className="font-semibold text-gray-400 block mb-1">Equipment Declared:</span>
-                <div className="flex flex-wrap gap-1.5">
+                <span className="font-semibold text-gray-400 block mb-1 text-[10px]">
+                  Equipment Declared:
+                </span>
+                <div className="flex flex-wrap gap-1">
                   {profile.questionnaire.equipment.map((eq, idx) => (
                     <span
                       key={idx}
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-white border border-gray-200"
+                      className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-white border border-gray-200"
                     >
                       ✓ {eq}
                     </span>
@@ -152,15 +154,17 @@ export default function WorkerDashboardPage() {
                 </div>
               </div>
               <div className="col-span-2">
-                <span className="font-semibold text-gray-400 block">Professional Bio:</span>
-                <p className="text-xs text-[#0B2545]/85 italic bg-white p-2.5 rounded-xl border border-gray-150 leading-relaxed mt-1">
+                <span className="font-semibold text-gray-400 block text-[10px]">
+                  Professional Bio:
+                </span>
+                <p className="text-xs text-[#0B2545]/85 italic bg-white p-2 rounded-xl border border-gray-150 leading-relaxed mt-0.5">
                   &ldquo;{profile.questionnaire.bio}&rdquo;
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 pt-4 border-t border-gray-50 flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="mt-6 pt-3 border-t border-gray-50 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/signin"
               className="px-5 py-2.5 rounded-xl border border-gray-200 text-xs font-extrabold uppercase tracking-wider text-gray-500 hover:bg-gray-50 cursor-pointer text-center"

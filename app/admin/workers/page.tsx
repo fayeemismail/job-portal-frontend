@@ -233,9 +233,6 @@ export default function AdminWorkersPage() {
             Human Resources
           </span>
           <h1 className="text-2xl font-black mt-1">Provider & Worker Registry</h1>
-          <p className="text-xs text-gray-400 mt-1.5">
-            Manage your service workers, onboarding applications, and dispatcher controls.
-          </p>
         </div>
         <button
           onClick={handleOpenAddModal}

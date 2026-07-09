@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { User, LogOut, Palette } from 'lucide-react';
+import { User, LogOut } from 'lucide-react';
 import { THEME_CLASSES, AdminTheme, useSidebar } from '@/components/ui/sidebar';
 import { authCookie, adminCookie, workerCookie } from '@/utils/auth-cookie';
 import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
@@ -15,7 +15,7 @@ interface ProfileDropdownProps {
 
 export function ProfileDropdown({ theme }: ProfileDropdownProps) {
   const themeClasses = THEME_CLASSES[theme];
-  const { accentTheme, setAccentTheme } = useSidebar();
+  const { accentTheme } = useSidebar();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -169,36 +169,6 @@ export function ProfileDropdown({ theme }: ProfileDropdownProps) {
           }`}
         >
           <div className="py-1 divide-y divide-gray-50 text-left font-sans">
-            {/* Theme Swapper section */}
-            <div className="px-4 py-3 flex flex-col gap-1.5 bg-gray-50/30">
-              <span className="text-[9px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1.5 select-none">
-                <Palette className="w-3.5 h-3.5" />
-                Color Theme
-              </span>
-              <div className="flex gap-1.5 mt-1">
-                <button
-                  onClick={() => setAccentTheme('navy')}
-                  className={`flex-1 py-1 rounded-lg font-extrabold text-[9px] uppercase tracking-wide cursor-pointer transition-all ${
-                    isNavy
-                      ? 'bg-[#0B2545] text-white shadow-xs'
-                      : 'border border-gray-200 text-gray-455 hover:bg-gray-100'
-                  }`}
-                >
-                  Navy
-                </button>
-                <button
-                  onClick={() => setAccentTheme('orange')}
-                  className={`flex-1 py-1 rounded-lg font-extrabold text-[9px] uppercase tracking-wide cursor-pointer transition-all ${
-                    !isNavy
-                      ? 'bg-[#EE5E36] text-white shadow-xs'
-                      : 'border border-gray-200 text-gray-455 hover:bg-gray-100'
-                  }`}
-                >
-                  Orange
-                </button>
-              </div>
-            </div>
-
             <Link
               href={isWorker ? '/worker/profile' : '/profile'}
               className={`flex items-center gap-2 px-4 py-3 text-sm text-[#0B2545] transition-colors duration-200 font-medium ${linkHoverBg} ${linkHoverText}`}

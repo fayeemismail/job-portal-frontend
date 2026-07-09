@@ -48,7 +48,7 @@ export function WorkerSidebar() {
               <Logo />
             </div>
           ) : (
-            <div className="mx-auto text-xs font-black select-none tracking-widest text-[#EE5E36]">
+            <div className="mx-auto text-xs font-black select-none tracking-widest text-white/80">
               AX
             </div>
           )}
