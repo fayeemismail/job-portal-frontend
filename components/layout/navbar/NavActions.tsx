@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { User, LogOut, ClipboardList } from 'lucide-react';
 import { AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
-import { authCookie } from '@/utils/auth-cookie';
+import { authCookie, adminCookie, workerCookie } from '@/utils/auth-cookie';
 import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
 import { getWorkerByEmail } from '@/utils/worker-profile-store';
 
@@ -23,10 +23,8 @@ export function NavActions() {
     const updateProfile = () => {
       setIsLoggedIn(authCookie.get());
 
-      const isWorkerRole =
-        typeof window !== 'undefined' && document.cookie.includes('worker_session=true');
-      const isAdminRole =
-        typeof window !== 'undefined' && document.cookie.includes('admin_session=true');
+      const isWorkerRole = workerCookie.get();
+      const isAdminRole = adminCookie.get();
 
       if (isWorkerRole) {
         const loggedInEmail =
@@ -72,7 +70,9 @@ export function NavActions() {
             try {
               const data = JSON.parse(stored);
               setDisplayName((data.name || 'John').split(' ')[0]);
-              setAvatar(data.avatar || '');
+              setAvatar(
+                data.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'
+              );
               setInitials(data.initials || 'JD');
               return;
             } catch {
@@ -82,7 +82,7 @@ export function NavActions() {
         }
         setDisplayName('John');
         setInitials('JD');
-        setAvatar('');
+        setAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150');
       }
     };
 
