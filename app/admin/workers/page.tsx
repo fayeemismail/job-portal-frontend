@@ -256,6 +256,20 @@ export default function AdminWorkersPage() {
                           >
                             {worker.approvalStatus === 'approved' ? 'Active' : 'Blocked'}
                           </span>
+
+                          {worker.approvalStatus === 'approved' && (
+                            <span
+                              className={`text-[8px] font-extrabold uppercase px-1.5 py-0.5 rounded-full select-none ${
+                                worker.poolStatus === 'Available'
+                                  ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                                  : worker.poolStatus === 'Busy'
+                                    ? 'bg-amber-50 text-amber-600 border border-amber-100'
+                                    : 'bg-gray-100 text-gray-500 border border-gray-250'
+                              }`}
+                            >
+                              {worker.poolStatus || 'Offline'}
+                            </span>
+                          )}
                         </div>
                         <p
                           className={`text-[9px] font-black uppercase tracking-wider flex items-center gap-1 ${accentTextClass}`}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ClipboardList,
   User,
@@ -147,6 +148,7 @@ function CustomDropdown({
 }
 
 export default function WorkerDashboardPage() {
+  const router = useRouter();
   const { accentTheme } = useSidebar();
   const isNavy = accentTheme === 'navy';
 
@@ -200,10 +202,17 @@ export default function WorkerDashboardPage() {
     Promise.resolve().then(() => {
       const loggedInEmail = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
       setEmail(loggedInEmail);
+
+      const data = getWorkerByEmail(loggedInEmail);
+      if (data && data.approvalStatus === 'approved') {
+        router.push('/worker/tasks');
+        return;
+      }
+
       updateProfileData(loggedInEmail);
       setMounted(true);
     });
-  }, []);
+  }, [router]);
 
   const handleOnboardingSubmit = (e: React.FormEvent) => {
     e.preventDefault();

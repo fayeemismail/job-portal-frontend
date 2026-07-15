@@ -74,6 +74,8 @@ export interface WorkerProfile {
   avatar: string;
   skills: string[];
   approvalStatus: 'approved' | 'pending' | 'rejected';
+  poolStatus?: 'Available' | 'Busy' | 'Offline';
+  activeStatus?: 'Active' | 'Inactive';
   questionnaire?: WorkerQuestionnaire;
 }
 
@@ -216,7 +218,12 @@ export function updateApprovalStatus(
   const index = workers.findIndex((w) => w.id === id);
   if (index === -1) return false;
 
-  workers[index] = { ...workers[index], approvalStatus: status };
+  workers[index] = {
+    ...workers[index],
+    approvalStatus: status,
+    poolStatus: status === 'approved' ? 'Available' : 'Offline',
+    activeStatus: status === 'approved' ? 'Active' : 'Inactive',
+  };
   saveLocalWorkers(workers);
   notifySubscribers();
   return true;

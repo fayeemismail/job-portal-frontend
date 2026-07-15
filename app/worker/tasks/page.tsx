@@ -6,24 +6,58 @@ import { Calendar, Clock, MapPin, ChevronRight, Search } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import { getLocalOrders } from '@/utils/worker-store';
 import { OrderItem } from '@/components/orders/constants';
+import { getWorkerByEmail, updateWorkerProfile, WorkerProfile } from '@/utils/worker-profile-store';
 
 export default function WorkerTasksPage() {
   const { accentTheme } = useSidebar();
   const isNavy = accentTheme === 'navy';
 
   const [orders, setOrders] = useState<OrderItem[]>([]);
-  const [activeTab, setActiveTab] = useState<'active' | 'available' | 'completed'>('active');
+  const [activeTab, setActiveTab] = useState<'active' | 'completed'>('active');
   const [searchQuery, setSearchQuery] = useState('');
   const [mounted, setMounted] = useState(false);
+  const [profile, setProfile] = useState<WorkerProfile | null>(null);
 
   useEffect(() => {
     Promise.resolve().then(() => {
       setOrders(getLocalOrders());
+      const email = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+      setProfile(getWorkerByEmail(email) || null);
       setMounted(true);
     });
+
+    const handleUpdate = () => {
+      setOrders(getLocalOrders());
+      const email = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+      setProfile(getWorkerByEmail(email) || null);
+    };
+
+    window.addEventListener('bookingsUpdated', handleUpdate);
+    window.addEventListener('workerProfileUpdated', handleUpdate);
+    return () => {
+      window.removeEventListener('bookingsUpdated', handleUpdate);
+      window.removeEventListener('workerProfileUpdated', handleUpdate);
+    };
   }, []);
 
-  const workerName = 'Marcus Vance';
+  const workerName = profile?.name || 'Marcus Vance';
+
+  // Check if worker has active bookings in progress
+  const hasActiveWork = orders.some(
+    (o) =>
+      o.worker?.name === workerName &&
+      o.status !== 'completed' &&
+      o.status !== 'cash-collected' &&
+      o.status !== 'closed' &&
+      o.status !== 'cancelled'
+  );
+
+  const handleStatusToggle = () => {
+    if (!profile || hasActiveWork) return;
+    const currentStatus = profile.poolStatus || 'Offline';
+    const nextStatus = currentStatus === 'Available' ? 'Offline' : 'Available';
+    updateWorkerProfile(profile.email, { poolStatus: nextStatus });
+  };
 
   // Filter lists based on active tab
   const getFilteredTasks = () => {
@@ -31,14 +65,20 @@ export default function WorkerTasksPage() {
     if (activeTab === 'active') {
       // Active jobs assigned to Marcus
       list = orders.filter(
-        (o) => o.worker?.name === workerName && o.status !== 'completed' && o.status !== 'cancelled'
+        (o) =>
+          o.worker?.name === workerName &&
+          o.status !== 'completed' &&
+          o.status !== 'cash-collected' &&
+          o.status !== 'closed' &&
+          o.status !== 'cancelled'
       );
-    } else if (activeTab === 'available') {
-      // Unassigned bookings waiting for dispatch
-      list = orders.filter((o) => o.worker === null && o.status === 'pending');
     } else {
       // Completed jobs by Marcus
-      list = orders.filter((o) => o.worker?.name === workerName && o.status === 'completed');
+      list = orders.filter(
+        (o) =>
+          o.worker?.name === workerName &&
+          (o.status === 'completed' || o.status === 'cash-collected' || o.status === 'closed')
+      );
     }
 
     // Filter by search query (customer name or service title)
@@ -66,14 +106,62 @@ export default function WorkerTasksPage() {
     return <div className="min-h-screen bg-white animate-pulse" />;
   }
 
+  const currentPoolStatus = hasActiveWork
+    ? 'Busy'
+    : profile?.poolStatus === 'Available'
+      ? 'Available'
+      : 'Offline';
+
   return (
     <div className="space-y-6 text-[#0B2545] font-sans text-left animate-in fade-in duration-300">
       {/* Header */}
-      <div className="border-b border-gray-100 pb-5">
-        <span className={`text-[10px] font-black uppercase tracking-widest ${accentTextClass}`}>
-          Task Schedules
-        </span>
-        <h1 className="text-2xl font-black mt-1">My Service Tasks</h1>
+      <div className="border-b border-gray-100 pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${accentTextClass}`}>
+            Task Schedules
+          </span>
+          <h1 className="text-2xl font-black mt-1">My Service Tasks</h1>
+        </div>
+
+        {/* Dynamic Status Toggle */}
+        {profile && (
+          <div className="flex items-center gap-3 bg-gray-50/50 border border-gray-100 p-2.5 rounded-2xl shrink-0">
+            <div className="flex flex-col text-right">
+              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">
+                Duty Status
+              </span>
+              <span className="text-xs font-black text-[#0B2545] mt-1">
+                {currentPoolStatus === 'Busy'
+                  ? 'Busy (On Duty)'
+                  : currentPoolStatus === 'Available'
+                    ? 'Online (Available)'
+                    : 'Offline'}
+              </span>
+            </div>
+
+            <button
+              disabled={hasActiveWork}
+              onClick={handleStatusToggle}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-55 disabled:cursor-not-allowed ${
+                currentPoolStatus === 'Busy'
+                  ? 'bg-amber-500'
+                  : currentPoolStatus === 'Available'
+                    ? isNavy
+                      ? 'bg-[#0B2545]'
+                      : 'bg-[#EE5E36]'
+                    : 'bg-gray-300'
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs ring-0 transition duration-200 ease-in-out ${
+                  currentPoolStatus === 'Available' || currentPoolStatus === 'Busy'
+                    ? 'translate-x-5'
+                    : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Tabs and Search Filters */}
@@ -86,14 +174,6 @@ export default function WorkerTasksPage() {
             }`}
           >
             Active Work
-          </button>
-          <button
-            onClick={() => setActiveTab('available')}
-            className={`flex-1 sm:flex-none px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
-              activeTab === 'available' ? activeTabClass : 'text-[#0B2545]/60 hover:bg-gray-100/50'
-            }`}
-          >
-            Job Board
           </button>
           <button
             onClick={() => setActiveTab('completed')}
@@ -170,13 +250,17 @@ export default function WorkerTasksPage() {
                 <div className="flex items-center gap-2">
                   <span
                     className={`text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${
-                      task.status === 'completed'
+                      task.status === 'completed' ||
+                      task.status === 'cash-collected' ||
+                      task.status === 'closed'
                         ? 'bg-green-50 text-green-700 border-green-100'
                         : task.status === 'in-progress'
                           ? 'bg-blue-50 text-blue-700 border-blue-100'
-                          : task.status === 'dispatched'
-                            ? 'bg-purple-50 text-purple-700 border-purple-100'
-                            : 'bg-amber-50 text-amber-700 border-amber-100'
+                          : task.status === 'on-the-way'
+                            ? 'bg-amber-50 text-amber-700 border-amber-100'
+                            : task.status === 'assigned' || task.status === 'accepted'
+                              ? 'bg-purple-50 text-purple-700 border-purple-100'
+                              : 'bg-gray-50 text-gray-700 border-gray-100'
                     }`}
                   >
                     {task.status}

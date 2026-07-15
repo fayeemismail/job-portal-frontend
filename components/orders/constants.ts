@@ -18,7 +18,15 @@ export interface OrderItem {
   category: string;
   imageUrl: string;
   status:
-    'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled';
+    | 'pending'
+    | 'assigned'
+    | 'accepted'
+    | 'on-the-way'
+    | 'in-progress'
+    | 'completed'
+    | 'cash-collected'
+    | 'closed'
+    | 'cancelled';
   price: number;
   paymentMethod: string;
   date: string;
@@ -396,11 +404,13 @@ export const BILLING_CONFIG = {
 };
 
 export const ORDER_STATUS_STYLES: Record<OrderItem['status'], string> = {
-  completed: 'bg-green-50/30 text-green-600 border border-green-200/60',
-  'in-progress': 'bg-[#FFF4F0]/30 text-[#EE5E36] border border-[#EE5E36]/20',
   pending: 'bg-gray-50/50 text-[#0B2545]/70 border border-[#0B2545]/10',
+  assigned: 'bg-purple-50/40 text-purple-700 border border-purple-200/50',
+  accepted: 'bg-blue-50/40 text-blue-700 border border-blue-200/50',
+  'on-the-way': 'bg-amber-50/40 text-amber-700 border border-amber-200/50',
+  'in-progress': 'bg-[#FFF4F0]/30 text-[#EE5E36] border border-[#EE5E36]/20',
+  completed: 'bg-green-50/30 text-green-600 border border-green-200/60',
+  'cash-collected': 'bg-emerald-50/40 text-emerald-700 border border-emerald-200/50',
+  closed: 'bg-slate-50/50 text-slate-600 border border-slate-200',
   cancelled: 'bg-red-50/30 text-red-500 border border-red-200/60',
-  accepted: 'bg-indigo-50/30 text-indigo-600 border border-indigo-200/60',
-  dispatched: 'bg-purple-50/30 text-purple-600 border border-purple-200/60',
-  'on-hold': 'bg-gray-55/50 text-gray-600 border border-gray-200',
 };

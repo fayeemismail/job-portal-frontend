@@ -31,6 +31,8 @@ export const DEFAULT_WORKERS: WorkerProfile[] = [
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
     skills: ['Deep Cleaning', 'Window Washing', 'Carpet Cleaning', 'Post-Construction Clean'],
     approvalStatus: 'approved',
+    poolStatus: 'Available',
+    activeStatus: 'Active',
   },
   {
     id: 'w2',
@@ -43,6 +45,8 @@ export const DEFAULT_WORKERS: WorkerProfile[] = [
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
     skills: ['Interior Painting', 'Exterior Painting', 'Wallpaper Removal', 'Drywall Repair'],
     approvalStatus: 'approved',
+    poolStatus: 'Offline',
+    activeStatus: 'Active',
   },
   {
     id: 'w3',
@@ -55,6 +59,8 @@ export const DEFAULT_WORKERS: WorkerProfile[] = [
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
     skills: ['Leak Detection', 'Pipe Repair', 'Water Heater Flush', 'Drain Unclogging'],
     approvalStatus: 'approved',
+    poolStatus: 'Busy',
+    activeStatus: 'Active',
   },
   {
     id: 'w4',
@@ -67,6 +73,8 @@ export const DEFAULT_WORKERS: WorkerProfile[] = [
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
     skills: ['Smart Home Setup', 'Fixture Installation', 'Outlet Rewiring', 'Breaker Box Repair'],
     approvalStatus: 'approved',
+    poolStatus: 'Available',
+    activeStatus: 'Active',
   },
   {
     id: 'w5',
@@ -79,6 +87,8 @@ export const DEFAULT_WORKERS: WorkerProfile[] = [
     avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150',
     skills: ['Cabinet Install', 'Crown Molding', 'Door Hanging'],
     approvalStatus: 'pending',
+    poolStatus: 'Offline',
+    activeStatus: 'Inactive',
     questionnaire: {
       phone: '+91 98765 00005',
       baseLocation: 'Bangalore, KA',
@@ -119,6 +129,8 @@ export const DEFAULT_WORKERS: WorkerProfile[] = [
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
     skills: ['Faux Finishes', 'Stenciling', 'Cabinet Spraying'],
     approvalStatus: 'pending',
+    poolStatus: 'Offline',
+    activeStatus: 'Inactive',
     questionnaire: {
       phone: '+91 98765 00006',
       baseLocation: 'Chennai, TN',
