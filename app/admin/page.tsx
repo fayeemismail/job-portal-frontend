@@ -1,7 +1,14 @@
 'use client';
 
-import { DashboardCard } from '@/components/admin/dashboard/DashboardCard';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboardPage() {
-  return <DashboardCard />;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/admin/orders');
+  }, [router]);
+
+  return null;
 }

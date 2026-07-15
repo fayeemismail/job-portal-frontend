@@ -5,14 +5,12 @@ import { ArrowLeft } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import { CustomDropdown } from './CustomDropdown';
 
+import { OrderItem } from '@/components/orders/constants';
+
 interface ODPHeaderProps {
   orderId: string;
-  status:
-    'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled';
-  onStatusChange: (
-    status:
-      'pending' | 'accepted' | 'dispatched' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled'
-  ) => void;
+  status: OrderItem['status'];
+  onStatusChange: (status: OrderItem['status']) => void;
 }
 
 export function ODPHeader({ orderId, status, onStatusChange }: ODPHeaderProps) {
@@ -25,8 +23,13 @@ export function ODPHeader({ orderId, status, onStatusChange }: ODPHeaderProps) {
 
   const STATUS_OPTIONS = [
     { value: 'pending', label: 'Pending', desc: 'Booking request waiting for dispatch' },
-    { value: 'in-progress', label: 'In Progress', desc: 'Worker currently resolving the task' },
-    { value: 'completed', label: 'Completed', desc: 'Job successfully finished and closed' },
+    { value: 'assigned', label: 'Assigned', desc: 'Worker allocated but not accepted' },
+    { value: 'accepted', label: 'Accepted', desc: 'Worker has accepted assignment' },
+    { value: 'on-the-way', label: 'On The Way', desc: 'Worker is traveling to location' },
+    { value: 'in-progress', label: 'In Progress', desc: 'Worker currently resolving task' },
+    { value: 'completed', label: 'Completed', desc: 'Service completed successfully' },
+    { value: 'cash-collected', label: 'Cash Collected', desc: 'Cash payment received on-site' },
+    { value: 'closed', label: 'Closed', desc: 'Booking finalized and archived' },
     { value: 'cancelled', label: 'Cancelled', desc: 'Booking request revoked/cancelled' },
   ] as const;
 

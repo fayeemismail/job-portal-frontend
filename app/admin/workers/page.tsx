@@ -3,14 +3,10 @@
 import { useState, useEffect } from 'react';
 import {
   User,
-  Plus,
   Search,
-  Star,
   Briefcase,
   Mail,
   Phone,
-  Trash2,
-  Edit,
   X,
   CheckCircle,
   Inbox,
@@ -18,14 +14,7 @@ import {
   Clock,
 } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
-import {
-  getLocalWorkers,
-  saveLocalWorkers,
-  addWorker,
-  updateWorkerProfile,
-  updateApprovalStatus,
-  WorkerProfile,
-} from '@/utils/worker-profile-store';
+import { getLocalWorkers, updateApprovalStatus, WorkerProfile } from '@/utils/worker-profile-store';
 
 export default function AdminWorkersPage() {
   const { accentTheme } = useSidebar();
@@ -39,16 +28,6 @@ export default function AdminWorkersPage() {
   const [activeTab, setActiveTab] = useState<'roster' | 'onboarding'>('roster');
   const [selectedWorker, setSelectedWorker] = useState<WorkerProfile | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
-
-  // Modal / Form States for active roster edit/add
-  const [showModal, setShowModal] = useState(false);
-  const [editingWorkerId, setEditingWorkerId] = useState<string | null>(null);
-  const [formName, setFormName] = useState('');
-  const [formEmail, setFormEmail] = useState('');
-  const [formPhone, setFormPhone] = useState('');
-  const [formRole, setFormRole] = useState('Cleaning Expert');
-  const [formAvatar, setFormAvatar] = useState('');
-  const [formSkillsText, setFormSkillsText] = useState('');
 
   // Feedback message
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
@@ -69,91 +48,6 @@ export default function AdminWorkersPage() {
     setTimeout(() => {
       setFeedbackMsg(null);
     }, 3000);
-  };
-
-  const handleOpenAddModal = () => {
-    setEditingWorkerId(null);
-    setFormName('');
-    setFormEmail('');
-    setFormPhone('');
-    setFormRole('Cleaning Expert');
-    setFormAvatar('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'); // default preset
-    setFormSkillsText('');
-    setShowModal(true);
-  };
-
-  const handleOpenEditModal = (worker: WorkerProfile) => {
-    setEditingWorkerId(worker.id);
-    setFormName(worker.name);
-    setFormEmail(worker.email);
-    setFormPhone(worker.phone);
-    setFormRole(worker.role);
-    setFormAvatar(worker.avatar);
-    setFormSkillsText(worker.skills.join(', '));
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setEditingWorkerId(null);
-  };
-
-  const handleDeleteWorker = (id: string) => {
-    const updated = workers.filter((w) => w.id !== id);
-    setWorkers(updated);
-    saveLocalWorkers(updated);
-
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('workerProfileUpdated'));
-    }
-
-    triggerFeedback('Worker deleted successfully!');
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formName || !formEmail || !formPhone) {
-      triggerFeedback('Error: Please fill in Name, Email, and Phone.');
-      return;
-    }
-
-    const parsedSkills = formSkillsText
-      .split(',')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-
-    if (editingWorkerId) {
-      const workerToUpdate = workers.find((w) => w.id === editingWorkerId);
-      if (workerToUpdate) {
-        updateWorkerProfile(workerToUpdate.email, {
-          name: formName,
-          email: formEmail,
-          phone: formPhone,
-          role: formRole,
-          avatar: formAvatar,
-          skills: parsedSkills,
-        });
-        fetchWorkers();
-        triggerFeedback('Worker details updated successfully!');
-      }
-    } else {
-      const newWorkerData = {
-        name: formName,
-        email: formEmail,
-        phone: formPhone,
-        role: formRole,
-        avatar: formAvatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-        rating: 5.0,
-        completedJobs: 0,
-        skills: parsedSkills.length > 0 ? parsedSkills : [formRole],
-        approvalStatus: 'approved' as const,
-      };
-      addWorker(newWorkerData);
-      fetchWorkers();
-      triggerFeedback('New worker registered successfully!');
-    }
-
-    setShowModal(false);
   };
 
   // Approval actions
@@ -180,8 +74,26 @@ export default function AdminWorkersPage() {
     setShowReviewModal(true);
   };
 
+  const handleBlockWorker = (id: string) => {
+    const success = updateApprovalStatus(id, 'rejected');
+    if (success) {
+      fetchWorkers();
+      triggerFeedback('Service provider blocked successfully.');
+    }
+  };
+
+  const handleUnblockWorker = (id: string) => {
+    const success = updateApprovalStatus(id, 'approved');
+    if (success) {
+      fetchWorkers();
+      triggerFeedback('Service provider unblocked successfully.');
+    }
+  };
+
   // Group workers by approval status
-  const approvedWorkers = workers.filter((w) => w.approvalStatus === 'approved');
+  const approvedWorkers = workers.filter(
+    (w) => w.approvalStatus === 'approved' || w.approvalStatus === 'rejected'
+  );
   const pendingWorkers = workers.filter((w) => w.approvalStatus === 'pending');
 
   // Filter based on active tab & query
@@ -234,12 +146,6 @@ export default function AdminWorkersPage() {
           </span>
           <h1 className="text-2xl font-black mt-1">Provider & Worker Registry</h1>
         </div>
-        <button
-          onClick={handleOpenAddModal}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all hover:scale-[1.01] active:scale-98 ${btnClass}`}
-        >
-          <Plus className="w-4 h-4" /> Register New Worker
-        </button>
       </div>
 
       {/* Tabs Row */}
@@ -315,7 +221,8 @@ export default function AdminWorkersPage() {
               {filteredList.map((worker) => (
                 <div
                   key={worker.id}
-                  className="bg-white border border-gray-150/70 rounded-2xl p-4.5 flex flex-col justify-between shadow-3xs hover:border-[#EE5E36]/25 hover:shadow-2xs transition-all relative group overflow-hidden"
+                  onClick={() => handleOpenReview(worker)}
+                  className="bg-white rounded-2xl p-4.5 flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative group overflow-hidden cursor-pointer"
                 >
                   <div
                     className={`absolute top-0 left-0 w-full h-0.5 bg-[#EE5E36]/10 group-hover:bg-[#EE5E36] transition-colors`}
@@ -335,32 +242,41 @@ export default function AdminWorkersPage() {
                       </div>
 
                       {/* Name and title */}
-                      <div className="space-y-0.5 min-w-0">
-                        <h3 className="text-sm font-black leading-tight tracking-tight truncate">
-                          {worker.name}
-                        </h3>
+                      <div className="space-y-0.5 min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="text-sm font-black leading-tight tracking-tight truncate">
+                            {worker.name}
+                          </h3>
+                          <span
+                            className={`text-[8px] font-extrabold uppercase px-1.5 py-0.5 rounded-full select-none ${
+                              worker.approvalStatus === 'approved'
+                                ? 'bg-green-50 text-green-600 border border-green-100'
+                                : 'bg-red-50 text-red-600 border border-red-100'
+                            }`}
+                          >
+                            {worker.approvalStatus === 'approved' ? 'Active' : 'Blocked'}
+                          </span>
+
+                          {worker.approvalStatus === 'approved' && (
+                            <span
+                              className={`text-[8px] font-extrabold uppercase px-1.5 py-0.5 rounded-full select-none ${
+                                worker.poolStatus === 'Available'
+                                  ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                                  : worker.poolStatus === 'Busy'
+                                    ? 'bg-amber-50 text-amber-600 border border-amber-100'
+                                    : 'bg-gray-100 text-gray-500 border border-gray-250'
+                              }`}
+                            >
+                              {worker.poolStatus || 'Offline'}
+                            </span>
+                          )}
+                        </div>
                         <p
                           className={`text-[9px] font-black uppercase tracking-wider flex items-center gap-1 ${accentTextClass}`}
                         >
                           <Briefcase className="w-3 h-3 shrink-0" />
                           {worker.role}
                         </p>
-                      </div>
-                    </div>
-
-                    {/* Rating & Jobs */}
-                    <div className="flex items-center gap-3 bg-gray-50/50 p-2 rounded-xl mt-3 border border-gray-50 text-[10.5px]">
-                      <div className="flex-1 flex items-center justify-center gap-1">
-                        <Star className="w-3 h-3 fill-[#FBBC05] text-[#FBBC05]" />
-                        <span className="font-black">{worker.rating}</span>
-                        <span className="text-[9.5px] text-gray-400 font-semibold">Avg</span>
-                      </div>
-                      <div className="w-px h-3 bg-gray-250" />
-                      <div className="flex-1 flex items-center justify-center gap-1">
-                        <span className="font-black">{worker.completedJobs}</span>
-                        <span className="text-[9.5px] text-gray-400 font-semibold uppercase tracking-wider">
-                          Jobs Done
-                        </span>
                       </div>
                     </div>
 
@@ -396,20 +312,25 @@ export default function AdminWorkersPage() {
 
                   {/* Actions footer */}
                   <div className="flex gap-2 mt-4 border-t border-gray-50 pt-3">
-                    <button
-                      onClick={() => handleOpenEditModal(worker)}
-                      className="flex-1 py-1.5 px-2.5 border border-gray-200 hover:border-[#EE5E36]/30 hover:bg-[#FFF4F0]/10 rounded-lg text-[9.5px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1 cursor-pointer text-[#0B2545]/70 hover:text-[#EE5E36] transition-all active:scale-95"
-                    >
-                      <Edit className="w-3 h-3" /> Edit Profile
-                    </button>
-
-                    {worker.email !== 'worker@example.com' && (
+                    {worker.approvalStatus === 'approved' ? (
                       <button
-                        onClick={() => handleDeleteWorker(worker.id)}
-                        className="py-1.5 px-2.5 border border-red-100 hover:border-red-250 hover:bg-red-50 text-red-500 rounded-lg text-[9.5px] font-extrabold uppercase tracking-wider flex items-center justify-center cursor-pointer transition-all active:scale-95"
-                        title="Remove Worker"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBlockWorker(worker.id);
+                        }}
+                        className="flex-1 py-1.5 px-2.5 border border-red-200 hover:bg-red-50 text-red-600 rounded-lg text-[9.5px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1 cursor-pointer transition-all active:scale-95"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        Block Provider
+                      </button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleUnblockWorker(worker.id);
+                        }}
+                        className="flex-1 py-1.5 px-2.5 border border-green-200 hover:bg-green-50 text-green-650 rounded-lg text-[9.5px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1 cursor-pointer transition-all active:scale-95"
+                      >
+                        Unblock Provider
                       </button>
                     )}
                   </div>
@@ -436,7 +357,8 @@ export default function AdminWorkersPage() {
               {filteredList.map((worker) => (
                 <div
                   key={worker.id}
-                  className="bg-[#FFFBF9] border border-[#EE5E36]/15 rounded-3xl p-5 flex flex-col justify-between shadow-3xs relative overflow-hidden"
+                  onClick={() => handleOpenReview(worker)}
+                  className="bg-[#FFFBF9] rounded-3xl p-5 flex flex-col justify-between shadow-xs hover:shadow-md transition-all relative overflow-hidden cursor-pointer"
                 >
                   <div className="absolute top-0 left-0 w-full h-1 bg-[#EE5E36]/35" />
 
@@ -497,15 +419,18 @@ export default function AdminWorkersPage() {
                   <div className="mt-6 border-t border-gray-100/60 pt-4">
                     {worker.questionnaire ? (
                       <button
-                        onClick={() => handleOpenReview(worker)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenReview(worker);
+                        }}
                         className={`w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-95 text-white ${btnClass}`}
                       >
-                        <FileText className="w-4 h-4" /> Review Questionnaire
+                        <FileText className="w-4 h-4" /> Review Application
                       </button>
                     ) : (
                       <button
                         disabled
-                        className="w-full py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 text-gray-400 bg-gray-100/80 border border-gray-200 cursor-not-allowed select-none"
+                        className="w-full py-2.5 rounded-xl text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 text-gray-400 bg-gray-100/80 border border-gray-250 cursor-not-allowed select-none"
                       >
                         Pending Questionnaire
                       </button>
@@ -562,33 +487,6 @@ export default function AdminWorkersPage() {
                   <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-100 pb-1">
                     Onboarding Submissions
                   </h3>
-
-                  {/* Legacy questionnaire fields if present */}
-                  {(selectedWorker.questionnaire.experience ||
-                    selectedWorker.questionnaire.availability) && (
-                    <div className="grid grid-cols-2 gap-3 text-xs bg-gray-50/50 p-3 rounded-2xl border border-gray-100">
-                      {selectedWorker.questionnaire.experience && (
-                        <div>
-                          <span className="font-semibold text-gray-400 block text-[10px]">
-                            Experience Declared:
-                          </span>
-                          <span className="font-extrabold">
-                            {selectedWorker.questionnaire.experience}
-                          </span>
-                        </div>
-                      )}
-                      {selectedWorker.questionnaire.availability && (
-                        <div>
-                          <span className="font-semibold text-gray-400 block text-[10px]">
-                            Availability:
-                          </span>
-                          <span className="font-extrabold">
-                            {selectedWorker.questionnaire.availability}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
 
                   {/* New onboarding fields */}
                   <div className="grid grid-cols-2 gap-4 text-xs">
@@ -729,163 +627,100 @@ export default function AdminWorkersPage() {
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-6 text-xs text-gray-400 italic">
-                  Applicant has not submitted onboarding questionnaire form yet.
+                <div className="space-y-4 text-left">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-100 pb-1">
+                    Worker Profile Details
+                  </h3>
+
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                      <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider">
+                        Primary Role:
+                      </span>
+                      <span className="font-extrabold text-[#0B2545]">{selectedWorker.role}</span>
+                    </div>
+
+                    <div>
+                      <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider">
+                        Phone Number:
+                      </span>
+                      <span className="font-extrabold text-[#0B2545]">{selectedWorker.phone}</span>
+                    </div>
+
+                    <div className="col-span-2">
+                      <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider mb-1.5">
+                        Expertise Skills:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedWorker.skills.map((skill, idx) => (
+                          <span
+                            key={idx}
+                            className={`text-[9.5px] font-bold px-2 py-0.5 rounded-md border ${tagBgClass}`}
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 
               {/* Accept / Reject Action Footer */}
               <div className="flex gap-3 pt-5 border-t border-gray-100 mt-6">
-                <button
-                  type="button"
-                  onClick={() => handleRejectWorker(selectedWorker.id)}
-                  className="flex-1 py-3 px-4 border border-red-200 hover:bg-red-50 text-red-500 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95"
-                >
-                  Decline Application
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleApproveWorker(selectedWorker.id)}
-                  className="flex-1 py-3 px-4 bg-[#34A853] hover:bg-[#34A853]/90 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95"
-                >
-                  Approve & Register
-                </button>
+                {selectedWorker.approvalStatus === 'pending' ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleRejectWorker(selectedWorker.id)}
+                      className="flex-1 py-3 px-4 border border-red-200 hover:bg-red-50 text-red-500 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95"
+                    >
+                      Decline Application
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleApproveWorker(selectedWorker.id)}
+                      className="flex-1 py-3 px-4 bg-[#34A853] hover:bg-[#34A853]/90 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95"
+                    >
+                      Approve & Register
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {selectedWorker.approvalStatus === 'approved' ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleBlockWorker(selectedWorker.id);
+                          setShowReviewModal(false);
+                        }}
+                        className="flex-1 py-3 px-4 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95"
+                      >
+                        Block Provider
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleUnblockWorker(selectedWorker.id);
+                          setShowReviewModal(false);
+                        }}
+                        className="flex-1 py-3 px-4 bg-[#34A853] hover:bg-[#34A853]/90 text-white rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95"
+                      >
+                        Unblock Provider
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setShowReviewModal(false)}
+                      className="px-6 py-3 border border-gray-250 text-gray-500 hover:bg-gray-50 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95"
+                    >
+                      Close
+                    </button>
+                  </>
+                )}
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal - Add / Edit Worker */}
-      {showModal && (
-        <div className="fixed inset-0 bg-[#0B2545]/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
-          <div className="bg-white border border-[#0B2545]/15 rounded-3xl max-w-lg w-full p-6 text-[#0B2545] font-sans relative shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
-            <button
-              onClick={handleCloseModal}
-              className="absolute top-5 right-5 text-gray-400 hover:text-[#0B2545] cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h2 className="text-xl font-black tracking-tight mb-1">
-              {editingWorkerId ? 'Edit Worker Profile' : 'Register New Service Provider'}
-            </h2>
-            <p className="text-xs text-gray-400 mb-5">
-              Specify skills, credentials, and dispatcher details.
-            </p>
-
-            <form onSubmit={handleSubmit} className="space-y-4 text-left">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Name */}
-                <div className="space-y-1.5">
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={formName}
-                    onChange={(e) => setFormName(e.target.value)}
-                    required
-                    placeholder="e.g. Jordan Vance"
-                    className={`w-full px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-xs font-semibold outline-none ${focusBorderClass} transition-colors`}
-                  />
-                </div>
-
-                {/* Email */}
-                <div className="space-y-1.5">
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    value={formEmail}
-                    onChange={(e) => setFormEmail(e.target.value)}
-                    required
-                    placeholder="name@example.com"
-                    disabled={!!editingWorkerId}
-                    className={`w-full px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-xs font-semibold outline-none ${focusBorderClass} disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors`}
-                  />
-                </div>
-
-                {/* Phone */}
-                <div className="space-y-1.5">
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
-                    Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    value={formPhone}
-                    onChange={(e) => setFormPhone(e.target.value)}
-                    required
-                    placeholder="+1 (555) 012-3456"
-                    className={`w-full px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-xs font-semibold outline-none ${focusBorderClass} transition-colors`}
-                  />
-                </div>
-
-                {/* Role */}
-                <div className="space-y-1.5">
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
-                    Primary Role
-                  </label>
-                  <select
-                    value={formRole}
-                    onChange={(e) => setFormRole(e.target.value)}
-                    className={`w-full px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-xs font-semibold outline-none ${focusBorderClass} transition-colors cursor-pointer`}
-                  >
-                    <option value="Cleaning Expert">Cleaning Expert</option>
-                    <option value="Painting Expert">Painting Expert</option>
-                    <option value="Plumbing Expert">Plumbing Expert</option>
-                    <option value="Electrical Expert">Electrical Expert</option>
-                    <option value="Carpentry Expert">Carpentry Expert</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Avatar Url */}
-              <div className="space-y-1.5">
-                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
-                  Profile Photo URL
-                </label>
-                <input
-                  type="url"
-                  value={formAvatar}
-                  onChange={(e) => setFormAvatar(e.target.value)}
-                  placeholder="https://images.unsplash.com/photo-... (optional)"
-                  className={`w-full px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-xs font-semibold outline-none ${focusBorderClass} transition-colors`}
-                />
-              </div>
-
-              {/* Skills Tags Text */}
-              <div className="space-y-1.5">
-                <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
-                  Service Skills (Comma separated list)
-                </label>
-                <textarea
-                  value={formSkillsText}
-                  onChange={(e) => setFormSkillsText(e.target.value)}
-                  placeholder="e.g. Deep Cleaning, Floor Buffing, Stain Removal"
-                  rows={2}
-                  className={`w-full px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-xs font-semibold outline-none ${focusBorderClass} transition-colors resize-none`}
-                />
-              </div>
-
-              {/* Footer */}
-              <div className="flex justify-end gap-3 pt-3 border-t border-gray-50">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="px-4 py-2 rounded-xl border border-gray-250 text-gray-500 hover:bg-gray-50 text-xs font-extrabold uppercase tracking-wider cursor-pointer transition-all active:scale-95"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className={`px-5 py-2 rounded-xl text-xs font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95 ${btnClass}`}
-                >
-                  {editingWorkerId ? 'Save Profile' : 'Add Worker'}
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}

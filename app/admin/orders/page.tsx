@@ -1,20 +1,42 @@
 'use client';
 
-import { useState } from 'react';
-import { MOCK_ORDERS, OrderItem } from '@/components/orders/constants';
+import { useState, useEffect } from 'react';
+import { OrderItem } from '@/components/orders/constants';
 import { Pagination } from '@/components/shared/Pagination';
 import { OrdersHeader } from '@/components/admin/orders/OrdersHeader';
 import { OrdersFilters } from '@/components/admin/orders/OrdersFilters';
 import { OrdersTable } from '@/components/admin/orders/OrdersTable';
+import { getLocalOrders } from '@/utils/worker-store';
 
 type FilterType = 'all' | 'pending' | 'in-progress' | 'completed' | 'cancelled';
 const PAGE_SIZE = 5;
 
 export default function AdminOrdersPage() {
-  const [orders] = useState<OrderItem[]>(MOCK_ORDERS);
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [mounted, setMounted] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    Promise.resolve().then(() => {
+      setOrders(getLocalOrders());
+      setMounted(true);
+    });
+
+    const handleUpdate = () => {
+      setOrders(getLocalOrders());
+    };
+
+    window.addEventListener('bookingsUpdated', handleUpdate);
+    return () => {
+      window.removeEventListener('bookingsUpdated', handleUpdate);
+    };
+  }, []);
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-white animate-pulse" />;
+  }
 
   // Filter computation
   const filteredOrders = orders.filter((order) => {

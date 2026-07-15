@@ -1,20 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, X, ClipboardList } from 'lucide-react';
-import { MOCK_ORDERS, ORDERS_PAGE_COPY } from '@/components/orders/constants';
+import { ORDERS_PAGE_COPY } from '@/components/orders/constants';
 import { OrdersFilters } from '@/components/orders/OrdersFilters';
 import { OrderCard } from '@/components/orders/OrderCard';
 import { Pagination } from '@/components/shared/Pagination';
+import { getLocalOrders } from '@/utils/worker-store';
+import { OrderItem } from '@/components/orders/constants';
 
 type FilterType = 'all' | 'active' | 'completed' | 'cancelled';
 
 const PAGE_SIZE = 6;
 
 export default function UserOrdersPage() {
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [mounted, setMounted] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    Promise.resolve().then(() => {
+      setOrders(getLocalOrders());
+      setMounted(true);
+    });
+
+    const handleUpdate = () => {
+      setOrders(getLocalOrders());
+    };
+
+    window.addEventListener('bookingsUpdated', handleUpdate);
+    return () => {
+      window.removeEventListener('bookingsUpdated', handleUpdate);
+    };
+  }, []);
 
   // Wrapper for active filter changes
   const handleFilterChange = (filter: FilterType) => {
@@ -29,13 +49,23 @@ export default function UserOrdersPage() {
   };
 
   // Filter logic
-  const filteredOrders = MOCK_ORDERS.filter((order) => {
+  const filteredOrders = orders.filter((order) => {
     // 1. Tab filter
-    if (activeFilter === 'active' && order.status !== 'pending' && order.status !== 'in-progress') {
-      return false;
+    if (activeFilter === 'active') {
+      const isActive =
+        order.status === 'pending' ||
+        order.status === 'assigned' ||
+        order.status === 'accepted' ||
+        order.status === 'on-the-way' ||
+        order.status === 'in-progress';
+      if (!isActive) return false;
     }
-    if (activeFilter === 'completed' && order.status !== 'completed') {
-      return false;
+    if (activeFilter === 'completed') {
+      const isCompleted =
+        order.status === 'completed' ||
+        order.status === 'cash-collected' ||
+        order.status === 'closed';
+      if (!isCompleted) return false;
     }
     if (activeFilter === 'cancelled' && order.status !== 'cancelled') {
       return false;
@@ -53,11 +83,15 @@ export default function UserOrdersPage() {
     return true;
   });
 
-  const totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE);
+  const totalPages = Math.ceil(filteredOrders.length / PAGE_SIZE) || 1;
   const paginatedOrders = filteredOrders.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE
   );
+
+  if (!mounted) {
+    return <div className="bg-white min-h-screen" />;
+  }
 
   return (
     <div className="bg-white min-h-screen py-16 font-sans text-[#0B2545]">

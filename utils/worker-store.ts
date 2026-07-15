@@ -2,7 +2,8 @@
 
 import { OrderItem, MOCK_ORDERS } from '@/components/orders/constants';
 
-const STORAGE_KEY = 'vance_worker_orders';
+const STORAGE_KEY = 'vance_orders';
+const BOOKINGS_UPDATED_EVENT = 'bookingsUpdated';
 
 export function getLocalOrders(): OrderItem[] {
   if (typeof window === 'undefined') return MOCK_ORDERS;
@@ -21,4 +22,5 @@ export function getLocalOrders(): OrderItem[] {
 export function saveLocalOrders(orders: OrderItem[]) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+  window.dispatchEvent(new Event(BOOKINGS_UPDATED_EVENT));
 }

@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ClipboardList,
   User,
-  Award,
   CheckCircle,
   Clock,
   ArrowRight,
@@ -148,6 +148,7 @@ function CustomDropdown({
 }
 
 export default function WorkerDashboardPage() {
+  const router = useRouter();
   const { accentTheme } = useSidebar();
   const isNavy = accentTheme === 'navy';
 
@@ -201,10 +202,17 @@ export default function WorkerDashboardPage() {
     Promise.resolve().then(() => {
       const loggedInEmail = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
       setEmail(loggedInEmail);
+
+      const data = getWorkerByEmail(loggedInEmail);
+      if (data && data.approvalStatus === 'approved') {
+        router.push('/worker/tasks');
+        return;
+      }
+
       updateProfileData(loggedInEmail);
       setMounted(true);
     });
-  }, []);
+  }, [router]);
 
   const handleOnboardingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -760,37 +768,6 @@ export default function WorkerDashboardPage() {
           >
             <User className="w-4 h-4" /> My Profile
           </Link>
-        </div>
-      </div>
-
-      {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white border border-gray-150/70 rounded-3xl p-6 shadow-3xs text-center space-y-1">
-          <Award className={`w-8 h-8 mx-auto ${accentTextClass}`} />
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Expert Role</p>
-          <p className="text-lg font-black leading-none">{profile.role}</p>
-        </div>
-
-        <div className="bg-white border border-gray-150/70 rounded-3xl p-6 shadow-3xs text-center space-y-1">
-          <div className="text-lg font-black flex items-center justify-center gap-1">
-            <span className="text-yellow-500 text-xl">★</span> {profile.rating}
-          </div>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-            Provider Rating
-          </p>
-          <p className="text-xs font-black text-gray-450 uppercase tracking-wider">
-            Top Rated Expert
-          </p>
-        </div>
-
-        <div className="bg-white border border-gray-150/70 rounded-3xl p-6 shadow-3xs text-center space-y-1">
-          <p className="text-2xl font-black">{profile.completedJobs}</p>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-            Completed Jobs
-          </p>
-          <p className="text-xs font-black text-gray-455 uppercase tracking-wider">
-            Jobs Dispatched
-          </p>
         </div>
       </div>
     </div>

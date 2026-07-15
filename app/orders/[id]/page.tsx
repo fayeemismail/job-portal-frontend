@@ -1,14 +1,16 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
-import { MOCK_ORDERS, ORDERS_PAGE_COPY, BILLING_CONFIG } from '@/components/orders/constants';
+import { ORDERS_PAGE_COPY, BILLING_CONFIG } from '@/components/orders/constants';
 import { ODPHeader } from '@/components/orders/ODPHeader';
 import { ODPServiceDetails } from '@/components/orders/ODPServiceDetails';
 import { ODPTimeline } from '@/components/orders/ODPTimeline';
 import { ODPInvoice } from '@/components/orders/ODPInvoice';
 import { ODPActions } from '@/components/orders/ODPActions';
+import { getLocalOrders, saveLocalOrders } from '@/utils/worker-store';
+import { OrderItem } from '@/components/orders/constants';
 
 interface OrderDetailsPageProps {
   params: Promise<{ id: string }>;
@@ -18,17 +20,37 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   const unwrappedParams = use(params);
   const id = unwrappedParams.id;
 
-  // Find the order by ID
-  const order = MOCK_ORDERS.find((o) => o.id === id);
-
-  // States for actions (simulate modifications)
-  const [isCancelled, setIsCancelled] = useState(order?.status === 'cancelled');
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [mounted, setMounted] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    Promise.resolve().then(() => {
+      setOrders(getLocalOrders());
+      setMounted(true);
+    });
+
+    const handleUpdate = () => {
+      setOrders(getLocalOrders());
+    };
+
+    window.addEventListener('bookingsUpdated', handleUpdate);
+    return () => {
+      window.removeEventListener('bookingsUpdated', handleUpdate);
+    };
+  }, []);
+
+  // Find the order by ID
+  const order = orders.find((o) => o.id === id);
 
   const triggerToast = (msg: string) => {
     setToastMsg(msg);
     setTimeout(() => setToastMsg(null), 3000);
   };
+
+  if (!mounted) {
+    return <div className="min-h-screen bg-white" />;
+  }
 
   if (!order) {
     return (
@@ -52,11 +74,35 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   const tax = basePrice * BILLING_CONFIG.taxRate;
   const totalPrice = basePrice + serviceFee + tax;
 
-  const currentStatus = isCancelled ? 'cancelled' : order.status;
-
   const handleCancelBooking = () => {
+    const isCancellable =
+      order.status === 'pending' || order.status === 'assigned' || order.status === 'accepted';
+
+    if (!isCancellable) {
+      alert('This booking has already started or completed and cannot be cancelled.');
+      return;
+    }
+
     if (window.confirm(ORDERS_PAGE_COPY.confirmCancelPrompt)) {
-      setIsCancelled(true);
+      const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const updatedOrders = orders.map((o) =>
+        o.id === id
+          ? {
+              ...o,
+              status: 'cancelled' as const,
+              timeline: [
+                ...o.timeline,
+                {
+                  title: 'Booking Cancelled',
+                  date: `Today, ${nowStr}`,
+                  description: 'Cancelled by customer.',
+                  done: true,
+                },
+              ],
+            }
+          : o
+      );
+      saveLocalOrders(updatedOrders);
       triggerToast(ORDERS_PAGE_COPY.toastCancelSuccess);
     }
   };
@@ -81,14 +127,14 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
 
       <div className="max-w-[1140px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Dynamic ODP Header Block */}
-        <ODPHeader orderId={order.id} status={currentStatus} />
+        <ODPHeader orderId={order.id} status={order.status} />
 
         {/* ODP Page Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column - Details & Progress Tracking */}
           <div className="lg:col-span-8 space-y-6">
             <ODPServiceDetails order={order} />
-            <ODPTimeline timeline={order.timeline} isCancelled={isCancelled} />
+            <ODPTimeline timeline={order.timeline} isCancelled={order.status === 'cancelled'} />
           </div>
 
           {/* Right Column - Invoicing Receipts & Quick Widgets */}
@@ -100,7 +146,7 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
               totalPrice={totalPrice}
             />
             <ODPActions
-              status={currentStatus}
+              status={order.status}
               onDownloadInvoice={handleDownloadInvoice}
               onReschedule={handleReschedule}
               onCancelBooking={handleCancelBooking}

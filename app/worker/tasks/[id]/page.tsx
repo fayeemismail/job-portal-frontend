@@ -12,11 +12,11 @@ import {
   Check,
   Phone,
   AlertCircle,
-  Bookmark,
 } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import { getLocalOrders, saveLocalOrders } from '@/utils/worker-store';
 import { OrderItem } from '@/components/orders/constants';
+import { updateWorkerProfile } from '@/utils/worker-profile-store';
 
 interface WorkerTaskDetailPageProps {
   params: Promise<{ id: string }>;
@@ -66,52 +66,66 @@ export default function WorkerTaskDetailPage({ params }: WorkerTaskDetailPagePro
     let toast = '';
     const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    if (task.worker === null) {
-      // Claim Job
-      const updated = {
-        ...task,
-        status: 'accepted' as const,
-        worker: {
-          name: workerName,
-          role: 'Cleaning Expert',
-          avatarInitials: 'MV',
-          rating: 4.9,
-        },
-        timeline: [
-          ...task.timeline,
-          {
-            title: 'Job Claimed',
-            date: `Today, ${nowStr}`,
-            description: `Assigned to ${workerName}`,
-            done: true,
-          },
-        ],
-      };
-      updateTaskStatusInStore(updated);
-      triggerToast('You have successfully claimed this job!');
-      return;
-    }
-
     switch (task.status) {
+      case 'assigned':
+        nextStatus = 'accepted';
+        toast = 'Assignment accepted successfully!';
+        break;
       case 'accepted':
+        nextStatus = 'on-the-way';
+        toast = 'Transit started! You are on the way.';
+        break;
+      case 'on-the-way':
         nextStatus = 'in-progress';
-        toast = 'Status updated to IN PROGRESS. Work started!';
+        toast = 'Work started! Status updated to IN PROGRESS.';
         break;
       case 'in-progress':
         nextStatus = 'completed';
-        toast = 'Status updated to COMPLETED. Great job!';
+        toast = 'Great job! Service marked as COMPLETED.';
+
+        // Reset worker pool status to Available
+        const workerEmail = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+        updateWorkerProfile(workerEmail, { poolStatus: 'Available' });
         break;
       default:
         return;
     }
 
     const updatedTimeline = [...task.timeline];
-    updatedTimeline.push({
-      title: nextStatus.toUpperCase(),
-      date: `Today, ${nowStr}`,
-      description: `Task updated by ${workerName}`,
-      done: true,
-    });
+    // Mark the previous pending timeline steps as done
+    if (nextStatus === 'accepted') {
+      const assignedIndex = updatedTimeline.findIndex((t) =>
+        t.title.toLowerCase().includes('assigned')
+      );
+      if (assignedIndex !== -1) {
+        updatedTimeline[assignedIndex] = {
+          ...updatedTimeline[assignedIndex],
+          title: 'Professional Assigned & Accepted',
+          date: `Today, ${nowStr}`,
+          description: `${workerName} has accepted your order booking.`,
+          done: true,
+        };
+      }
+    } else if (nextStatus === 'completed') {
+      const completedIndex = updatedTimeline.findIndex((t) =>
+        t.title.toLowerCase().includes('completed')
+      );
+      if (completedIndex !== -1) {
+        updatedTimeline[completedIndex] = {
+          ...updatedTimeline[completedIndex],
+          date: `Today, ${nowStr}`,
+          description: 'The work has been completed. Cash on Delivery collection pending.',
+          done: true,
+        };
+      }
+    } else {
+      updatedTimeline.push({
+        title: nextStatus.toUpperCase().replace(/-/g, ' '),
+        date: `Today, ${nowStr}`,
+        description: `Task updated by ${workerName}`,
+        done: true,
+      });
+    }
 
     const updatedTask = {
       ...task,
@@ -153,12 +167,13 @@ export default function WorkerTaskDetailPage({ params }: WorkerTaskDetailPagePro
 
   // Action Button config
   const getActionBtnConfig = () => {
-    if (task.worker === null) {
-      return { label: 'Claim Job Ticket', icon: Bookmark };
-    }
     switch (task.status) {
+      case 'assigned':
+        return { label: 'Accept Job Assignment', icon: CheckCircle };
       case 'accepted':
-        return { label: 'Arrived at Location', icon: CheckCircle };
+        return { label: 'Start Transit / On The Way', icon: MapPin };
+      case 'on-the-way':
+        return { label: 'Arrived / Start Work', icon: CheckCircle };
       case 'in-progress':
         return { label: 'Mark as Completed', icon: Check };
       default:
@@ -207,13 +222,17 @@ export default function WorkerTaskDetailPage({ params }: WorkerTaskDetailPagePro
             </span>
             <span
               className={`text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full border ${
-                task.status === 'completed'
+                task.status === 'completed' ||
+                task.status === 'cash-collected' ||
+                task.status === 'closed'
                   ? 'bg-green-50 text-green-700 border-green-100'
                   : task.status === 'in-progress'
                     ? 'bg-blue-50 text-blue-700 border-blue-100'
-                    : task.status === 'dispatched'
-                      ? 'bg-purple-50 text-purple-700 border-purple-100'
-                      : 'bg-amber-50 text-amber-700 border-amber-100'
+                    : task.status === 'on-the-way'
+                      ? 'bg-amber-50 text-amber-700 border-amber-100'
+                      : task.status === 'assigned' || task.status === 'accepted'
+                        ? 'bg-purple-50 text-purple-700 border-purple-100'
+                        : 'bg-gray-50 text-gray-700 border-gray-100'
               }`}
             >
               {task.status}

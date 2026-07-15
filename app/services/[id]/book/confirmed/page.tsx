@@ -1,13 +1,18 @@
 'use client';
 
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { MOCK_SERVICES, BOOKING_DATES, BOOKING_TIME_SLOTS } from '@/components/services/constants';
 import { BookingConfirmed } from '@/components/services/checkout/BookingConfirmed';
+import { getLocalOrders, saveLocalOrders } from '@/utils/worker-store';
+import { OrderItem } from '@/components/orders/constants';
 
 export default function BookingConfirmedPage() {
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const searchParams = useSearchParams();
+  const hasCreated = useRef(false);
+  const [newOrderId, setNewOrderId] = useState<string | null>(null);
 
   // Retrieve service
   const service = MOCK_SERVICES.find((s) => s.id === id);
@@ -33,12 +38,70 @@ export default function BookingConfirmedPage() {
       ? BOOKING_TIME_SLOTS[timeIdx]
       : BOOKING_TIME_SLOTS[0];
 
+  useEffect(() => {
+    if (!service || hasCreated.current) return;
+    hasCreated.current = true;
+
+    // Generate unique order ID
+    const randomNum = Math.floor(10000 + Math.random() * 90000);
+    const randomChar = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    const generatedId = `ORD-${randomNum}${randomChar}`;
+    setNewOrderId(generatedId);
+
+    const now = new Date();
+    const createdDateStr = `${now.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+    const newBooking: OrderItem = {
+      id: generatedId,
+      serviceName: service.title,
+      category: service.category,
+      imageUrl: '/service-cleaning.png',
+      status: 'pending',
+      price: service.price,
+      paymentMethod: 'Cash on Service / Pay Later (Conventional)',
+      date: `${activeDate.day}, July ${activeDate.date}, 2026`,
+      timeSlot: activeTime,
+      address: `${addressStreet}, ${addressCityStateZip}`,
+      worker: null,
+      createdDate: createdDateStr,
+      timeline: [
+        {
+          title: 'Booking Placed',
+          date: createdDateStr,
+          description: 'Your booking has been received and is pending assignment.',
+          done: true,
+        },
+        {
+          title: 'Professional Assigned',
+          date: '--',
+          description: 'Pending expert assignment.',
+          done: false,
+        },
+        {
+          title: 'Service Completed',
+          date: '--',
+          description: 'Pending service work.',
+          done: false,
+        },
+      ],
+    };
+
+    const currentOrders = getLocalOrders();
+    // Prepend so it shows up first in the user list
+    const updatedOrders = [newBooking, ...currentOrders];
+    saveLocalOrders(updatedOrders);
+  }, [service, activeDate, activeTime, addressStreet, addressCityStateZip]);
+
   const handleFinishBooking = () => {
     router.push('/services');
   };
 
   const handleViewOrder = () => {
-    router.push(`/orders/ORD-8947A`);
+    if (newOrderId) {
+      router.push(`/orders/${newOrderId}`);
+    } else {
+      router.push('/orders');
+    }
   };
 
   if (!service) {
