@@ -560,56 +560,172 @@ export default function AdminWorkersPage() {
               {selectedWorker.questionnaire ? (
                 <div className="space-y-4">
                   <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 border-b border-gray-100 pb-1">
-                    Questionnaire Answers
+                    Onboarding Submissions
                   </h3>
 
+                  {/* Legacy questionnaire fields if present */}
+                  {(selectedWorker.questionnaire.experience ||
+                    selectedWorker.questionnaire.availability) && (
+                    <div className="grid grid-cols-2 gap-3 text-xs bg-gray-50/50 p-3 rounded-2xl border border-gray-100">
+                      {selectedWorker.questionnaire.experience && (
+                        <div>
+                          <span className="font-semibold text-gray-400 block text-[10px]">
+                            Experience Declared:
+                          </span>
+                          <span className="font-extrabold">
+                            {selectedWorker.questionnaire.experience}
+                          </span>
+                        </div>
+                      )}
+                      {selectedWorker.questionnaire.availability && (
+                        <div>
+                          <span className="font-semibold text-gray-400 block text-[10px]">
+                            Availability:
+                          </span>
+                          <span className="font-extrabold">
+                            {selectedWorker.questionnaire.availability}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* New onboarding fields */}
                   <div className="grid grid-cols-2 gap-4 text-xs">
-                    <div>
-                      <span className="font-semibold text-gray-400 block">
-                        Experience Declared:
-                      </span>
-                      <span className="font-extrabold">
-                        {selectedWorker.questionnaire.experience}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="font-semibold text-gray-400 block">
-                        Weekly Availability:
-                      </span>
-                      <span className="font-extrabold">
-                        {selectedWorker.questionnaire.availability}
-                      </span>
-                    </div>
-
-                    <div className="col-span-2">
-                      <span className="font-semibold text-gray-400 block mb-1">
-                        Equipment Declared:
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selectedWorker.questionnaire.equipment.map((eq, idx) => (
-                          <span
-                            key={idx}
-                            className="text-[10px] font-semibold px-2.5 py-0.5 rounded-lg bg-gray-50 border border-gray-150"
-                          >
-                            ✓ {eq}
-                          </span>
-                        ))}
-                        {selectedWorker.questionnaire.equipment.length === 0 && (
-                          <span className="text-[10px] text-gray-400 italic">
-                            No equipment declared
-                          </span>
-                        )}
+                    {selectedWorker.questionnaire.primaryService && (
+                      <div className="col-span-2">
+                        <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider">
+                          Service Offered:
+                        </span>
+                        <span className="font-extrabold text-[#0B2545]">
+                          {selectedWorker.questionnaire.primaryService}
+                        </span>
                       </div>
-                    </div>
+                    )}
+                    {selectedWorker.questionnaire.phone && (
+                      <div>
+                        <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider">
+                          Phone Number:
+                        </span>
+                        <span className="font-extrabold text-[#0B2545]">
+                          {selectedWorker.questionnaire.phone}
+                        </span>
+                      </div>
+                    )}
+                    {selectedWorker.questionnaire.baseLocation && (
+                      <div>
+                        <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider">
+                          Base Location:
+                        </span>
+                        <span className="font-extrabold text-[#0B2545]">
+                          {selectedWorker.questionnaire.baseLocation}
+                        </span>
+                      </div>
+                    )}
+                    {selectedWorker.questionnaire.serviceableDistance !== undefined && (
+                      <div>
+                        <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider">
+                          Serviceable Radius:
+                        </span>
+                        <span className="font-extrabold text-[#0B2545]">
+                          {selectedWorker.questionnaire.serviceableDistance} km
+                        </span>
+                      </div>
+                    )}
 
-                    <div className="col-span-2">
-                      <span className="font-semibold text-gray-400 block">
-                        Professional Bio Statement:
-                      </span>
-                      <p className="text-xs italic bg-gray-50/50 p-3 rounded-2xl border border-gray-100 leading-relaxed mt-1 text-[#0B2545]/85">
-                        &ldquo;{selectedWorker.questionnaire.bio}&rdquo;
-                      </p>
-                    </div>
+                    {/* Bank Details section */}
+                    {selectedWorker.questionnaire.bankDetails && (
+                      <div className="col-span-2 bg-[#FFF4F0]/30 border border-[#EE5E36]/10 p-3.5 rounded-2xl space-y-2.5">
+                        <h4 className="text-[10px] font-black uppercase text-[#EE5E36] tracking-wider border-b border-[#EE5E36]/10 pb-1">
+                          Bank Account Details
+                        </h4>
+                        <div className="grid grid-cols-2 gap-2.5">
+                          <div>
+                            <span className="font-semibold text-gray-400 block text-[9px] uppercase tracking-wider">
+                              Bank Name:
+                            </span>
+                            <span className="font-extrabold text-[#0B2545]">
+                              {selectedWorker.questionnaire.bankDetails.bankName}
+                            </span>
+                          </div>
+                          {selectedWorker.questionnaire.bankDetails.branchName && (
+                            <div>
+                              <span className="font-semibold text-gray-400 block text-[9px] uppercase tracking-wider">
+                                Branch:
+                              </span>
+                              <span className="font-extrabold text-[#0B2545]">
+                                {selectedWorker.questionnaire.bankDetails.branchName}
+                              </span>
+                            </div>
+                          )}
+                          <div>
+                            <span className="font-semibold text-gray-400 block text-[9px] uppercase tracking-wider">
+                              IFSC Code:
+                            </span>
+                            <span className="font-extrabold text-[#0B2545]">
+                              {selectedWorker.questionnaire.bankDetails.ifscCode}
+                            </span>
+                          </div>
+                          {selectedWorker.questionnaire.bankDetails.accountNumber && (
+                            <div>
+                              <span className="font-semibold text-gray-400 block text-[9px] uppercase tracking-wider">
+                                Account Number:
+                              </span>
+                              <span className="font-extrabold text-[#0B2545]">
+                                ••••{' '}
+                                {selectedWorker.questionnaire.bankDetails.accountNumber.slice(-4)}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Documents list */}
+                    {selectedWorker.questionnaire.documents &&
+                      selectedWorker.questionnaire.documents.length > 0 && (
+                        <div className="col-span-2 space-y-2">
+                          <span className="font-semibold text-gray-400 block text-[10px] uppercase tracking-wider">
+                            Uploaded Documents ({selectedWorker.questionnaire.documents.length}):
+                          </span>
+                          <div className="space-y-2">
+                            {selectedWorker.questionnaire.documents.map((doc, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-between bg-white border border-gray-150 p-2.5 rounded-xl text-xs"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <FileText className="w-4.5 h-4.5 text-[#EE5E36]" />
+                                  <div>
+                                    <p className="font-extrabold text-[#0B2545] truncate max-w-[200px]">
+                                      {doc.name}
+                                    </p>
+                                    <p className="text-[9px] text-gray-400">
+                                      {doc.type} • {doc.size}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-600 border border-yellow-250">
+                                    {doc.status}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      alert(
+                                        `Reviewing document: ${doc.name}\nType: ${doc.type}\nUploaded: ${doc.uploadedAt}\nStatus: ${doc.status}`
+                                      )
+                                    }
+                                    className="text-[9px] font-black uppercase text-[#EE5E36] hover:underline cursor-pointer"
+                                  >
+                                    View
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </div>
               ) : (

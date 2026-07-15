@@ -50,7 +50,7 @@ export default function WorkerProfilePage() {
   const isNavy = accentTheme === 'navy';
 
   // Demo worker email
-  const workerEmail = 'worker@example.com';
+  const [workerEmail, setWorkerEmail] = useState('worker@example.com');
 
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
   const [name, setName] = useState('');
@@ -64,7 +64,9 @@ export default function WorkerProfilePage() {
 
   useEffect(() => {
     Promise.resolve().then(() => {
-      const data = getWorkerByEmail(workerEmail);
+      const loggedInEmail = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+      setWorkerEmail(loggedInEmail);
+      const data = getWorkerByEmail(loggedInEmail);
       if (data) {
         setProfile(data);
         setName(data.name);

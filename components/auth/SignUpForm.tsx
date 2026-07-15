@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { authCookie } from '@/utils/auth-cookie';
+import { authCookie, workerCookie } from '@/utils/auth-cookie';
 import { AuthSidebar } from './AuthSidebar';
+import { addWorker, getWorkerByEmail } from '@/utils/worker-profile-store';
 
 export function SignUpForm() {
   // Set default values for quick testing
@@ -39,6 +40,22 @@ export function SignUpForm() {
     // Instant authentication redirect
     authCookie.set(true);
     if (role === 'worker') {
+      const existing = getWorkerByEmail(email);
+      if (!existing) {
+        addWorker({
+          name,
+          email,
+          phone: '',
+          role: 'Expert',
+          rating: 5.0,
+          completedJobs: 0,
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+          skills: [],
+          approvalStatus: 'pending',
+        });
+      }
+      localStorage.setItem('vance_logged_in_email', email);
+      workerCookie.set(true);
       window.location.href = '/worker';
     } else {
       window.location.href = '/';
@@ -48,8 +65,26 @@ export function SignUpForm() {
   const handleSocialLogin = () => {
     authCookie.set(true);
     if (role === 'worker') {
+      const defaultEmail = 'social-worker@example.com';
+      const existing = getWorkerByEmail(defaultEmail);
+      if (!existing) {
+        addWorker({
+          name: 'Social Worker',
+          email: defaultEmail,
+          phone: '',
+          role: 'Expert',
+          rating: 5.0,
+          completedJobs: 0,
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+          skills: [],
+          approvalStatus: 'pending',
+        });
+      }
+      localStorage.setItem('vance_logged_in_email', defaultEmail);
+      workerCookie.set(true);
       window.location.href = '/worker';
     } else {
+      localStorage.setItem('vance_logged_in_email', 'john.doe@example.com');
       window.location.href = '/';
     }
   };
