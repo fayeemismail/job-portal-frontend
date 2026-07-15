@@ -8,61 +8,61 @@ export type AdminTheme = 'navy' | 'charcoal' | 'slate' | 'light';
 
 export const THEME_CLASSES = {
   navy: {
-    sidebarBg: 'bg-[#0B2545] text-white border-white/5',
-    activeBtn: 'bg-[#EE5E36] text-white shadow-md shadow-[#EE5E36]/10',
+    sidebarBg: 'bg-[#0B2545] text-white border-r border-[#0B2545]/10',
+    activeBtn: 'bg-white/10 text-white shadow-3xs',
     hoverBtn: 'text-gray-300 hover:bg-white/5 hover:text-white',
     label: 'text-gray-400/80',
     footerBg: 'bg-[#081C35]/50 border-t border-white/5',
-    footerIcon: 'text-gray-400 hover:text-[#EE5E36] hover:bg-white/5',
+    footerIcon: 'text-gray-400 hover:text-white hover:bg-white/5',
     logoFilter: 'brightness-0 invert',
-    navbarBg: 'bg-[#0B2545] text-white border-b border-white/5',
-    navbarTrigger: 'text-white hover:bg-white/10',
-    navbarIcon: 'text-gray-300 hover:text-[#EE5E36] hover:bg-white/5',
-    navbarText: 'text-white',
-    navbarSubtitle: 'text-gray-300/80',
-    navbarDivider: 'bg-white/10',
-  },
-  charcoal: {
-    sidebarBg: 'bg-[#111827] text-white border-white/5',
-    activeBtn: 'bg-[#3B82F6] text-white shadow-md shadow-[#3B82F6]/10',
-    hoverBtn: 'text-gray-300 hover:bg-white/5 hover:text-white',
-    label: 'text-gray-400/80',
-    footerBg: 'bg-black/20 border-t border-white/5',
-    footerIcon: 'text-gray-400 hover:text-[#3B82F6] hover:bg-white/5',
-    logoFilter: 'brightness-0 invert',
-    navbarBg: 'bg-[#111827] text-white border-b border-white/5',
-    navbarTrigger: 'text-white hover:bg-white/10',
-    navbarIcon: 'text-gray-300 hover:text-[#3B82F6] hover:bg-white/5',
-    navbarText: 'text-white',
-    navbarSubtitle: 'text-gray-300/80',
-    navbarDivider: 'bg-white/10',
-  },
-  slate: {
-    sidebarBg: 'bg-[#0F172A] text-white border-white/5',
-    activeBtn: 'bg-[#10B981] text-white shadow-md shadow-[#10B981]/10',
-    hoverBtn: 'text-gray-300 hover:bg-white/5 hover:text-white',
-    label: 'text-gray-400/80',
-    footerBg: 'bg-black/25 border-t border-white/5',
-    footerIcon: 'text-gray-400 hover:text-[#10B981] hover:bg-white/5',
-    logoFilter: 'brightness-0 invert',
-    navbarBg: 'bg-[#0F172A] text-white border-b border-white/5',
-    navbarTrigger: 'text-white hover:bg-white/10',
-    navbarIcon: 'text-gray-300 hover:text-[#10B981] hover:bg-white/5',
-    navbarText: 'text-white',
-    navbarSubtitle: 'text-gray-300/80',
-    navbarDivider: 'bg-white/10',
-  },
-  light: {
-    sidebarBg: 'bg-white text-[#0B2545] border-r border-gray-200',
-    activeBtn: 'bg-[#EE5E36] text-white shadow-md shadow-[#EE5E36]/10',
-    hoverBtn: 'text-gray-500 hover:bg-gray-100 hover:text-[#0B2545]',
-    label: 'text-gray-400',
-    footerBg: 'bg-gray-50 border-t border-gray-150',
-    footerIcon: 'text-gray-500 hover:text-[#EE5E36] hover:bg-gray-200/50',
-    logoFilter: '',
     navbarBg: 'bg-white text-[#0B2545] border-b border-gray-200',
     navbarTrigger: 'text-[#0B2545] hover:bg-gray-100',
-    navbarIcon: 'text-gray-500 hover:text-[#EE5E36] hover:bg-gray-50',
+    navbarIcon: 'text-gray-500 hover:text-[#0B2545] hover:bg-gray-50',
+    navbarText: 'text-[#0B2545]',
+    navbarSubtitle: 'text-gray-400',
+    navbarDivider: 'bg-gray-200',
+  },
+  charcoal: {
+    sidebarBg: 'bg-[#0B2545] text-white border-r border-[#0B2545]/10',
+    activeBtn: 'bg-white/10 text-white shadow-3xs',
+    hoverBtn: 'text-gray-300 hover:bg-white/5 hover:text-white',
+    label: 'text-gray-400/80',
+    footerBg: 'bg-[#081C35]/50 border-t border-white/5',
+    footerIcon: 'text-gray-400 hover:text-white hover:bg-white/5',
+    logoFilter: 'brightness-0 invert',
+    navbarBg: 'bg-white text-[#0B2545] border-b border-gray-200',
+    navbarTrigger: 'text-[#0B2545] hover:bg-gray-100',
+    navbarIcon: 'text-gray-500 hover:text-[#0B2545] hover:bg-gray-50',
+    navbarText: 'text-[#0B2545]',
+    navbarSubtitle: 'text-gray-400',
+    navbarDivider: 'bg-gray-200',
+  },
+  slate: {
+    sidebarBg: 'bg-[#0B2545] text-white border-r border-[#0B2545]/10',
+    activeBtn: 'bg-white/10 text-white shadow-3xs',
+    hoverBtn: 'text-gray-300 hover:bg-white/5 hover:text-white',
+    label: 'text-gray-400/80',
+    footerBg: 'bg-[#081C35]/50 border-t border-white/5',
+    footerIcon: 'text-gray-400 hover:text-white hover:bg-white/5',
+    logoFilter: 'brightness-0 invert',
+    navbarBg: 'bg-white text-[#0B2545] border-b border-gray-200',
+    navbarTrigger: 'text-[#0B2545] hover:bg-gray-100',
+    navbarIcon: 'text-gray-500 hover:text-[#0B2545] hover:bg-gray-50',
+    navbarText: 'text-[#0B2545]',
+    navbarSubtitle: 'text-gray-400',
+    navbarDivider: 'bg-gray-200',
+  },
+  light: {
+    sidebarBg: 'bg-[#0B2545] text-white border-r border-[#0B2545]/10',
+    activeBtn: 'bg-white/10 text-white shadow-3xs',
+    hoverBtn: 'text-gray-300 hover:bg-white/5 hover:text-white',
+    label: 'text-gray-400/80',
+    footerBg: 'bg-[#081C35]/50 border-t border-white/5',
+    footerIcon: 'text-gray-400 hover:text-white hover:bg-white/5',
+    logoFilter: 'brightness-0 invert',
+    navbarBg: 'bg-white text-[#0B2545] border-b border-gray-200',
+    navbarTrigger: 'text-[#0B2545] hover:bg-gray-100',
+    navbarIcon: 'text-gray-500 hover:text-[#0B2545] hover:bg-gray-50',
     navbarText: 'text-[#0B2545]',
     navbarSubtitle: 'text-gray-400',
     navbarDivider: 'bg-gray-200',
@@ -112,21 +112,12 @@ interface SidebarProviderProps {
 
 export function SidebarProvider({ children }: SidebarProviderProps) {
   const [open, setOpen] = useState(true);
-  const [theme, setTheme] = useState<AdminTheme>('light');
-  const [accentTheme, setAccentTheme] = useState<AccentTheme>('navy');
+  const theme: AdminTheme = 'navy';
+  const accentTheme: AccentTheme = 'navy';
 
   const toggleSidebar = () => setOpen(!open);
 
-  const baseTheme = THEME_CLASSES[theme];
-  const isNavyAccent = accentTheme === 'navy';
-  const activeBtn = isNavyAccent
-    ? 'bg-[#0B2545] text-white shadow-md shadow-[#0B2545]/15'
-    : 'bg-[#EE5E36] text-white shadow-md shadow-[#EE5E36]/15';
-
-  const themeClasses = {
-    ...baseTheme,
-    activeBtn,
-  };
+  const themeClasses = THEME_CLASSES[theme];
 
   return (
     <SidebarContext.Provider
@@ -135,9 +126,9 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
         setOpen,
         toggleSidebar,
         theme,
-        setTheme,
+        setTheme: () => {},
         accentTheme,
-        setAccentTheme,
+        setAccentTheme: () => {},
         themeClasses,
       }}
     >

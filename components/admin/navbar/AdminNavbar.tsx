@@ -3,7 +3,6 @@
 import { SidebarTrigger, useSidebar, THEME_CLASSES } from '@/components/ui/sidebar';
 import { ConsoleControl } from './ConsoleControl';
 import { ProfileDropdown } from './ProfileDropdown';
-import { AccentSwitcher } from './AccentSwitcher';
 
 export function AdminNavbar() {
   const { theme } = useSidebar();
@@ -22,8 +21,6 @@ export function AdminNavbar() {
 
       {/* Right side actions - Admin Profile Dropdown */}
       <div className="flex items-center gap-4 h-full">
-        <AccentSwitcher />
-        <div className={`h-4 w-px ${themeClasses.navbarDivider}`} />
         <ProfileDropdown theme={theme} />
       </div>
     </header>

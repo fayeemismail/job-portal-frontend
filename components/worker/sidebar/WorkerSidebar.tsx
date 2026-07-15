@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, User } from 'lucide-react';
 import { Logo } from '@/components/layout/navbar/Logo';
 import {
   Sidebar,
@@ -27,6 +27,11 @@ const WORKER_NAV_ITEMS = [
     href: '/worker/tasks',
     icon: ClipboardList,
   },
+  {
+    label: 'My Profile',
+    href: '/worker/profile',
+    icon: User,
+  },
 ] as const;
 
 export function WorkerSidebar() {
@@ -43,7 +48,7 @@ export function WorkerSidebar() {
               <Logo />
             </div>
           ) : (
-            <div className="mx-auto text-xs font-black select-none tracking-widest text-[#EE5E36]">
+            <div className="mx-auto text-xs font-black select-none tracking-widest text-white/80">
               AX
             </div>
           )}
@@ -56,11 +61,9 @@ export function WorkerSidebar() {
           <SidebarMenu>
             {WORKER_NAV_ITEMS.map((item) => {
               const Icon = item.icon;
-              // Matches exact page or sub-pages under /worker/tasks
+              // Matches exact page or sub-pages
               const isActive =
-                item.href === '/worker'
-                  ? pathname === '/worker'
-                  : pathname.startsWith('/worker/tasks');
+                item.href === '/worker' ? pathname === '/worker' : pathname.startsWith(item.href);
 
               return (
                 <SidebarMenuItem key={item.label}>

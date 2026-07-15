@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { authCookie } from '@/utils/auth-cookie';
+import { authCookie, workerCookie } from '@/utils/auth-cookie';
 import { AuthSidebar } from './AuthSidebar';
+import { addWorker, getWorkerByEmail } from '@/utils/worker-profile-store';
 
 export function SignUpForm() {
   // Set default values for quick testing
@@ -13,6 +14,7 @@ export function SignUpForm() {
   const [password, setPassword] = useState('password123');
   const [agreeTerms, setAgreeTerms] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState<'customer' | 'worker'>('customer');
 
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -37,12 +39,54 @@ export function SignUpForm() {
 
     // Instant authentication redirect
     authCookie.set(true);
-    window.location.href = '/';
+    if (role === 'worker') {
+      const existing = getWorkerByEmail(email);
+      if (!existing) {
+        addWorker({
+          name,
+          email,
+          phone: '',
+          role: 'Expert',
+          rating: 5.0,
+          completedJobs: 0,
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+          skills: [],
+          approvalStatus: 'pending',
+        });
+      }
+      localStorage.setItem('vance_logged_in_email', email);
+      workerCookie.set(true);
+      window.location.href = '/worker';
+    } else {
+      window.location.href = '/';
+    }
   };
 
   const handleSocialLogin = () => {
     authCookie.set(true);
-    window.location.href = '/';
+    if (role === 'worker') {
+      const defaultEmail = 'social-worker@example.com';
+      const existing = getWorkerByEmail(defaultEmail);
+      if (!existing) {
+        addWorker({
+          name: 'Social Worker',
+          email: defaultEmail,
+          phone: '',
+          role: 'Expert',
+          rating: 5.0,
+          completedJobs: 0,
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
+          skills: [],
+          approvalStatus: 'pending',
+        });
+      }
+      localStorage.setItem('vance_logged_in_email', defaultEmail);
+      workerCookie.set(true);
+      window.location.href = '/worker';
+    } else {
+      localStorage.setItem('vance_logged_in_email', 'john.doe@example.com');
+      window.location.href = '/';
+    }
   };
 
   return (
@@ -57,7 +101,9 @@ export function SignUpForm() {
           <div className="text-left mb-5">
             <h1 className="text-xl font-extrabold text-[#0B2545] tracking-tight">Create Account</h1>
             <p className="text-xs font-semibold text-gray-400 mt-1">
-              Sign up today and schedule your first service in seconds.
+              {role === 'customer'
+                ? 'Sign up today and schedule your first service in seconds.'
+                : 'Join our expert network and start receiving tasks in your area.'}
             </p>
           </div>
 
@@ -70,6 +116,35 @@ export function SignUpForm() {
 
           {/* Form */}
           <form onSubmit={handleSignUp} className="space-y-3.5 text-left">
+            {/* Minimal Helper Link Onboarding Choice */}
+            <div className="bg-gray-50 border border-gray-200/50 rounded-xl p-3 mb-4 text-left">
+              <p className="text-[10px] text-gray-500 font-bold leading-relaxed">
+                {role === 'customer' ? (
+                  <>
+                    Looking to earn money as a service provider?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setRole('worker')}
+                      className="text-[#EE5E36] font-extrabold hover:underline cursor-pointer outline-none"
+                    >
+                      Sign up as an Expert
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    Looking to book home services?{' '}
+                    <button
+                      type="button"
+                      onClick={() => setRole('customer')}
+                      className="text-[#EE5E36] font-extrabold hover:underline cursor-pointer outline-none"
+                    >
+                      Sign up as a Customer
+                    </button>
+                  </>
+                )}
+              </p>
+            </div>
+
             {/* Full Name Field */}
             <div>
               <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400 mb-1.5">

@@ -3,6 +3,7 @@ export const DEFAULT_PROFILE = {
   email: 'johndoe@example.com',
   phone: '+1 (555) 019-2834',
   initials: 'JD',
+  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
 };
 
 export const PROFILE_DASHBOARD_COPY = {

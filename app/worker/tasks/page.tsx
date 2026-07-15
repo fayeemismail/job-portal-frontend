@@ -122,17 +122,17 @@ export default function WorkerTasksPage() {
 
       {/* Task Cards List */}
       {filteredTasks.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredTasks.map((task) => (
             <Link
               key={task.id}
               href={`/worker/tasks/${task.id}`}
-              className="bg-white border border-[#0B2545]/10 rounded-3xl p-6 shadow-3xs hover:shadow-xs transition-all flex flex-col justify-between gap-4 text-left relative group overflow-hidden"
+              className="bg-white border border-[#0B2545]/10 rounded-2xl p-4 shadow-3xs hover:border-[#0B2545]/50 transition-colors duration-300 flex flex-col justify-between gap-3 text-left relative group overflow-hidden"
             >
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between gap-4">
                   <span
-                    className={`text-[9px] font-black uppercase px-2 py-0.5 rounded tracking-widest border ${
+                    className={`text-[8.5px] font-black uppercase px-1.5 py-0.5 rounded tracking-widest border ${
                       isNavy
                         ? 'bg-[#0B2545]/5 text-[#0B2545] border-[#0B2545]/10'
                         : 'bg-[#FFF4F0] text-[#EE5E36] border-[#EE5E36]/10'
@@ -140,14 +140,14 @@ export default function WorkerTasksPage() {
                   >
                     {task.category}
                   </span>
-                  <span className="text-[10px] font-mono text-gray-400 font-bold">{task.id}</span>
+                  <span className="text-[9.5px] font-mono text-gray-400 font-bold">{task.id}</span>
                 </div>
 
-                <h3 className="text-base font-black leading-snug text-[#0B2545] group-hover:text-gray-700 transition-colors">
+                <h3 className="text-sm font-black leading-snug text-[#0B2545] group-hover:text-gray-700 transition-colors">
                   {task.serviceName}
                 </h3>
 
-                <div className="grid grid-cols-1 gap-2 pt-2 text-xs font-bold text-gray-500">
+                <div className="grid grid-cols-1 gap-1.5 pt-1.5 text-xs font-bold text-gray-500">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 shrink-0" />
                     <span>{task.date}</span>
@@ -158,16 +158,18 @@ export default function WorkerTasksPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate max-w-[240px]">{task.address}</span>
+                    <span className="truncate max-w-[200px]">{task.address}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between border-t border-gray-50 pt-4 mt-1">
-                <span className="text-sm font-black text-gray-900">${task.price.toFixed(2)}</span>
+              <div className="flex items-center justify-between border-t border-gray-50 pt-3 mt-1">
+                <span className="text-[13px] font-black text-gray-900">
+                  ${task.price.toFixed(2)}
+                </span>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                    className={`text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                       task.status === 'completed'
                         ? 'bg-green-50 text-green-700 border-green-100'
                         : task.status === 'in-progress'
