@@ -2,67 +2,46 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { authCookie, workerCookie } from '@/utils/auth-cookie';
+import { User, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { AuthSidebar } from './AuthSidebar';
+import { signUpSchema, SignUpFormData } from '@/validators/auth.validator';
+import { useRegister } from '@/hooks/use-register';
+import { authCookie, workerCookie } from '@/utils/auth-cookie';
 import { addWorker, getWorkerByEmail } from '@/utils/worker-profile-store';
 
 export function SignUpForm() {
-  // Set default values for quick testing
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('john.doe@example.com');
-  const [password, setPassword] = useState('password123');
-  const [agreeTerms, setAgreeTerms] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState<'customer' | 'worker'>('customer');
 
-  const [errorMsg, setErrorMsg] = useState('');
+  const { registerUser, isPending, errorMsg, setErrorMsg } = useRegister();
 
-  const handleSignUp = (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      role: 'customer',
+      agreeTerms: false,
+    },
+  });
+
+  const role = watch('role');
+
+  const onSubmit = (data: SignUpFormData) => {
     setErrorMsg('');
-
-    if (!name || !email || !password) {
-      setErrorMsg('Please fill in all fields.');
-      return;
-    }
-
-    if (!agreeTerms) {
-      setErrorMsg('You must agree to the Terms of Service & Privacy Policy.');
-      return;
-    }
-
-    if (password.length < 6) {
-      setErrorMsg('Password must be at least 6 characters long.');
-      return;
-    }
-
-    // Instant authentication redirect
-    authCookie.set(true);
-    if (role === 'worker') {
-      const existing = getWorkerByEmail(email);
-      if (!existing) {
-        addWorker({
-          name,
-          email,
-          phone: '',
-          role: 'Expert',
-          rating: 5.0,
-          completedJobs: 0,
-          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
-          skills: [],
-          approvalStatus: 'pending',
-        });
-      }
-      localStorage.setItem('vance_logged_in_email', email);
-      workerCookie.set(true);
-      window.location.href = '/worker';
-    } else {
-      window.location.href = '/';
-    }
+    registerUser(data);
   };
 
   const handleSocialLogin = () => {
+    // Instant mock authentication for social login demonstration
     authCookie.set(true);
     if (role === 'worker') {
       const defaultEmail = 'social-worker@example.com';
@@ -115,7 +94,7 @@ export function SignUpForm() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSignUp} className="space-y-3.5 text-left">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5 text-left">
             {/* Minimal Helper Link Onboarding Choice */}
             <div className="bg-gray-50 border border-gray-200/50 rounded-xl p-3 mb-4 text-left">
               <p className="text-[10px] text-gray-500 font-bold leading-relaxed">
@@ -124,7 +103,7 @@ export function SignUpForm() {
                     Looking to earn money as a service provider?{' '}
                     <button
                       type="button"
-                      onClick={() => setRole('worker')}
+                      onClick={() => setValue('role', 'worker')}
                       className="text-[#EE5E36] font-extrabold hover:underline cursor-pointer outline-none"
                     >
                       Sign up as an Expert
@@ -135,7 +114,7 @@ export function SignUpForm() {
                     Looking to book home services?{' '}
                     <button
                       type="button"
-                      onClick={() => setRole('customer')}
+                      onClick={() => setValue('role', 'customer')}
                       className="text-[#EE5E36] font-extrabold hover:underline cursor-pointer outline-none"
                     >
                       Sign up as a Customer
@@ -156,13 +135,18 @@ export function SignUpForm() {
                 </span>
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
-                  required
-                  className="w-full pl-9 pr-4 py-2 bg-gray-50/50 border border-gray-200 focus:border-[#EE5E36] focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200"
+                  {...register('name')}
+                  className={`w-full pl-9 pr-4 py-2 bg-gray-50/50 border ${
+                    errors.name
+                      ? 'border-red-500 focus:border-red-500'
+                      : 'border-gray-200 focus:border-[#EE5E36]'
+                  } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
                 />
               </div>
+              {errors.name && (
+                <p className="text-[10px] text-red-500 font-semibold mt-1">{errors.name.message}</p>
+              )}
             </div>
 
             {/* Email Field */}
@@ -176,13 +160,20 @@ export function SignUpForm() {
                 </span>
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@domain.com"
-                  required
-                  className="w-full pl-9 pr-4 py-2 bg-gray-50/50 border border-gray-200 focus:border-[#EE5E36] focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200"
+                  {...register('email')}
+                  className={`w-full pl-9 pr-4 py-2 bg-gray-50/50 border ${
+                    errors.email
+                      ? 'border-red-500 focus:border-red-500'
+                      : 'border-gray-200 focus:border-[#EE5E36]'
+                  } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
                 />
               </div>
+              {errors.email && (
+                <p className="text-[10px] text-red-500 font-semibold mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -196,11 +187,13 @@ export function SignUpForm() {
                 </span>
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 6 characters"
-                  required
-                  className="w-full pl-9 pr-9 py-2 bg-gray-50/50 border border-gray-200 focus:border-[#EE5E36] focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200"
+                  {...register('password')}
+                  className={`w-full pl-9 pr-9 py-2 bg-gray-50/50 border ${
+                    errors.password
+                      ? 'border-red-500 focus:border-red-500'
+                      : 'border-gray-200 focus:border-[#EE5E36]'
+                  } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
                 />
                 <button
                   type="button"
@@ -214,39 +207,58 @@ export function SignUpForm() {
                   )}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-[10px] text-red-500 font-semibold mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Terms and conditions Checkbox */}
-            <div className="flex items-start">
-              <input
-                id="terms"
-                type="checkbox"
-                checked={agreeTerms}
-                onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="w-3.5 h-3.5 border-gray-300 rounded text-[#EE5E36] focus:ring-[#EE5E36] cursor-pointer accent-[#EE5E36] mt-0.5"
-              />
-              <label
-                htmlFor="terms"
-                className="ml-2 text-[10px] font-bold text-gray-500 cursor-pointer select-none leading-relaxed"
-              >
-                I agree to Ainorax&apos;s{' '}
-                <Link href="#" className="text-[#EE5E36] hover:underline">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link href="#" className="text-[#EE5E36] hover:underline">
-                  Privacy Policy
-                </Link>
-                .
-              </label>
+            <div className="flex flex-col items-start gap-1">
+              <div className="flex items-start">
+                <input
+                  id="terms"
+                  type="checkbox"
+                  {...register('agreeTerms')}
+                  className="w-3.5 h-3.5 border-gray-300 rounded text-[#EE5E36] focus:ring-[#EE5E36] cursor-pointer accent-[#EE5E36] mt-0.5"
+                />
+                <label
+                  htmlFor="terms"
+                  className="ml-2 text-[10px] font-bold text-gray-500 cursor-pointer select-none leading-relaxed"
+                >
+                  I agree to Ainorax&apos;s{' '}
+                  <Link href="#" className="text-[#EE5E36] hover:underline">
+                    Terms of Service
+                  </Link>{' '}
+                  and{' '}
+                  <Link href="#" className="text-[#EE5E36] hover:underline">
+                    Privacy Policy
+                  </Link>
+                  .
+                </label>
+              </div>
+              {errors.agreeTerms && (
+                <p className="text-[10px] text-red-500 font-semibold">
+                  {errors.agreeTerms.message}
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="btn-animate btn-animate-primary w-full py-2.5 rounded-lg text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-[#EE5E36]/10"
+              disabled={isPending}
+              className="btn-animate btn-animate-primary w-full py-2.5 rounded-lg text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-[#EE5E36]/10 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Register
+              {isPending ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Registering...
+                </>
+              ) : (
+                'Register'
+              )}
             </button>
           </form>
 
