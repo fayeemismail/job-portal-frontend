@@ -213,7 +213,7 @@ export function SignUpForm() {
               <FormFieldError error={errors.password?.message} />
             </div>
 
-            {/* Terms and conditions Checkbox */}
+            {/* Terms and conditions Checkbox (Hidden for now, will add later)
             <div className="flex flex-col items-start gap-1">
               <div className="flex items-start">
                 <input
@@ -239,6 +239,7 @@ export function SignUpForm() {
               </div>
               <FormFieldError error={errors.agreeTerms?.message} />
             </div>
+            */}
 
             {/* Submit Button */}
             <button
