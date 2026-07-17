@@ -31,6 +31,7 @@ export function useRegister() {
     onError: (error: Error) => {
       const apiMessage = error.message || 'Registration failed. Please try again.';
       setErrorMsg(apiMessage);
+      toast.error(apiMessage);
     },
   });
 

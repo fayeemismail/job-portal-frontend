@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { User, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -10,6 +10,8 @@ import { signUpSchema, SignUpFormData } from '@/validators/auth.validator';
 import { useRegister } from '@/hooks/use-register';
 import { authCookie, workerCookie } from '@/utils/auth-cookie';
 import { addWorker, getWorkerByEmail } from '@/utils/worker-profile-store';
+import { CollapseTransition } from '@/components/ui/CollapseTransition';
+import { FormFieldError } from '@/components/ui/FormFieldError';
 
 export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +36,13 @@ export function SignUpForm() {
   });
 
   const role = watch('role');
+
+  useEffect(() => {
+    const subscription = watch(() => {
+      if (errorMsg) setErrorMsg('');
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, errorMsg, setErrorMsg]);
 
   const onSubmit = (data: SignUpFormData) => {
     setErrorMsg('');
@@ -86,12 +95,12 @@ export function SignUpForm() {
             </p>
           </div>
 
-          {/* Alert Error Box */}
-          {errorMsg && (
-            <div className="bg-red-50 border border-red-200/40 text-red-600 px-3.5 py-2.5 rounded-xl text-[11px] font-bold mb-4 text-left animate-in fade-in duration-300">
+          {/* Alert Error Box with Smooth CSS Grid Height Transition */}
+          <CollapseTransition show={!!errorMsg} marginClass="mb-4">
+            <div className="bg-red-50 border border-red-200/40 text-red-600 px-3.5 py-2.5 rounded-xl text-[11px] font-bold text-left">
               {errorMsg}
             </div>
-          )}
+          </CollapseTransition>
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5 text-left">
@@ -144,9 +153,7 @@ export function SignUpForm() {
                   } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
                 />
               </div>
-              {errors.name && (
-                <p className="text-[10px] text-red-500 font-semibold mt-1">{errors.name.message}</p>
-              )}
+              <FormFieldError error={errors.name?.message} />
             </div>
 
             {/* Email Field */}
@@ -169,11 +176,7 @@ export function SignUpForm() {
                   } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
                 />
               </div>
-              {errors.email && (
-                <p className="text-[10px] text-red-500 font-semibold mt-1">
-                  {errors.email.message}
-                </p>
-              )}
+              <FormFieldError error={errors.email?.message} />
             </div>
 
             {/* Password Field */}
@@ -207,11 +210,7 @@ export function SignUpForm() {
                   )}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-[10px] text-red-500 font-semibold mt-1">
-                  {errors.password.message}
-                </p>
-              )}
+              <FormFieldError error={errors.password?.message} />
             </div>
 
             {/* Terms and conditions Checkbox */}
@@ -238,11 +237,7 @@ export function SignUpForm() {
                   .
                 </label>
               </div>
-              {errors.agreeTerms && (
-                <p className="text-[10px] text-red-500 font-semibold">
-                  {errors.agreeTerms.message}
-                </p>
-              )}
+              <FormFieldError error={errors.agreeTerms?.message} />
             </div>
 
             {/* Submit Button */}
