@@ -11,7 +11,7 @@ import { useRegister } from '@/hooks/use-register';
 import { authCookie, workerCookie } from '@/utils/auth-cookie';
 import { addWorker, getWorkerByEmail } from '@/utils/worker-profile-store';
 import { CollapseTransition } from '@/components/ui/CollapseTransition';
-import { FormFieldError } from '@/components/ui/FormFieldError';
+import { FormField } from '@/components/ui/FormField';
 
 export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,8 +27,8 @@ export function SignUpForm() {
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: '',
-      email: '',
+      name: 'john doe',
+      email: 'johndoe@gmail.com',
       password: '123456',
       role: 'customer',
       agreeTerms: true,
@@ -134,74 +134,37 @@ export function SignUpForm() {
             </div>
 
             {/* Full Name Field */}
-            <div>
-              <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400 mb-1.5">
-                Full Name
-              </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <User className="w-3.5 h-3.5" />
-                </span>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  {...register('name')}
-                  className={`w-full pl-9 pr-4 py-2 bg-gray-50/50 border ${
-                    errors.name
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-gray-200 focus:border-[#EE5E36]'
-                  } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
-                />
-              </div>
-              <FormFieldError error={errors.name?.message} />
-            </div>
+            <FormField
+              label="Full Name"
+              placeholder="John Doe"
+              icon={User}
+              error={errors.name?.message}
+              {...register('name')}
+            />
 
             {/* Email Field */}
-            <div>
-              <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400 mb-1.5">
-                Email Address
-              </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Mail className="w-3.5 h-3.5" />
-                </span>
-                <input
-                  type="email"
-                  placeholder="name@domain.com"
-                  {...register('email')}
-                  className={`w-full pl-9 pr-4 py-2 bg-gray-50/50 border ${
-                    errors.email
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-gray-200 focus:border-[#EE5E36]'
-                  } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
-                />
-              </div>
-              <FormFieldError error={errors.email?.message} />
-            </div>
+            <FormField
+              label="Email Address"
+              type="email"
+              placeholder="name@domain.com"
+              icon={Mail}
+              error={errors.email?.message}
+              {...register('email')}
+            />
 
             {/* Password Field */}
-            <div>
-              <label className="block text-[10px] font-extrabold uppercase tracking-wider text-gray-400 mb-1.5">
-                Password
-              </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Lock className="w-3.5 h-3.5" />
-                </span>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="At least 6 characters"
-                  {...register('password')}
-                  className={`w-full pl-9 pr-9 py-2 bg-gray-50/50 border ${
-                    errors.password
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-gray-200 focus:border-[#EE5E36]'
-                  } focus:bg-white rounded-lg text-xs font-semibold text-[#0B2545] outline-none transition-all duration-200`}
-                />
+            <FormField
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              placeholder="At least 6 characters"
+              icon={Lock}
+              error={errors.password?.message}
+              {...register('password')}
+              rightElement={
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#0B2545] cursor-pointer"
+                  className="text-gray-400 hover:text-[#0B2545] cursor-pointer outline-none"
                 >
                   {showPassword ? (
                     <EyeOff className="w-3.5 h-3.5" />
@@ -209,9 +172,8 @@ export function SignUpForm() {
                     <Eye className="w-3.5 h-3.5" />
                   )}
                 </button>
-              </div>
-              <FormFieldError error={errors.password?.message} />
-            </div>
+              }
+            />
 
             {/* Terms and conditions Checkbox (Hidden for now, will add later)
             <div className="flex flex-col items-start gap-1">
@@ -237,7 +199,6 @@ export function SignUpForm() {
                   .
                 </label>
               </div>
-              <FormFieldError error={errors.agreeTerms?.message} />
             </div>
             */}
 
