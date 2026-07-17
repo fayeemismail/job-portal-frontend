@@ -27,9 +27,9 @@ export function SignUpForm() {
     defaultValues: {
       name: '',
       email: '',
-      password: '',
+      password: '123456',
       role: 'customer',
-      agreeTerms: false,
+      agreeTerms: true,
     },
   });
 
