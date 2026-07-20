@@ -11,11 +11,19 @@ export interface User {
 export interface RegisterPayload {
   name: string;
   email: string;
-  password?: string; // made optional/required depending on standard form validation
+  password: string;
   role?: 'customer' | 'worker';
 }
 
 export interface RegisterResponse {
   user: User;
-  token: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: User;
 }
