@@ -17,12 +17,14 @@ import { useSidebar } from '@/components/ui/sidebar';
 import { getLocalOrders, saveLocalOrders } from '@/utils/worker-store';
 import { OrderItem } from '@/components/orders/constants';
 import { updateWorkerProfile } from '@/utils/worker-profile-store';
+import { useAuth } from '@/hooks/use-auth';
 
 interface WorkerTaskDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
 export default function WorkerTaskDetailPage({ params }: WorkerTaskDetailPageProps) {
+  const { user } = useAuth();
   const { accentTheme } = useSidebar();
   const isNavy = accentTheme === 'navy';
 
@@ -84,7 +86,7 @@ export default function WorkerTaskDetailPage({ params }: WorkerTaskDetailPagePro
         toast = 'Great job! Service marked as COMPLETED.';
 
         // Reset worker pool status to Available
-        const workerEmail = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+        const workerEmail = user?.email || 'worker@example.com';
         updateWorkerProfile(workerEmail, { poolStatus: 'Available' });
         break;
       default:

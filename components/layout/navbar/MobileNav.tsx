@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, User, LogOut, ClipboardList } from 'lucide-react';
 import { NAV_ITEMS, AUTH_CONFIG, USER_PROFILE_CONFIG } from './constants';
 import { getActiveItemLabel } from './utils';
-import { authCookie, adminCookie, workerCookie } from '@/utils/auth-cookie';
+import { useAuth } from '@/hooks/use-auth';
+import { useLogout } from '@/hooks/use-logout';
 import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
-import { getWorkerByEmail } from '@/utils/worker-profile-store';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -17,112 +17,32 @@ interface MobileNavProps {
 
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname();
+  const { user, isAuthenticated } = useAuth();
+  const { logoutUser } = useLogout();
+
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [profileExpanded, setProfileExpanded] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const [avatar, setAvatar] = useState('');
-  const [initials, setInitials] = useState('JD');
-  const [displayName, setDisplayName] = useState('My Account');
-
+  const displayName = user?.name ? user.name.split(' ')[0] : 'My Account';
+  const initials = user?.name
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'U';
+  const [profileExpanded, setProfileExpanded] = useState(false);
   const activeItem = getActiveItemLabel(pathname, NAV_ITEMS);
-
-  // Sync initially on mount & when drawer opens
-  useEffect(() => {
-    const updateProfile = () => {
-      setIsLoggedIn(authCookie.get());
-
-      const isWorkerRole = workerCookie.get();
-      const isAdminRole = adminCookie.get();
-
-      if (isWorkerRole) {
-        const loggedInEmail =
-          (typeof window !== 'undefined' && localStorage.getItem('vance_logged_in_email')) ||
-          'worker@example.com';
-        const worker = getWorkerByEmail(loggedInEmail);
-        if (worker) {
-          setDisplayName(worker.name.split(' ')[0]);
-          setAvatar(worker.avatar);
-          const computedInitials = worker.name
-            .split(' ')
-            .map((n) => n[0])
-            .join('')
-            .slice(0, 2)
-            .toUpperCase();
-          setInitials(computedInitials || 'MV');
-          return;
-        }
-      } else if (isAdminRole) {
-        const stored = typeof window !== 'undefined' && localStorage.getItem('vance_admin_profile');
-        if (stored) {
-          try {
-            const data = JSON.parse(stored);
-            setDisplayName((data.name || 'Admin').split(' ')[0]);
-            setAvatar(
-              data.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
-            );
-            setInitials(data.initials || 'A');
-            return;
-          } catch {
-            // fallback
-          }
-        }
-        setDisplayName('Admin');
-        setInitials('A');
-        setAvatar('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150');
-        return;
-      } else {
-        // Customer Profile
-        if (typeof window !== 'undefined') {
-          const stored = localStorage.getItem('vance_customer_profile');
-          if (stored) {
-            try {
-              const data = JSON.parse(stored);
-              setDisplayName((data.name || 'John').split(' ')[0]);
-              setAvatar(
-                data.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'
-              );
-              setInitials(data.initials || 'JD');
-              return;
-            } catch {
-              // fallback
-            }
-          }
-        }
-        setDisplayName('John');
-        setInitials('JD');
-        setAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150');
-      }
-    };
-
-    updateProfile();
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('customerProfileUpdated', updateProfile);
-      window.addEventListener('adminProfileUpdated', updateProfile);
-      window.addEventListener('workerProfileUpdated', updateProfile);
-    }
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('customerProfileUpdated', updateProfile);
-        window.removeEventListener('adminProfileUpdated', updateProfile);
-        window.removeEventListener('workerProfileUpdated', updateProfile);
-      }
-    };
-  }, [isOpen]);
 
   const handleLogout = () => {
     setShowLogoutModal(true);
   };
 
   const handleConfirmLogout = () => {
-    authCookie.set(false);
-    setIsLoggedIn(false);
-    setProfileExpanded(false);
     setShowLogoutModal(false);
     onClose();
-    window.location.href = '/';
+    logoutUser();
   };
 
   return (
@@ -185,23 +105,16 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         ))}
 
         {/* Mobile Profile Account Dropdown (Only if logged in) */}
-        {isLoggedIn && (
+        {isAuthenticated && (
           <div className="space-y-1">
             <button
               onClick={() => setProfileExpanded(!profileExpanded)}
               className="w-full flex justify-between items-center px-3 py-3 rounded-md text-base font-semibold text-[#0B2545] hover:bg-gray-50 transition-colors"
             >
               <div className="flex items-center gap-2.5">
-                {avatar ? (
-                  <div className="w-8 h-8 rounded-full overflow-hidden border border-[#EE5E36]/15 shrink-0 bg-gray-50">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={avatar} alt={displayName} className="w-full h-full object-cover" />
-                  </div>
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-[#FFF4F0] border border-[#EE5E36]/15 flex items-center justify-center text-[#EE5E36] font-bold text-xs select-none">
-                    {initials}
-                  </div>
-                )}
+                <div className="w-8 h-8 rounded-full bg-[#FFF4F0] border border-[#EE5E36]/15 flex items-center justify-center text-[#EE5E36] font-bold text-xs select-none">
+                  {initials}
+                </div>
                 <span>{displayName}</span>
               </div>
               <ChevronDown
@@ -243,7 +156,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
         {/* Mobile Right Section */}
         <div className="pt-4 border-t border-gray-100 space-y-4">
-          {!isLoggedIn && (
+          {!isAuthenticated && (
             <div className="grid grid-cols-2 gap-3 px-3">
               <Link
                 href={AUTH_CONFIG.signInHref}

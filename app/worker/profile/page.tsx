@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { User, Mail, Phone, Tag, Check, Plus, X, Camera } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import { getWorkerByEmail, updateWorkerProfile, WorkerProfile } from '@/utils/worker-profile-store';
+import { useAuth } from '@/hooks/use-auth';
 
 const PRESET_AVATARS = [
   {
@@ -48,9 +49,10 @@ const SUGGESTED_SKILLS = [
 export default function WorkerProfilePage() {
   const { accentTheme } = useSidebar();
   const isNavy = accentTheme === 'navy';
+  const { user } = useAuth();
 
   // Demo worker email
-  const [workerEmail, setWorkerEmail] = useState('worker@example.com');
+  const [workerEmail, setWorkerEmail] = useState('');
 
   const [profile, setProfile] = useState<WorkerProfile | null>(null);
   const [name, setName] = useState('');
@@ -64,7 +66,7 @@ export default function WorkerProfilePage() {
 
   useEffect(() => {
     Promise.resolve().then(() => {
-      const loggedInEmail = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+      const loggedInEmail = user?.email || 'worker@example.com';
       setWorkerEmail(loggedInEmail);
       const data = getWorkerByEmail(loggedInEmail);
       if (data) {
@@ -76,7 +78,7 @@ export default function WorkerProfilePage() {
       }
       setMounted(true);
     });
-  }, []);
+  }, [user?.email]);
 
   const triggerFeedback = (msg: string) => {
     setFeedbackMsg(msg);

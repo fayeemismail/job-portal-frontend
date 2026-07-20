@@ -1,6 +1,10 @@
 import { ApiErrorResponse } from '@/types/api';
 import { ENV } from '@/config/env';
 
+export interface ApiRequestInit extends RequestInit {
+  _isRetry?: boolean;
+}
+
 export class ApiError extends Error {
   status: number;
   errors?: Record<string, string>;
@@ -15,7 +19,7 @@ export class ApiError extends Error {
 
 const BASE_URL = ENV.apiUrl;
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+async function request<T>(path: string, options: ApiRequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${path}`;
 
   const headers = new Headers(options.headers);
@@ -47,6 +51,29 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
     if (!response.ok) {
       const errorData = responseData as ApiErrorResponse;
+
+      // Auto-refresh token handling on 401 Unauthorized (except for auth attempt endpoints)
+      const isAuthEndpoint =
+        path.includes('/auth/login') ||
+        path.includes('/auth/register') ||
+        path.includes('/auth/refresh');
+
+      if (response.status === 401 && !isAuthEndpoint && !options._isRetry) {
+        try {
+          const refreshRes = await fetch(`${BASE_URL}/auth/refresh`, {
+            method: 'POST',
+            credentials: 'include',
+          });
+
+          if (refreshRes.ok) {
+            // Retry the original request once with _isRetry flag set
+            return request<T>(path, { ...options, _isRetry: true });
+          }
+        } catch {
+          // Fallthrough to throw original 401 error
+        }
+      }
+
       throw new ApiError(
         errorData.message || 'An unexpected error occurred',
         response.status,
@@ -54,13 +81,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       );
     }
 
-    // Return the response data (usually matching ApiResponse<T> where we return data.data)
     return responseData as T;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
     }
-    // Network or other generic client-side errors
     throw new ApiError(
       error instanceof Error ? error.message : 'Network error or request failed',
       500
@@ -69,21 +94,21 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export const apiClient = {
-  get<T>(path: string, options?: RequestInit): Promise<T> {
+  get<T>(path: string, options?: ApiRequestInit): Promise<T> {
     return request<T>(path, { ...options, method: 'GET' });
   },
 
-  post<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
+  post<T>(path: string, body?: unknown, options?: ApiRequestInit): Promise<T> {
     const requestBody = body instanceof FormData ? body : JSON.stringify(body);
     return request<T>(path, { ...options, method: 'POST', body: requestBody });
   },
 
-  put<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
+  put<T>(path: string, body?: unknown, options?: ApiRequestInit): Promise<T> {
     const requestBody = body instanceof FormData ? body : JSON.stringify(body);
     return request<T>(path, { ...options, method: 'PUT', body: requestBody });
   },
 
-  delete<T>(path: string, options?: RequestInit): Promise<T> {
+  delete<T>(path: string, options?: ApiRequestInit): Promise<T> {
     return request<T>(path, { ...options, method: 'DELETE' });
   },
 };
