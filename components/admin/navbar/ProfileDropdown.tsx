@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { User, LogOut } from 'lucide-react';
 import { THEME_CLASSES, AdminTheme, useSidebar } from '@/components/ui/sidebar';
-import { authCookie, adminCookie, workerCookie } from '@/utils/auth-cookie';
+import { useAuth } from '@/hooks/use-auth';
+import { useLogout } from '@/hooks/use-logout';
 import { LogoutConfirmModal } from '@/components/shared/LogoutConfirmModal';
-import { ADMIN_INITIALS, ADMIN_NAME, ADMIN_AVATAR } from './constants';
-import { getWorkerByEmail } from '@/utils/worker-profile-store';
+import { ADMIN_INITIALS, ADMIN_NAME } from './constants';
 
 interface ProfileDropdownProps {
   theme: AdminTheme;
@@ -16,101 +16,21 @@ interface ProfileDropdownProps {
 export function ProfileDropdown({ theme }: ProfileDropdownProps) {
   const themeClasses = THEME_CLASSES[theme];
   const { accentTheme } = useSidebar();
+  const { user } = useAuth();
+  const { logoutUser } = useLogout();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  // Dynamic Profile States
-  const [displayName, setDisplayName] = useState(ADMIN_NAME);
-  const [displayInitials, setDisplayInitials] = useState(ADMIN_INITIALS);
-  const [displayAvatar, setDisplayAvatar] = useState('');
-  const [isWorker, setIsWorker] = useState(false);
-
-  useEffect(() => {
-    const updateProfile = () => {
-      const isWorkerRole = workerCookie.get();
-      const isAdminRole = adminCookie.get();
-      setIsWorker(isWorkerRole);
-
-      if (isWorkerRole) {
-        const loggedInEmail =
-          (typeof window !== 'undefined' && localStorage.getItem('vance_logged_in_email')) ||
-          'worker@example.com';
-        const worker = getWorkerByEmail(loggedInEmail);
-        if (worker) {
-          setDisplayName(worker.name);
-          setDisplayAvatar(worker.avatar);
-          const initials = worker.name
-            .split(' ')
-            .map((n) => n[0])
-            .join('')
-            .slice(0, 2)
-            .toUpperCase();
-          setDisplayInitials(initials || 'MV');
-          return;
-        }
-      } else if (isAdminRole) {
-        if (typeof window !== 'undefined') {
-          const stored = localStorage.getItem('vance_admin_profile');
-          if (stored) {
-            try {
-              const data = JSON.parse(stored);
-              setDisplayName(data.name || ADMIN_NAME);
-              setDisplayAvatar(data.avatar || ADMIN_AVATAR);
-              setDisplayInitials(data.initials || ADMIN_INITIALS);
-              return;
-            } catch {
-              // fallback
-            }
-          }
-        }
-        setDisplayName(ADMIN_NAME);
-        setDisplayInitials(ADMIN_INITIALS);
-        setDisplayAvatar(ADMIN_AVATAR);
-        return;
-      } else {
-        // Customer Profile
-        if (typeof window !== 'undefined') {
-          const stored = localStorage.getItem('vance_customer_profile');
-          if (stored) {
-            try {
-              const data = JSON.parse(stored);
-              setDisplayName(data.name || 'John Doe');
-              setDisplayAvatar(
-                data.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150'
-              );
-              setDisplayInitials(data.initials || 'JD');
-              return;
-            } catch {
-              // fallback
-            }
-          }
-        }
-        setDisplayName('John Doe');
-        setDisplayInitials('JD');
-        setDisplayAvatar('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150');
-        return;
-      }
-
-      setDisplayName(ADMIN_NAME);
-      setDisplayInitials(ADMIN_INITIALS);
-      setDisplayAvatar('');
-    };
-
-    updateProfile();
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('workerProfileUpdated', updateProfile);
-      window.addEventListener('customerProfileUpdated', updateProfile);
-      window.addEventListener('adminProfileUpdated', updateProfile);
-    }
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('workerProfileUpdated', updateProfile);
-        window.removeEventListener('customerProfileUpdated', updateProfile);
-        window.removeEventListener('adminProfileUpdated', updateProfile);
-      }
-    };
-  }, []);
+  const displayName = user?.name || ADMIN_NAME;
+  const displayInitials = user?.name
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : ADMIN_INITIALS;
+  const isWorker = user?.role === 'worker';
 
   const handleLogout = () => {
     setShowDropdown(false);
@@ -118,11 +38,8 @@ export function ProfileDropdown({ theme }: ProfileDropdownProps) {
   };
 
   const handleConfirmLogout = () => {
-    authCookie.set(false);
-    adminCookie.remove();
-    workerCookie.remove();
     setShowLogoutModal(false);
-    window.location.href = '/signin';
+    logoutUser();
   };
 
   // Dynamic Theme Colors
@@ -150,12 +67,7 @@ export function ProfileDropdown({ theme }: ProfileDropdownProps) {
           <div
             className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs select-none border overflow-hidden shrink-0 ${avatarBg} ${avatarText} ${avatarBorder}`}
           >
-            {displayAvatar ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={displayAvatar} alt={displayName} className="w-full h-full object-cover" />
-            ) : (
-              displayInitials
-            )}
+            {displayInitials}
           </div>
           <span className="text-[13px] hidden sm:inline">{displayName}</span>
         </button>

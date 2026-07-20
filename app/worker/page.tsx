@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/use-auth';
 import {
   ClipboardList,
   User,
@@ -198,9 +199,11 @@ export default function WorkerDashboardPage() {
     }
   };
 
+  const { user } = useAuth();
+
   useEffect(() => {
     Promise.resolve().then(() => {
-      const loggedInEmail = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+      const loggedInEmail = user?.email || 'worker@example.com';
       setEmail(loggedInEmail);
 
       const data = getWorkerByEmail(loggedInEmail);
@@ -212,7 +215,7 @@ export default function WorkerDashboardPage() {
       updateProfileData(loggedInEmail);
       setMounted(true);
     });
-  }, [router]);
+  }, [router, user]);
 
   const handleOnboardingSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Calendar, Clock, MapPin, ChevronRight, Search } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
+import { useAuth } from '@/hooks/use-auth';
 import { getLocalOrders } from '@/utils/worker-store';
 import { OrderItem } from '@/components/orders/constants';
 import { getWorkerByEmail, updateWorkerProfile, WorkerProfile } from '@/utils/worker-profile-store';
 
 export default function WorkerTasksPage() {
   const { accentTheme } = useSidebar();
+  const { user } = useAuth();
   const isNavy = accentTheme === 'navy';
 
   const [orders, setOrders] = useState<OrderItem[]>([]);
@@ -21,14 +23,14 @@ export default function WorkerTasksPage() {
   useEffect(() => {
     Promise.resolve().then(() => {
       setOrders(getLocalOrders());
-      const email = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+      const email = user?.email || 'worker@example.com';
       setProfile(getWorkerByEmail(email) || null);
       setMounted(true);
     });
 
     const handleUpdate = () => {
       setOrders(getLocalOrders());
-      const email = localStorage.getItem('vance_logged_in_email') || 'worker@example.com';
+      const email = user?.email || 'worker@example.com';
       setProfile(getWorkerByEmail(email) || null);
     };
 
@@ -38,7 +40,7 @@ export default function WorkerTasksPage() {
       window.removeEventListener('bookingsUpdated', handleUpdate);
       window.removeEventListener('workerProfileUpdated', handleUpdate);
     };
-  }, []);
+  }, [user?.email]);
 
   const workerName = profile?.name || 'Marcus Vance';
 

@@ -7,7 +7,6 @@ import { ProfileSidebar } from '@/components/profile/ProfileSidebar';
 import { ProfileInfoTab } from '@/components/profile/ProfileInfoTab';
 import { AddressesTab } from '@/components/profile/AddressesTab';
 import { FeedbackToast } from '@/components/profile/FeedbackToast';
-import { adminCookie } from '@/utils/auth-cookie';
 
 interface AddressItem {
   id: string;
@@ -16,7 +15,11 @@ interface AddressItem {
   cityStateZip: string;
 }
 
+import { useAuth } from '@/hooks/use-auth';
+
 export default function ProfileDashboardPage() {
+  const { user } = useAuth();
+
   // Navigation tabs state
   const [activeTab, setActiveTab] = useState<'profile' | 'addresses'>('profile');
 
@@ -40,37 +43,20 @@ export default function ProfileDashboardPage() {
 
   useEffect(() => {
     Promise.resolve().then(() => {
-      const isAdmin = adminCookie.get();
-      const storageKey = isAdmin ? 'vance_admin_profile' : 'vance_customer_profile';
-      const stored = localStorage.getItem(storageKey);
-
-      if (stored) {
-        try {
-          const data = JSON.parse(stored);
-          setProfileName(data.name || (isAdmin ? 'Admin Operator' : DEFAULT_PROFILE.name));
-          setProfileEmail(data.email || (isAdmin ? 'admin@example.com' : DEFAULT_PROFILE.email));
-          setProfilePhone(data.phone || (isAdmin ? '+1 (555) 019-9988' : DEFAULT_PROFILE.phone));
-          setProfileInitials(data.initials || (isAdmin ? 'A' : DEFAULT_PROFILE.initials));
-          setProfileAvatar(
-            data.avatar ||
-              (isAdmin
-                ? 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150'
-                : DEFAULT_PROFILE.avatar || '')
-          );
-        } catch {
-          // fallback
-        }
-      } else if (isAdmin) {
-        // Seed default admin values if not set yet
-        setProfileName('Admin Operator');
-        setProfileEmail('admin@example.com');
-        setProfilePhone('+1 (555) 019-9988');
-        setProfileInitials('A');
-        setProfileAvatar('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150');
+      if (user) {
+        setProfileName(user.name);
+        setProfileEmail(user.email);
+        const initials = user.name
+          .split(' ')
+          .map((n) => n[0])
+          .join('')
+          .slice(0, 2)
+          .toUpperCase();
+        setProfileInitials(initials || 'U');
       }
       setMounted(true);
     });
-  }, []);
+  }, [user]);
 
   // Add Address states
   const [showAddForm, setShowAddForm] = useState(false);
@@ -126,7 +112,7 @@ export default function ProfileDashboardPage() {
     const computedInitials = initials || 'JD';
     setProfileInitials(computedInitials);
 
-    const isAdmin = adminCookie.get();
+    const isAdmin = false;
     const storageKey = isAdmin ? 'vance_admin_profile' : 'vance_customer_profile';
     const eventName = isAdmin ? 'adminProfileUpdated' : 'customerProfileUpdated';
 

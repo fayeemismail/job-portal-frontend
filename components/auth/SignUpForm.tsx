@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AuthSidebar } from './AuthSidebar';
 import { signUpSchema, SignUpFormData } from '@/validators/auth.validator';
 import { useRegister } from '@/hooks/use-register';
-import { authCookie, workerCookie } from '@/utils/auth-cookie';
 import { addWorker, getWorkerByEmail } from '@/utils/worker-profile-store';
 import { CollapseTransition } from '@/components/ui/CollapseTransition';
 import { FormField } from '@/components/ui/FormField';
@@ -50,8 +49,6 @@ export function SignUpForm() {
   };
 
   const handleSocialLogin = () => {
-    // Instant mock authentication for social login demonstration
-    authCookie.set(true);
     if (role === 'worker') {
       const defaultEmail = 'social-worker@example.com';
       const existing = getWorkerByEmail(defaultEmail);
@@ -68,11 +65,8 @@ export function SignUpForm() {
           approvalStatus: 'pending',
         });
       }
-      localStorage.setItem('vance_logged_in_email', defaultEmail);
-      workerCookie.set(true);
       window.location.href = '/worker';
     } else {
-      localStorage.setItem('vance_logged_in_email', 'john.doe@example.com');
       window.location.href = '/';
     }
   };
