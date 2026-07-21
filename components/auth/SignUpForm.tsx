@@ -12,8 +12,26 @@ import { addWorker, getWorkerByEmail } from '@/utils/worker-profile-store';
 import { CollapseTransition } from '@/components/ui/CollapseTransition';
 import { FormField } from '@/components/ui/FormField';
 
+const DEMO_SIGNUP_ACCOUNTS = [
+  {
+    name: 'Sarah Jenkins',
+    email: 'customer@example.com',
+    pass: 'password123',
+    role: 'customer' as const,
+    label: '👤 Customer Demo',
+  },
+  {
+    name: 'Marcus Vance',
+    email: 'worker@example.com',
+    pass: 'password123',
+    role: 'worker' as const,
+    label: '🛠️ Expert Demo',
+  },
+] as const;
+
 export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [demoIndex, setDemoIndex] = useState(0);
 
   const { registerUser, isPending, errorMsg, setErrorMsg } = useRegister();
 
@@ -26,9 +44,9 @@ export function SignUpForm() {
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: 'john doe',
-      email: 'johndoe@gmail.com',
-      password: '123456',
+      name: 'Sarah Jenkins',
+      email: 'customer@example.com',
+      password: 'password123',
       role: 'customer',
       agreeTerms: true,
     },
@@ -80,13 +98,32 @@ export function SignUpForm() {
       <div className="col-span-12 md:col-span-7 px-6 py-4 md:px-12 flex flex-col justify-center bg-white h-full overflow-hidden">
         <div className="max-w-sm w-full mx-auto my-auto">
           {/* Header */}
-          <div className="text-left mb-5">
-            <h1 className="text-xl font-extrabold text-[#0B2545] tracking-tight">Create Account</h1>
-            <p className="text-xs font-semibold text-gray-400 mt-1">
-              {role === 'customer'
-                ? 'Sign up today and schedule your first service in seconds.'
-                : 'Join our expert network and start receiving tasks in your area.'}
-            </p>
+          <div className="text-left mb-5 flex justify-between items-start gap-4">
+            <div>
+              <h1 className="text-xl font-extrabold text-[#0B2545] tracking-tight">
+                Create Account
+              </h1>
+              <p className="text-xs font-semibold text-gray-400 mt-1">
+                {role === 'customer'
+                  ? 'Sign up today and schedule your first service in seconds.'
+                  : 'Join our expert network and start receiving tasks in your area.'}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const nextIdx = (demoIndex + 1) % DEMO_SIGNUP_ACCOUNTS.length;
+                setDemoIndex(nextIdx);
+                const acc = DEMO_SIGNUP_ACCOUNTS[nextIdx];
+                setValue('name', acc.name);
+                setValue('email', acc.email);
+                setValue('password', acc.pass);
+                setValue('role', acc.role);
+              }}
+              className="text-[10px] font-extrabold text-[#EE5E36] hover:text-[#0B2545] border border-[#EE5E36]/25 hover:border-[#0B2545]/25 px-2 py-1.5 rounded-lg transition-all cursor-pointer select-none mt-0.5 shrink-0 animate-in fade-in duration-200"
+            >
+              {DEMO_SIGNUP_ACCOUNTS[demoIndex].label}
+            </button>
           </div>
 
           {/* Alert Error Box with Smooth CSS Grid Height Transition */}
@@ -106,7 +143,13 @@ export function SignUpForm() {
                     Looking to earn money as a service provider?{' '}
                     <button
                       type="button"
-                      onClick={() => setValue('role', 'worker')}
+                      onClick={() => {
+                        setValue('role', 'worker');
+                        setValue('name', 'Marcus Vance');
+                        setValue('email', 'worker@example.com');
+                        setValue('password', 'password123');
+                        setDemoIndex(1);
+                      }}
                       className="text-[#EE5E36] font-extrabold hover:underline cursor-pointer outline-none"
                     >
                       Sign up as an Expert
@@ -117,7 +160,13 @@ export function SignUpForm() {
                     Looking to book home services?{' '}
                     <button
                       type="button"
-                      onClick={() => setValue('role', 'customer')}
+                      onClick={() => {
+                        setValue('role', 'customer');
+                        setValue('name', 'Sarah Jenkins');
+                        setValue('email', 'customer@example.com');
+                        setValue('password', 'password123');
+                        setDemoIndex(0);
+                      }}
                       className="text-[#EE5E36] font-extrabold hover:underline cursor-pointer outline-none"
                     >
                       Sign up as a Customer

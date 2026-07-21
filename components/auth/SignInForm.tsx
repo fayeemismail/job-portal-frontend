@@ -12,8 +12,9 @@ import { CollapseTransition } from '@/components/ui/CollapseTransition';
 import { FormField } from '@/components/ui/FormField';
 
 const DEMO_ACCOUNTS = [
-  { email: 'johndoe@gmail.com', pass: '123456', label: 'Customer Demo' },
-  { email: 'worker@example.com', pass: 'password123', label: 'Worker Demo' },
+  { email: 'customer@example.com', pass: 'password123', label: '👤 Customer Demo' },
+  { email: 'worker@example.com', pass: 'password123', label: '🛠️ Expert Demo' },
+  { email: 'admin@example.com', pass: 'admin123', label: '🛡️ Admin Security' },
 ] as const;
 
 export function SignInForm() {
@@ -31,8 +32,8 @@ export function SignInForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: 'johndoe@gmail.com',
-      password: '123456',
+      email: 'customer@example.com',
+      password: 'password123',
     },
   });
 
